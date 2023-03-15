@@ -3,6 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Attendance.WPF.Controls"
     xmlns:converters="clr-namespace:Attendance.WPF.Converters">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Clock/AnalogClockStyle.xaml" />
+        <ResourceDictionary Source="/Clock/DigitalClockStyle.xaml" />
+    </ResourceDictionary.MergedDictionaries>
 
     <!--  LoadingSpinnerControl  -->
     <Style TargetType="{x:Type controls:LoadingSpinnerControl}">

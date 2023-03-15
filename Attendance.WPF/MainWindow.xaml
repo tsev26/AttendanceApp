@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:Attendance.WPF.ViewModels"
     xmlns:views="clr-namespace:Attendance.WPF.Views"
-    Title="Attendance App TSevcu"
+    Title="Docházka TSevcu"
     Width="1200"
     Height="800"
     d:DataContext="{d:DesignInstance viewmodels:MainViewModel}"
@@ -19,6 +19,22 @@
 
             <DataTemplate DataType="{x:Type viewmodels:HomeViewModel}">
                 <views:HomeView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodels:UserDailyOverviewViewModel}">
+                <views:UserDailyOverviewView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodels:UserSelectActivityViewModel}">
+                <views:UserSelectActivityView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodels:UserMenuViewModel}">
+                <views:UserMenuView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodels:LayoutViewModel}">
+                <views:LayoutView />
             </DataTemplate>
 
         </Grid.Resources>

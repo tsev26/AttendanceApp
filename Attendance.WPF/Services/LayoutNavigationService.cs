@@ -12,20 +12,20 @@ namespace Attendance.WPF.Services
     {
         private readonly NavigationStore _navigationStore;
         private readonly Func<TViewModel> _createViewModel;
-        private readonly INavigationService _navigateHomeViewModel;
+        private readonly Func<NavigationBarViewModel> _createNavigationBarViewModel;
 
         public LayoutNavigationService(NavigationStore navigationStore,
             Func<TViewModel> createViewModel,
-            INavigationService navigateHomeViewModel)
+            Func<NavigationBarViewModel> createNavigationBarViewModel)
         {
             _navigationStore = navigationStore;
             _createViewModel = createViewModel;
-            _navigateHomeViewModel = navigateHomeViewModel;
+            _createNavigationBarViewModel = createNavigationBarViewModel;
         }
 
         public void Navigate(string message = "")
         {
-            _navigationStore.CurrentViewModel = new LayoutViewModel(_navigateHomeViewModel, _createViewModel());
+            _navigationStore.CurrentViewModel = new LayoutViewModel(_createNavigationBarViewModel(), _createViewModel());
         }
     }
 }

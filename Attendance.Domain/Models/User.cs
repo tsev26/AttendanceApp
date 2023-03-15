@@ -8,6 +8,19 @@ namespace Attendance.Domain.Models
 {
     public class User : DomainObject
     {
+        public User(string firstName, 
+                    string lastName, 
+                    string email, 
+                    bool isAdmin)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            IsAdmin = isAdmin;
+            Groups = new List<Group>();
+            Keys = new List<Key>();
+        }
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }

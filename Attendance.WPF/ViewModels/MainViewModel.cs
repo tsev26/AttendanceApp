@@ -1,5 +1,6 @@
-﻿using Attendance.WPF.Stores;
-
+﻿using Attendance.Domain.Models;
+using Attendance.WPF.Stores;
+using System;
 
 namespace Attendance.WPF.ViewModels
 {
@@ -13,13 +14,25 @@ namespace Attendance.WPF.ViewModels
 
         public bool IsModalOpen => _modalNavigationStore.IsOpen;
 
-        public MainViewModel(NavigationStore navigationStore, ModalNavigationStore modalNavigationStore)
+        public MainViewModel(NavigationStore navigationStore, 
+                             ModalNavigationStore modalNavigationStore,
+                             ActivityStore activityStore,
+                             UserStore userStore)
         {
             _navigationStore = navigationStore;
             _modalNavigationStore = modalNavigationStore;
 
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
             _modalNavigationStore.CurrentViewModelChanged += OnCurrentModelViewModelChanged;
+
+            ActivityProperty workActivityProperty = new ActivityProperty(false, false, true, TimeSpan.FromHours(6), TimeSpan.FromMinutes(30), false, false, false, false, "práce");
+            Activity workActivity = new Activity("Práce", "P", workActivityProperty);
+
+            activityStore.AddActivity(workActivity);
+
+            User admin = new User("admin", "admin", "tsevcu@gmail.com", true);
+            admin.Keys.Add(new Key("admin"));
+            userStore.AddUser(admin);
         }
 
         private void OnCurrentModelViewModelChanged()

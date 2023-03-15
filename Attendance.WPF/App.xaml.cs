@@ -37,6 +37,10 @@ namespace Attendance.WPF
             services.AddSingleton<ModalNavigationStore>();
             services.AddSingleton<MessageStore>();
 
+            services.AddSingleton<UserStore>();
+            services.AddSingleton<ActivityStore>();
+            services.AddSingleton<CurrentUser>();
+
 
             //Navigation
             services.AddSingleton<INavigationService>(CreateHomeNavigationService);
@@ -45,6 +49,11 @@ namespace Attendance.WPF
 
             //ViewModels
             services.AddTransient<HomeViewModel>(CreateHomeViewModel);
+            services.AddTransient<NavigationBarViewModel>(CreateNavigationBarViewModel);
+            services.AddTransient<UserMenuViewModel>(CreateUserMenuViewModel);
+
+            services.AddTransient<UserSelectActivityViewModel>();
+            services.AddTransient<UserDailyOverviewViewModel>();
 
             services.AddSingleton<MainViewModel>();
 
@@ -73,6 +82,9 @@ namespace Attendance.WPF
         private HomeViewModel CreateHomeViewModel(IServiceProvider serviceProvider)
         {
             return new HomeViewModel(
+                serviceProvider.GetRequiredService<UserStore>(),
+                CreateUserMenuNavigationService(serviceProvider),
+                serviceProvider.GetRequiredService<CurrentUser>()
                 );
         }
 
@@ -83,5 +95,32 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<MessageStore>(),
                 () => serviceProvider.GetRequiredService<HomeViewModel>());
         }
+
+        private INavigationService CreateUserMenuNavigationService(IServiceProvider serviceProvider)
+        {
+            return new LayoutNavigationService<UserMenuViewModel>(
+                serviceProvider.GetRequiredService<NavigationStore>(),
+                () => serviceProvider.GetRequiredService<UserMenuViewModel>(),
+                () => serviceProvider.GetRequiredService<NavigationBarViewModel>());
+        }
+
+        private NavigationBarViewModel CreateNavigationBarViewModel(IServiceProvider serviceProvider)
+        {
+            return new NavigationBarViewModel(
+                CreateHomeNavigationService(serviceProvider)
+                );
+        }
+
+        private UserMenuViewModel CreateUserMenuViewModel(IServiceProvider serviceProvider)
+        {
+            return new UserMenuViewModel(
+                serviceProvider.GetRequiredService<UserDailyOverviewViewModel>(),
+                serviceProvider.GetRequiredService<UserSelectActivityViewModel>(),
+                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<ActivityStore>()
+                );
+        }
+
+        
     }
 }

@@ -12,17 +12,18 @@ namespace Attendance.WPF.ViewModels
     public class LayoutViewModel : ViewModelBase
     {
         public ViewModelBase ContentViewModel { get; }
-        public ICommand NavigateHomeCommand { get; }
+        public NavigationBarViewModel NavigationBarViewModel { get; }
 
-        public LayoutViewModel(INavigationService homeNavigationService, ViewModelBase contentViewModel)
+        public LayoutViewModel(NavigationBarViewModel navigationBarViewModel, ViewModelBase contentViewModel)
         {
-            NavigateHomeCommand = new NavigateCommand(homeNavigationService);
+            NavigationBarViewModel = navigationBarViewModel;
             ContentViewModel = contentViewModel;
         }
 
         public override void Dispose()
         {
             ContentViewModel.Dispose();
+            NavigationBarViewModel.Dispose();
             base.Dispose();
         }
     }

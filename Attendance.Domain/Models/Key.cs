@@ -8,6 +8,11 @@ namespace Attendance.Domain.Models
 {
     public class Key : DomainObject
     {
+        public Key(string keyValue)
+        {
+            KeyValue = keyValue;
+        }
+
         public string KeyValue { get; set; }
     }
 }
