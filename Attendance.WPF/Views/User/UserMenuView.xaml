@@ -4,8 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:clock="clr-namespace:Attendance.WPF.Clock"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Attendance.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:Attendance.WPF.ViewModels"
+    xmlns:views="clr-namespace:Attendance.WPF.Views"
+    d:DataContext="{d:DesignInstance viewmodels:UserMenuViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -22,7 +24,11 @@
             BorderBrush="Black"
             BorderThickness="1"
             CornerRadius="5">
-            <local:UserSelectActivityView Margin="10" DataContext="{Binding UserSelectActivityViewModel}" />
+            <views:UserSelectActivityView
+                x:Name="UserSelectActivity"
+                Margin="10"
+                DataContext="{Binding UserSelectActivityViewModel}"
+                Focusable="True" />
         </Border>
 
         <Border
@@ -32,7 +38,10 @@
             BorderBrush="Black"
             BorderThickness="1"
             CornerRadius="5">
-            <local:UserDailyOverviewView Margin="10" DataContext="{Binding UserDailyOverviewViewModel}" />
+            <views:UserDailyOverviewView
+                Margin="10"
+                DataContext="{Binding UserDailyOverviewViewModel}"
+                Focusable="False" />
         </Border>
     </Grid>
 </UserControl>

@@ -30,6 +30,42 @@ namespace Attendance.WPF.ViewModels
 
             activityStore.AddActivity(workActivity);
 
+            ActivityProperty pauseActivityProperty = new ActivityProperty(false, true, false, TimeSpan.FromHours(0), TimeSpan.FromMinutes(0), false, false, false, false, "pauza");
+            Activity pausekActivity = new Activity("Pauza", "A", pauseActivityProperty);
+
+            activityStore.AddActivity(pausekActivity);
+
+            /*
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(workActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(workActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(workActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(workActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(workActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(workActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(workActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(workActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(workActivity);
+            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pausekActivity);
+            */
+
             User admin = new User("admin", "admin", "tsevcu@gmail.com", true);
             admin.Keys.Add(new Key("admin"));
             userStore.AddUser(admin);

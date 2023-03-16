@@ -17,7 +17,10 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <view:NavigationBarView Grid.Row="0" DataContext="{Binding NavigationBarViewModel}" />
+        <view:NavigationBarView
+            Grid.Row="0"
+            DataContext="{Binding NavigationBarViewModel}"
+            Focusable="False" />
         <Border
             Grid.Row="1"
             Margin="5"

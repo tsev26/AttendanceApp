@@ -1,19 +1,27 @@
-﻿using Attendance.WPF.Services;
+﻿using Attendance.WPF.Commands;
+using Attendance.WPF.Services;
+using Attendance.WPF.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Attendance.WPF.ViewModels
 {
     public class NavigationBarViewModel : ViewModelBase
     {
-        private INavigationService _navigationService;
+        private readonly CurrentUser _currentUser;
 
-        public NavigationBarViewModel(INavigationService navigationService)
+        public NavigationBarViewModel(INavigationService navigateHomeService, CurrentUser currentUser)
         {
-            _navigationService = navigationService;
+            NavigateHomeCommand = new NavigateCommand(navigateHomeService);
+            _currentUser = currentUser;
         }
+
+        public string CurrentName => _currentUser.User.LastName + " " + _currentUser.User.FirstName;
+
+        public ICommand NavigateHomeCommand { get; set; }
     }
 }

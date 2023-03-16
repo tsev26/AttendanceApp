@@ -52,7 +52,7 @@ namespace Attendance.WPF
             services.AddTransient<NavigationBarViewModel>(CreateNavigationBarViewModel);
             services.AddTransient<UserMenuViewModel>(CreateUserMenuViewModel);
 
-            services.AddTransient<UserSelectActivityViewModel>();
+            services.AddTransient<UserSelectActivityViewModel>(CreateUserSelectActivityViewModel);
             services.AddTransient<UserDailyOverviewViewModel>();
 
             services.AddSingleton<MainViewModel>();
@@ -88,6 +88,15 @@ namespace Attendance.WPF
                 );
         }
 
+        private UserSelectActivityViewModel CreateUserSelectActivityViewModel(IServiceProvider serviceProvider)
+        {
+            return UserSelectActivityViewModel.LoadViewModel(
+                serviceProvider.GetRequiredService<ActivityStore>(),
+                serviceProvider.GetRequiredService<CurrentUser>(),
+                CreateHomeNavigationService(serviceProvider)
+                );
+        }
+
         private INavigationService CreateHomeNavigationService(IServiceProvider serviceProvider)
         {
             return new NavigationService<HomeViewModel>(
@@ -107,7 +116,8 @@ namespace Attendance.WPF
         private NavigationBarViewModel CreateNavigationBarViewModel(IServiceProvider serviceProvider)
         {
             return new NavigationBarViewModel(
-                CreateHomeNavigationService(serviceProvider)
+                CreateHomeNavigationService(serviceProvider),
+                serviceProvider.GetRequiredService<CurrentUser>()
                 );
         }
 

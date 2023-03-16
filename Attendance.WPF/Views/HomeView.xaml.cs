@@ -24,5 +24,19 @@ namespace Attendance.WPF.Views
         {
             InitializeComponent();
         }
+
+        private void FindUserTextBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Input.Keyboard.Focus(FindUserTextBox);
+        }
+
+        private void FindUserTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textbox = sender as TextBox;
+            if (textbox != null)
+            {
+                textbox.CaretIndex = textbox.Text.Length;
+            }
+        }
     }
 }

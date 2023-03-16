@@ -6,9 +6,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Attendance.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:Attendance.WPF.ViewModels"
+    d:DataContext="{d:DesignInstance viewmodels:NavigationBarViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Focusable="False"
     mc:Ignorable="d">
+    <UserControl.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding NavigateHomeCommand}" />
+    </UserControl.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -23,13 +29,19 @@
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
 
-            <clock:DigitalClock
+            <Border
                 Grid.Column="0"
-                Margin="10,20,0,0"
-                HorizontalAlignment="Left"
-                FontSize="25"
-                ShowTime="False" />
-
+                Margin="5,15,5,10"
+                Padding="5"
+                Background="FloralWhite"
+                BorderBrush="Black"
+                BorderThickness="1"
+                CornerRadius="5">
+                <clock:DigitalClock
+                    HorizontalAlignment="Left"
+                    FontSize="25"
+                    ShowTime="False" />
+            </Border>
             <StackPanel
                 Grid.Column="1"
                 HorizontalAlignment="Center"
@@ -42,12 +54,76 @@
                     Stretch="Fill" />
             </StackPanel>
 
-
-            <clock:DigitalClock
+            <Border
                 Grid.Column="2"
-                Margin="0,20,10,0"
-                FontSize="25"
-                ShowDate="False" />
+                Margin="5,15,5,10"
+                Padding="5"
+                Background="FloralWhite"
+                BorderBrush="Black"
+                BorderThickness="1"
+                CornerRadius="5">
+                <clock:DigitalClock FontSize="25" ShowDate="False" />
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="25,0,0,0">
+            <StackPanel Orientation="Horizontal">
+                <Button
+                    Margin="0,0,5,0"
+                    Content="Historie"
+                    Focusable="False"
+                    Style="{StaticResource ViewButton}" />
+
+                <Button
+                    Margin="0,0,5,0"
+                    Content="Profil"
+                    Focusable="False"
+                    Style="{StaticResource ViewButton}" />
+
+                <Button
+                    Margin="0,0,5,0"
+                    Content="Opravy"
+                    Focusable="False"
+                    Style="{StaticResource ViewButton}" />
+
+                <Button
+                    Margin="0,0,5,0"
+                    Content="Podřízení"
+                    Focusable="False"
+                    Style="{StaticResource ViewButton}" />
+
+                <Button
+                    Margin="0,0,5,0"
+                    Content="Klíče"
+                    Focusable="False"
+                    Style="{StaticResource ViewButton}" />
+
+
+                <Button
+                    Margin="0,0,5,0"
+                    Content="Aktivity"
+                    Focusable="False"
+                    Style="{StaticResource ViewButton}" />
+
+                <Button
+                    Margin="0,0,5,0"
+                    Content="Skupiny"
+                    Focusable="False"
+                    Style="{StaticResource ViewButton}" />
+
+
+                <Button
+                    Margin="0,0,5,0"
+                    Command="{Binding NavigateHomeCommand}"
+                    Content="Zavřít"
+                    Focusable="False"
+                    Style="{StaticResource ViewButton}" />
+
+                <TextBlock
+                    Margin="0,0,5,0"
+                    Style="{StaticResource DetailTextBlock}"
+                    Text="{Binding CurrentName}" />
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

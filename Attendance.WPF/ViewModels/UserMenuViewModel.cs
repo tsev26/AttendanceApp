@@ -9,8 +9,6 @@ namespace Attendance.WPF.ViewModels
 {
     public class UserMenuViewModel : ViewModelBase
     {
-        private readonly UserDailyOverviewViewModel _userDailyOverviewViewModel;
-        private readonly UserSelectActivityViewModel _userSelectActivityViewModel;
         private readonly CurrentUser _currentUser;
         private readonly ActivityStore _activityStore;
 
@@ -19,11 +17,14 @@ namespace Attendance.WPF.ViewModels
                                  CurrentUser currentUser, 
                                  ActivityStore activityStore)
         {
-            _userDailyOverviewViewModel = userDailyOverviewViewModel;
-            _userSelectActivityViewModel = userSelectActivityViewModel;
+            UserDailyOverviewViewModel = userDailyOverviewViewModel;
+            UserSelectActivityViewModel = userSelectActivityViewModel;
             _currentUser = currentUser;
             _activityStore = activityStore;
         }
 
+
+        public UserDailyOverviewViewModel UserDailyOverviewViewModel { get; }
+        public UserSelectActivityViewModel UserSelectActivityViewModel { get; }
     }
 }
