@@ -39,7 +39,7 @@ namespace Attendance.WPF
 
             services.AddSingleton<UserStore>();
             services.AddSingleton<ActivityStore>();
-            services.AddSingleton<CurrentUser>();
+            services.AddScoped<CurrentUser>();
 
 
             //Navigation

@@ -26,5 +26,13 @@ namespace Attendance.WPF.ViewModels
 
         public UserDailyOverviewViewModel UserDailyOverviewViewModel { get; }
         public UserSelectActivityViewModel UserSelectActivityViewModel { get; }
+
+        public override void Dispose()
+        {
+            _currentUser.User = null;
+            UserDailyOverviewViewModel.Dispose();
+            UserSelectActivityViewModel.Dispose();
+            base.Dispose();
+        }
     }
 }

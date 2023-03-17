@@ -2,9 +2,7 @@
     x:Class="Attendance.WPF.Views.UserDailyOverviewView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:beahviors="clr-namespace:Attendance.WPF.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:local="clr-namespace:Attendance.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:Attendance.WPF.ViewModels"
@@ -172,16 +170,7 @@
                             Margin="0,5,0,0"
                             HorizontalAlignment="Left"
                             FontSize="20"
-                            Text="{Binding WorkedInDayTotal, StringFormat={}{0:1:00:2:00}}"
->
-
-                            <interactivity:Interaction.Behaviors>
-                                <beahviors:PeriodicBindingUpdateBehavior
-                                    Interval="0:00:01"
-                                    Mode="UpdateTarget"
-                                    Property="{x:Static TextBlock.TextProperty}" />
-                            </interactivity:Interaction.Behaviors>
-                        </TextBlock>
+                            Text="{Binding WorkedInDayTotal, StringFormat={}{0:1:00:2:00}}" />
                         <TextBlock
                             x:Name="WorkedTicksTextBlock"
                             Grid.Row="1"
@@ -189,14 +178,7 @@
                             Margin="0,5,0,0"
                             HorizontalAlignment="Center"
                             FontSize="20"
-                            Text="{Binding WorkedInDay}">
-                            <interactivity:Interaction.Behaviors>
-                                <beahviors:PeriodicBindingUpdateBehavior
-                                    Interval="0:00:01"
-                                    Mode="UpdateTarget"
-                                    Property="{x:Static TextBlock.TextProperty}" />
-                            </interactivity:Interaction.Behaviors>
-                        </TextBlock>
+                            Text="{Binding WorkedInDay}" />
                         <TextBlock
                             x:Name="TotalPausedTicksTextBlock"
                             Grid.Row="2"
@@ -204,14 +186,7 @@
                             Margin="0,5,0,5"
                             HorizontalAlignment="Center"
                             FontSize="20"
-                            Text="{Binding PauseInDay}">
-                            <interactivity:Interaction.Behaviors>
-                                <beahviors:PeriodicBindingUpdateBehavior
-                                    Interval="0:00:01"
-                                    Mode="UpdateTarget"
-                                    Property="{x:Static TextBlock.TextProperty}" />
-                            </interactivity:Interaction.Behaviors>
-                        </TextBlock>
+                            Text="{Binding PauseInDay}" />
 
                     </Grid>
                 </StackPanel>
@@ -266,12 +241,6 @@
                             HorizontalAlignment="Left"
                             FontSize="20"
                             ItemsSource="{Binding ActivitiesTotalInDay}">
-                            <interactivity:Interaction.Behaviors>
-                                <beahviors:PeriodicBindingUpdateBehavior
-                                    Interval="0:00:01"
-                                    Mode="UpdateTarget"
-                                    Property="{x:Static ItemsControl.ItemsSourceProperty}" />
-                            </interactivity:Interaction.Behaviors>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="5,0,0,1">
