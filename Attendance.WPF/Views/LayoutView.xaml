@@ -24,6 +24,7 @@
         <Border
             Grid.Row="1"
             Margin="5"
+            Background="{StaticResource ListViewItemColorA}"
             BorderBrush="Black"
             BorderThickness="1"
             CornerRadius="5">

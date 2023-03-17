@@ -52,7 +52,7 @@ namespace Attendance.WPF
             services.AddTransient<NavigationBarViewModel>(CreateNavigationBarViewModel);
             services.AddTransient<UserMenuViewModel>(CreateUserMenuViewModel);
 
-            services.AddTransient<UserSelectActivityViewModel>(CreateUserSelectActivityViewModel);
+            services.AddTransient<UserSelectActivityViewModel>(); //CreateUserSelectActivityViewModel
             services.AddTransient<UserDailyOverviewViewModel>();
 
             services.AddSingleton<MainViewModel>();

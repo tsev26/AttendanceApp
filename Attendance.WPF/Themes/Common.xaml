@@ -121,8 +121,8 @@
         <LinearGradientBrush.GradientStops>
             <GradientStopCollection>
                 <GradientStop Offset="0" Color="#000000FF" />
-                <GradientStop Offset="0.4" Color="#600000FF" />
-                <GradientStop Offset="0.6" Color="#600000FF" />
+                <GradientStop Offset="0.4" Color="{DynamicResource ControlLightColor}" />
+                <GradientStop Offset="0.6" Color="{DynamicResource ControlMediumColor}" />
                 <GradientStop Offset="1" Color="#000000FF" />
             </GradientStopCollection>
         </LinearGradientBrush.GradientStops>

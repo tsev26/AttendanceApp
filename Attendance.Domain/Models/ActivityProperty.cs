@@ -8,9 +8,10 @@ namespace Attendance.Domain.Models
 {
     public class ActivityProperty : DomainObject
     {
-        public ActivityProperty(bool isPlan, bool isPause, bool hasPause, TimeSpan pauseEvery, TimeSpan pauseDuration, bool hasExpectedStart, bool hasExpectedReturn, bool isFullDayActivity, bool isHalfDayActivity, string groupByName)
+        public ActivityProperty(bool isPlan, bool count, bool isPause, bool hasPause, TimeSpan pauseEvery, TimeSpan pauseDuration, bool hasExpectedStart, bool hasExpectedReturn, bool isFullDayActivity, bool isHalfDayActivity, string groupByName)
         {
             IsPlan = isPlan;
+            Count = count;
             IsPause = isPause;
             HasPause = hasPause;
             PauseEvery = pauseEvery;
@@ -23,6 +24,7 @@ namespace Attendance.Domain.Models
         }
 
         public bool IsPlan { get; set; }
+        public bool Count { get; set; }
         public bool IsPause { get; set; }
         public bool HasPause { get; set; }
         public TimeSpan PauseEvery { get; set; }
