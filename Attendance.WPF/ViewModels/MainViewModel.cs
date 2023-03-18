@@ -14,7 +14,8 @@ namespace Attendance.WPF.ViewModels
 
         public bool IsModalOpen => _modalNavigationStore.IsOpen;
 
-        public MainViewModel(NavigationStore navigationStore, 
+        public MainViewModel(NavigationBarViewModel navigationBarViewModel,
+                             NavigationStore navigationStore, 
                              ModalNavigationStore modalNavigationStore,
                              ActivityStore activityStore,
                              UserStore userStore)
@@ -40,41 +41,47 @@ namespace Attendance.WPF.ViewModels
 
             activityStore.AddActivity(homeActivity);
 
-            /*
-            activityStore.AddActivity(pausekActivity);
+            
+            activityStore.AddActivity(pauseActivity);
             activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pausekActivity);
-            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pauseActivity);
+            activityStore.AddActivity(pauseActivity);
             activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pausekActivity);
-            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pauseActivity);
+            activityStore.AddActivity(pauseActivity);
             activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pausekActivity);
-            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pauseActivity);
+            activityStore.AddActivity(pauseActivity);
             activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pausekActivity);
-            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pauseActivity);
+            activityStore.AddActivity(pauseActivity);
             activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pausekActivity);
-            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pauseActivity);
+            activityStore.AddActivity(pauseActivity);
             activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pausekActivity);
-            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pauseActivity);
+            activityStore.AddActivity(pauseActivity);
             activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pausekActivity);
-            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pauseActivity);
+            activityStore.AddActivity(pauseActivity);
             activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pausekActivity);
-            activityStore.AddActivity(pausekActivity);
+            activityStore.AddActivity(pauseActivity);
+            activityStore.AddActivity(pauseActivity);
             activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pausekActivity);
-            activityStore.AddActivity(pausekActivity);
-            */
+            activityStore.AddActivity(pauseActivity);
+            activityStore.AddActivity(pauseActivity);
+            
 
             User admin = new User("admin", "admin", "tsevcu@gmail.com", true);
             admin.Keys.Add(new Key("admin"));
             userStore.AddUser(admin);
+
+            User user1 = new User("Tomáš", "Ševců", "tsevcu@gmail.com", false);
+            user1.Keys.Add(new Key("tse"));
+            userStore.AddUser(user1);
         }
+
+        public NavigationBarViewModel NavigationBarViewModel { get; }
 
         private void OnCurrentModelViewModelChanged()
         {

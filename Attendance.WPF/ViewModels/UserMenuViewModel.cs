@@ -12,8 +12,9 @@ namespace Attendance.WPF.ViewModels
         private readonly CurrentUser _currentUser;
         private readonly ActivityStore _activityStore;
 
-        public UserMenuViewModel(UserDailyOverviewViewModel userDailyOverviewViewModel, 
-                                 UserSelectActivityViewModel userSelectActivityViewModel, 
+        public UserMenuViewModel(
+                                 UserSelectActivityViewModel userSelectActivityViewModel,
+                                 UserDailyOverviewViewModel userDailyOverviewViewModel,
                                  CurrentUser currentUser, 
                                  ActivityStore activityStore)
         {
@@ -29,7 +30,7 @@ namespace Attendance.WPF.ViewModels
 
         public override void Dispose()
         {
-            _currentUser.User = null;
+            _currentUser.Clear();
             UserDailyOverviewViewModel.Dispose();
             UserSelectActivityViewModel.Dispose();
             base.Dispose();

@@ -15,7 +15,7 @@ namespace Attendance.WPF.ViewModels
     {
         private readonly ActivityStore _activityStore;
 
-        public List<Activity> Activities => (List<Activity>)_activityStore.Activities;
+        public List<Activity> Activities => _activityStore.Activities;
 
         public UserSelectActivityViewModel(ActivityStore activityStore, CurrentUser currentUser, INavigationService navigateToHome)
         {
@@ -60,6 +60,12 @@ namespace Attendance.WPF.ViewModels
             {
                 UserSetActivityCommand.Execute(activity);
             }
+        }
+
+        public override void Dispose()
+        {
+            UserSetActivityCommand = null;
+            base.Dispose();
         }
 
     }

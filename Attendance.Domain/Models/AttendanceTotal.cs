@@ -8,7 +8,7 @@ namespace Attendance.Domain.Models
 {
     public class AttendanceTotal : DomainObject
     {
-        public AttendanceTotal(User user, DateOnly date, Activity activity, TimeSpan duration)
+        public AttendanceTotal(User user, DateOnly date, Activity activity, TimeSpan duration) : base()
         {
             User = user;
             Date = date;
@@ -16,7 +16,7 @@ namespace Attendance.Domain.Models
             Duration = duration;
         }
 
-        public AttendanceTotal()
+        public AttendanceTotal() : base()
         {
 
         }

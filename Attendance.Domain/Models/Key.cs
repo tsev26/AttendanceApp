@@ -8,7 +8,7 @@ namespace Attendance.Domain.Models
 {
     public class Key : DomainObject
     {
-        public Key(string keyValue)
+        public Key(string keyValue) : base()
         {
             KeyValue = keyValue;
         }

@@ -18,59 +18,11 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-
-            <Border
-                Grid.Column="0"
-                Margin="5,15,5,150"
-                Padding="5"
-                Background="FloralWhite"
-                BorderBrush="Black"
-                BorderThickness="1"
-                CornerRadius="5">
-                <clock:DigitalClock
-                    HorizontalAlignment="Left"
-                    FontSize="25"
-                    ShowTime="False" />
-            </Border>
-            <StackPanel
-                Grid.Column="1"
-                Margin="10"
-                HorizontalAlignment="Center"
-                Orientation="Horizontal">
-                <Image
-                    Height="150"
-                    RenderOptions.BitmapScalingMode="Fant"
-                    Source="/Resources/TSevcu-2.png"
-                    Stretch="Fill" />
-
-            </StackPanel>
-
-            <Border
-                Grid.Column="2"
-                Margin="5,15,5,150"
-                Padding="5"
-                Background="FloralWhite"
-                BorderBrush="Black"
-                BorderThickness="1"
-                CornerRadius="5">
-                <clock:DigitalClock FontSize="25" ShowDate="False" />
-            </Border>
-        </Grid>
-
-
-
         <StackPanel
             Grid.Row="1"
             Margin="0,-100,0,0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
-
 
             <TextBlock
                 Grid.Row="0"
@@ -93,15 +45,14 @@
                     Focusable="True"
                     FontSize="24"
                     Loaded="FindUserTextBox_Loaded"
-                    Text="{Binding UserKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    TextChanged="FindUserTextBox_TextChanged" />
+                    Text="{Binding UserKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <Button
                     Grid.Column="1"
                     Margin="0,0,0,0"
                     Command="{Binding ClearUserKeyCommand}"
                     Content="X"
-                    GotFocus="FindUserTextBox_Loaded"
+                    Focusable="False"
                     Style="{StaticResource ViewButton}"
                     Visibility="{Binding HasText, Converter={StaticResource BoolToVisibilityConverter}}" />
             </Grid>

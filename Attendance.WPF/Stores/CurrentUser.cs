@@ -16,11 +16,20 @@ namespace Attendance.WPF.Stores
         private User? _user;
         private List<AttendanceRecord> _attendanceRecords;
         private List<AttendanceTotal> _attendanceTotal;
+        //private List<AttendanceRecord> _userAttendanceRecords;
+        //private List<AttendanceTotal> _userAttendanceTotal;
 
         public CurrentUser()
         {
             _attendanceRecords = new List<AttendanceRecord>();
             _attendanceTotal = new List<AttendanceTotal>();
+        }
+
+        public void LoadUser(User user)
+        {
+            User = user;
+            //_userAttendanceRecords = _attendanceRecords.Where(a => a.User == user).ToList();
+            //_userAttendanceTotal = _attendanceTotal.Where(a => a.User == user).ToList();
         }
 
         public User User
@@ -29,31 +38,31 @@ namespace Attendance.WPF.Stores
             set { _user = value; }
         }
 
-        public List<AttendanceRecord> AttendanceRecords => _attendanceRecords;
+        public List<AttendanceRecord> AttendanceRecords => _attendanceRecords.Where(a => a.User == User).ToList();
 
-        public List<AttendanceTotal> AttendanceTotals => _attendanceTotal;
+        public List<AttendanceTotal> AttendanceTotals => _attendanceTotal.Where(a => a.User == User).ToList();
 
         public void SetActivity(Activity activity)
         {
-            AttendanceRecord attendanceRecord = new AttendanceRecord(_user, activity, DateTime.Now);
+            AttendanceRecord attendanceRecord = new AttendanceRecord(User, activity, DateTime.Now);
             _attendanceRecords.Add(attendanceRecord);
             CountTotalDay(attendanceRecord);
         }
 
         public string MonthAverage()
         {
-            long CountDaysWorked = _attendanceTotal.Where(a => a.Date.Month == DateTime.Now.Month && a.Date.Year == DateTime.Now.Year && a.Activity.Property.Count && !a.Activity.Property.IsPause && a.Duration > TimeSpan.Zero).Count();
-            long MonthlyWorked = (long)_attendanceTotal.Where(a => a.Date.Month == DateTime.Now.Month && a.Date.Year == DateTime.Now.Year && a.Activity.Property.Count && !a.Activity.Property.IsPause).Sum(a => a.Duration.TotalSeconds);
+            long CountDaysWorked = AttendanceTotals.Where(a => a.Date.Month == DateTime.Now.Month && a.Date.Year == DateTime.Now.Year && a.Activity.Property.Count && !a.Activity.Property.IsPause && a.Duration > TimeSpan.Zero).Count();
+            long MonthlyWorked = (long)AttendanceTotals.Where(a => a.Date.Month == DateTime.Now.Month && a.Date.Year == DateTime.Now.Year && a.Activity.Property.Count && !a.Activity.Property.IsPause).Sum(a => a.Duration.TotalSeconds);
             return ConvertSecondsToHHMMSS(MonthlyWorked/CountDaysWorked);
         }
 
         public string WorkedInDayTotal(DateOnly date)
         {
-            long WorkedInDay = (long)_attendanceTotal.Where(a => a.Date == date && a.Activity.Property.Count).Sum(a => a.Duration.TotalSeconds);
+            long WorkedInDay = (long)AttendanceTotals.Where(a => a.Date == date && a.Activity.Property.Count).Sum(a => a.Duration.TotalSeconds);
 
-            if (_attendanceRecords.Count > 0)
+            if (AttendanceRecords.Count > 0)
             {
-                AttendanceRecord lastRecord = _attendanceRecords.Last();
+                AttendanceRecord lastRecord = AttendanceRecords.Last();
                 if (DateOnly.FromDateTime(lastRecord.Entry) == date && lastRecord.Activity.Property.Count)
                 {
                     WorkedInDay += (long)(DateTime.Now - lastRecord.Entry).TotalSeconds;
@@ -65,11 +74,11 @@ namespace Attendance.WPF.Stores
 
         public string WorkedInDay(DateOnly date)
         {
-            long WorkedInDay = (long)_attendanceTotal.Where(a => a.Date == date && a.Activity.Property.Count && !a.Activity.Property.IsPause).Sum(a => a.Duration.TotalSeconds);
+            long WorkedInDay = (long)AttendanceTotals.Where(a => a.Date == date && a.Activity.Property.Count && !a.Activity.Property.IsPause).Sum(a => a.Duration.TotalSeconds);
 
-            if (_attendanceRecords.Count > 0)
+            if (AttendanceRecords.Count > 0)
             {
-                AttendanceRecord lastRecord = _attendanceRecords.Last();
+                AttendanceRecord lastRecord = AttendanceRecords.Last();
                 if (DateOnly.FromDateTime(lastRecord.Entry) == date && lastRecord.Activity.Property.Count && !lastRecord.Activity.Property.IsPause)
                 {
                     WorkedInDay += (long)(DateTime.Now - lastRecord.Entry).TotalSeconds;
@@ -81,11 +90,11 @@ namespace Attendance.WPF.Stores
 
         public string PauseInDay(DateOnly date)
         {
-            long WorkedInDay = (long)_attendanceTotal.Where(a => a.Date == date && a.Activity.Property.Count && a.Activity.Property.IsPause).Sum(a => a.Duration.TotalSeconds);
+            long WorkedInDay = (long)AttendanceTotals.Where(a => a.Date == date && a.Activity.Property.Count && a.Activity.Property.IsPause).Sum(a => a.Duration.TotalSeconds);
 
-            if (_attendanceRecords.Count > 0)
+            if (AttendanceRecords.Count > 0)
             {
-                AttendanceRecord lastRecord = _attendanceRecords.Last();
+                AttendanceRecord lastRecord = AttendanceRecords.Last();
                 if (DateOnly.FromDateTime(lastRecord.Entry) == date && lastRecord.Activity.Property.Count && lastRecord.Activity.Property.IsPause)
                 {
                     WorkedInDay += (long)(DateTime.Now - lastRecord.Entry).TotalSeconds;
@@ -98,10 +107,10 @@ namespace Attendance.WPF.Stores
         public List<AttendanceTotal> ActivitiesTotalInDay(DateOnly date)
         {
             List<AttendanceTotal> ActivitiesTotalInDay = new List<AttendanceTotal>();
-            ActivitiesTotalInDay = _attendanceTotal.Where(a => a.Date == date && a.Activity.Property.Count).OrderBy(a => a.Duration).ToList().ConvertAll(x => new AttendanceTotal(x.User, x.Date, x.Activity, x.Duration));
-            if (_attendanceRecords.Count > 0)
+            ActivitiesTotalInDay = AttendanceTotals.Where(a => a.Date == date && a.Activity.Property.Count).OrderBy(a => a.Duration).ToList().ConvertAll(x => new AttendanceTotal(x.User, x.Date, x.Activity, x.Duration));
+            if (AttendanceRecords.Count > 0)
             {
-                AttendanceRecord lastRecord = _attendanceRecords.Last();
+                AttendanceRecord lastRecord = AttendanceRecords.Last();
                 if (DateOnly.FromDateTime(lastRecord.Entry) == date && lastRecord.Activity.Property.Count)
                 {
                     AttendanceTotal? AttendanceWithOngoingActivity = ActivitiesTotalInDay.SingleOrDefault(a => a.Activity == lastRecord.Activity);
@@ -120,7 +129,7 @@ namespace Attendance.WPF.Stores
 
         public List<AttendanceRecord> RecordsInDay(DateOnly date)
         {
-            List<AttendanceRecord> RecordsInDay = _attendanceRecords.Where(a => DateOnly.FromDateTime(a.Entry) == date).OrderByDescending(a => a.Entry).ToList();
+            List<AttendanceRecord> RecordsInDay = AttendanceRecords.Where(a => DateOnly.FromDateTime(a.Entry) == date).OrderByDescending(a => a.Entry).ToList();
             return RecordsInDay;
         }
 
@@ -129,7 +138,7 @@ namespace Attendance.WPF.Stores
             DateOnly date = DateOnly.FromDateTime(attendanceRecord.Entry);
             
             List<AttendanceRecordWithEnding> attendanceRecordWithEndings = new List<AttendanceRecordWithEnding>();
-            List<AttendanceRecord> orderedAttendanceRecord = _attendanceRecords.OrderBy(a => a.Entry).ToList();
+            List<AttendanceRecord> orderedAttendanceRecord = AttendanceRecords.OrderBy(a => a.Entry).ToList();
 
             for (int i = 0; i < orderedAttendanceRecord.Count - 1; i++)
             {
@@ -168,9 +177,14 @@ namespace Attendance.WPF.Stores
                 })
                 .ToList();
 
-            _attendanceTotal.Clear();
+            _attendanceTotal.RemoveAll(a => a.User == User);
             _attendanceTotal.AddRange(newAttendanceTotalInDay);
 
+        }
+
+        public void Clear()
+        {
+            User = null;
         }
     }
 }

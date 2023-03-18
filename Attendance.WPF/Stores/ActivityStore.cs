@@ -9,14 +9,14 @@ namespace Attendance.WPF.Stores
 {
     public class ActivityStore
     {
-        private IList<Activity> _activities;
+        private List<Activity> _activities;
 
         public ActivityStore()
         {
             _activities = new List<Activity>();
         }
 
-        public IList<Activity> Activities
+        public List<Activity> Activities
         {
             get { return _activities; }
             set

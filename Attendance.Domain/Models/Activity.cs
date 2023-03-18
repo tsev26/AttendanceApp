@@ -8,7 +8,7 @@ namespace Attendance.Domain.Models
 {
     public class Activity : DomainObject
     {
-        public Activity(string name, string shortcut, ActivityProperty property)
+        public Activity(string name, string shortcut, ActivityProperty property) : base()
         {
             Name = name;
             Shortcut = shortcut;

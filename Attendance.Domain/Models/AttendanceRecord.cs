@@ -8,7 +8,7 @@ namespace Attendance.Domain.Models
 {
     public class AttendanceRecord : DomainObject
     {
-        public AttendanceRecord(User user, Activity activity, DateTime entry)
+        public AttendanceRecord(User user, Activity activity, DateTime entry) : base()
         {
             User = user;
             Activity = activity;

@@ -20,7 +20,7 @@ namespace Attendance.WPF.ViewModels
             _currentUser = currentUser;
         }
 
-        public string CurrentName => _currentUser.User.LastName + " " + _currentUser.User.FirstName;
+        public string CurrentName => "test";//_currentUser.User.LastName + " " + _currentUser.User.FirstName;
 
         public ICommand NavigateHomeCommand { get; set; }
     }

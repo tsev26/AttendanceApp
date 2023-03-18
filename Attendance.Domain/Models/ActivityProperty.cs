@@ -8,7 +8,17 @@ namespace Attendance.Domain.Models
 {
     public class ActivityProperty : DomainObject
     {
-        public ActivityProperty(bool isPlan, bool count, bool isPause, bool hasPause, TimeSpan pauseEvery, TimeSpan pauseDuration, bool hasExpectedStart, bool hasExpectedReturn, bool isFullDayActivity, bool isHalfDayActivity, string groupByName)
+        public ActivityProperty(bool isPlan, 
+                                bool count, 
+                                bool isPause, 
+                                bool hasPause, 
+                                TimeSpan pauseEvery, 
+                                TimeSpan pauseDuration, 
+                                bool hasExpectedStart, 
+                                bool hasExpectedReturn, 
+                                bool isFullDayActivity, 
+                                bool isHalfDayActivity, 
+                                string groupByName) : base()
         {
             IsPlan = isPlan;
             Count = count;

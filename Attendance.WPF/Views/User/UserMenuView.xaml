@@ -10,41 +10,49 @@
     d:DataContext="{d:DesignInstance viewmodels:UserMenuViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    
     mc:Ignorable="d">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
         <Border
-            
-            Grid.Column="0"
-            Margin="0,0,5,0"
-            Background="AntiqueWhite"
+            Margin="5,0,5,5"
+            Background="FloralWhite"
             BorderBrush="Black"
             BorderThickness="1"
             CornerRadius="5">
-            <views:UserSelectActivityView
-                
-                x:Name="UserSelectActivity"
-                Margin="10"
-                DataContext="{Binding UserSelectActivityViewModel}"
-                Focusable="True" />
-        </Border>
 
-        <Border
-            Grid.Column="1"
-            Margin="5,0,10,0"
-            Background="AntiqueWhite"
-            BorderBrush="Black"
-            BorderThickness="1"
-            CornerRadius="5">
-            <views:UserDailyOverviewView
-                Margin="10"
-                DataContext="{Binding UserDailyOverviewViewModel}"
-                Focusable="False" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border
+                    Grid.Column="0"
+                    Margin="10"
+                    Background="AntiqueWhite"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    CornerRadius="5">
+                    <views:UserSelectActivityView
+                        x:Name="UserSelectActivity"
+                        Margin="10"
+                        DataContext="{Binding UserSelectActivityViewModel}"
+                        Focusable="True" />
+                </Border>
+
+                <Border
+                    Grid.Column="1"
+                    Margin="10"
+                    Background="AntiqueWhite"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    CornerRadius="5">
+                    <views:UserDailyOverviewView
+                        Margin="10"
+                        DataContext="{Binding UserDailyOverviewViewModel}"
+                        Focusable="False" />
+                </Border>
+
+            </Grid>
         </Border>
     </Grid>
 </UserControl>

@@ -8,9 +8,10 @@ namespace Attendance.Domain.Models
 {
     public class Group : DomainObject
     {
-        public Group(string name, 
+        public Group(
+                     string name, 
                      int priority, 
-                     User superVisor)
+                     User superVisor) : base ()
         {
             Name = name;
             Priority = priority;

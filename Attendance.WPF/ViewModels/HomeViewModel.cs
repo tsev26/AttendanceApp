@@ -24,9 +24,11 @@ namespace Attendance.WPF.ViewModels
 			_currentUser = currentUser;
             _navigateToUserMenu = navigateToUserMenu;
             ClearUserKeyCommand = new ClearUserKeyCommand(this);
+			NavigateTo = new NavigateCommand(navigateToUserMenu);
         }
 
         public ICommand ClearUserKeyCommand { get; set; }
+		public ICommand NavigateTo { get; set; }
 
         private string _userKey;
 		public string UserKey
@@ -56,7 +58,9 @@ namespace Attendance.WPF.ViewModels
 
             if (user != null)
             {
-                _currentUser.User = user;
+				_currentUser.User = user;
+                _currentUser.LoadUser(user);
+				_userKey = "";
 				_navigateToUserMenu.Navigate();
             }
 
