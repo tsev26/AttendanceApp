@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Xml.XPath;
 using static Attendance.WPF.Functions.TimeFunction;
@@ -13,7 +14,6 @@ namespace Attendance.WPF.Stores
 {
     public class CurrentUser
     {
-        private User? _user;
         private List<AttendanceRecord> _attendanceRecords;
         private List<AttendanceTotal> _attendanceTotal;
         //private List<AttendanceRecord> _userAttendanceRecords;
@@ -25,17 +25,30 @@ namespace Attendance.WPF.Stores
             _attendanceTotal = new List<AttendanceTotal>();
         }
 
+        public event Action CurrentUserChange;
+        public event Action CurrentUserKeysChange;
+
+        private User? _user;
+        public User? User
+        {
+            get
+            {
+                return _user;
+            }
+            set
+            {
+                _user = value;
+                CurrentUserChange?.Invoke();
+            }
+        }
+
+        public Key SelectedKeyValue { get; set; }
+
         public void LoadUser(User user)
         {
             User = user;
             //_userAttendanceRecords = _attendanceRecords.Where(a => a.User == user).ToList();
             //_userAttendanceTotal = _attendanceTotal.Where(a => a.User == user).ToList();
-        }
-
-        public User User
-        {
-            get { return _user; }
-            set { _user = value; }
         }
 
         public List<AttendanceRecord> AttendanceRecords => _attendanceRecords.Where(a => a.User == User).ToList();
@@ -124,7 +137,7 @@ namespace Attendance.WPF.Stores
                     }                  
                 }
             }
-            return ActivitiesTotalInDay;
+            return ActivitiesTotalInDay.OrderByDescending(a => a.Duration).ToList();
         }
 
         public List<AttendanceRecord> RecordsInDay(DateOnly date)
@@ -185,6 +198,27 @@ namespace Attendance.WPF.Stores
         public void Clear()
         {
             User = null;
+        }
+
+        public void RemoveKey(Key selectedKey)
+        {
+            User.Keys.Remove(selectedKey);
+            CurrentUserKeysChange?.Invoke();
+        }
+
+        public void UpsertKey(Key newKeyValue)
+        {
+            Key? existingKey = User.Keys.FirstOrDefault(a => a.Id == newKeyValue.Id);
+            if (existingKey != null)
+            {
+                int index = User.Keys.IndexOf(existingKey);
+                User.Keys[index] = newKeyValue;
+            }
+            else
+            {
+                User.Keys.Add(newKeyValue);
+            }
+            CurrentUserKeysChange?.Invoke();
         }
     }
 }

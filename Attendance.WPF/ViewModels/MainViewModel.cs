@@ -1,6 +1,7 @@
 ﻿using Attendance.Domain.Models;
 using Attendance.WPF.Stores;
 using System;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Attendance.WPF.ViewModels
 {
@@ -8,7 +9,6 @@ namespace Attendance.WPF.ViewModels
     {
         private readonly NavigationStore _navigationStore;
         private readonly ModalNavigationStore _modalNavigationStore;
-
         public ViewModelBase CurrentViewModel => _navigationStore.CurrentViewModel;
         public ViewModelBase CurrentModelViewModel => _modalNavigationStore.CurrentViewModel;
 
@@ -22,6 +22,8 @@ namespace Attendance.WPF.ViewModels
         {
             _navigationStore = navigationStore;
             _modalNavigationStore = modalNavigationStore;
+
+            NavigationBarViewModel = navigationBarViewModel;
 
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
             _modalNavigationStore.CurrentViewModelChanged += OnCurrentModelViewModelChanged;
@@ -41,7 +43,7 @@ namespace Attendance.WPF.ViewModels
 
             activityStore.AddActivity(homeActivity);
 
-            
+            /*
             activityStore.AddActivity(pauseActivity);
             activityStore.AddActivity(workActivity);
             activityStore.AddActivity(pauseActivity);
@@ -70,7 +72,7 @@ namespace Attendance.WPF.ViewModels
             activityStore.AddActivity(workActivity);
             activityStore.AddActivity(pauseActivity);
             activityStore.AddActivity(pauseActivity);
-            
+            */
 
             User admin = new User("admin", "admin", "tsevcu@gmail.com", true);
             admin.Keys.Add(new Key("admin"));
@@ -78,6 +80,8 @@ namespace Attendance.WPF.ViewModels
 
             User user1 = new User("Tomáš", "Ševců", "tsevcu@gmail.com", false);
             user1.Keys.Add(new Key("tse"));
+            user1.Keys.Add(new Key("tom"));
+            user1.Keys.Add(new Key("tre"));
             userStore.AddUser(user1);
         }
 

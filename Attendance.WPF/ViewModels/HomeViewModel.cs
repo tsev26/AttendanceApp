@@ -25,6 +25,8 @@ namespace Attendance.WPF.ViewModels
             _navigateToUserMenu = navigateToUserMenu;
             ClearUserKeyCommand = new ClearUserKeyCommand(this);
 			NavigateTo = new NavigateCommand(navigateToUserMenu);
+
+			_currentUser.User = null;
         }
 
         public ICommand ClearUserKeyCommand { get; set; }

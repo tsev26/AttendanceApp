@@ -41,6 +41,14 @@
                 <views:UsersView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodels:UserKeysViewModel}">
+                <views:UserKeysView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodels:UserKeyUpsertViewModel}">
+                <views:UserKeyUpsertView />
+            </DataTemplate>
+
         </Grid.Resources>
 
         <Grid.RowDefinitions>
@@ -56,13 +64,25 @@
             Focusable="False" />
 
         <control:Modal
-            Grid.Row="1"
+            Grid.RowSpan="2"
             Panel.ZIndex="1"
             IsOpen="{Binding IsModalOpen}">
             <ContentControl Content="{Binding CurrentModelViewModel}" />
         </control:Modal>
 
-        <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" />
+        <Grid Grid.Row="1">
+
+
+            <Border
+                Margin="5,0,5,5"
+                Padding="0,0,0,0"
+                Background="White"
+                BorderBrush="Black"
+                BorderThickness="1"
+                CornerRadius="5"
+                SnapsToDevicePixels="True" />
+            <ContentControl Content="{Binding CurrentViewModel}" />
+        </Grid>
 
     </Grid>
 </Window>

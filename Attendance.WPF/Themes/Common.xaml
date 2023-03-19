@@ -1018,10 +1018,10 @@
                         BorderThickness="1"
                         CornerRadius="5">
                         <Border.Background>
-                            <SolidColorBrush Color="{StaticResource ControlLightColor}" />
+                            <SolidColorBrush Color="{StaticResource MyWhite}" />
                         </Border.Background>
                         <Border.BorderBrush>
-                            <SolidColorBrush Color="{StaticResource BorderMediumColor}" />
+                            <SolidColorBrush Color="Black" />
                         </Border.BorderBrush>
                         <ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
                             <ItemsPresenter />
@@ -1048,12 +1048,13 @@
     <Style x:Key="{x:Type ListViewItem}" TargetType="ListViewItem">
         <Setter Property="SnapsToDevicePixels" Value="true" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="FontSize" Value="24" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
                     <Border
                         x:Name="Border"
-                        Margin="1,0,1,0"
+                        Margin="1,1,1,1"
                         Padding="3,3,0,3"
                         HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                         VerticalAlignment="{TemplateBinding VerticalAlignment}"
@@ -1080,10 +1081,12 @@
                             <Setter Property="Background" Value="{StaticResource ListViewItemColorA}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource ListViewItemColorMouseOver}" />
+                            <Setter TargetName="Border" Property="Background" Value="Moccasin" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{StaticResource ListViewItemColorSelected}" />
+                            <Setter TargetName="Border" Property="Background" Value="NavajoWhite" />
+                            <Setter TargetName="Border" Property="BorderThickness" Value="1" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="Black" />
                         </Trigger>
                     </ControlTemplate.Triggers>
 

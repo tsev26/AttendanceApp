@@ -29,6 +29,7 @@
                 <DataTemplate>
 
                     <Button
+                        MaxHeight="80"
                         Margin="0,5,5,5"
                         Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.UserSetActivityCommand}"
                         CommandParameter="{Binding}"

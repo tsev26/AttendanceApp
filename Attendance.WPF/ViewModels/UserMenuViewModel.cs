@@ -10,27 +10,22 @@ namespace Attendance.WPF.ViewModels
     public class UserMenuViewModel : ViewModelBase
     {
         private readonly CurrentUser _currentUser;
-        private readonly ActivityStore _activityStore;
 
-        public UserMenuViewModel(
-                                 UserSelectActivityViewModel userSelectActivityViewModel,
+        public UserMenuViewModel(UserSelectActivityViewModel userSelectActivityViewModel,
                                  UserDailyOverviewViewModel userDailyOverviewViewModel,
-                                 CurrentUser currentUser, 
-                                 ActivityStore activityStore)
+                                 CurrentUser currentUser)
         {
             UserDailyOverviewViewModel = userDailyOverviewViewModel;
             UserSelectActivityViewModel = userSelectActivityViewModel;
-            _currentUser = currentUser;
-            _activityStore = activityStore;
-        }
 
+            _currentUser = currentUser;
+        }
 
         public UserDailyOverviewViewModel UserDailyOverviewViewModel { get; }
         public UserSelectActivityViewModel UserSelectActivityViewModel { get; }
 
         public override void Dispose()
         {
-            _currentUser.Clear();
             UserDailyOverviewViewModel.Dispose();
             UserSelectActivityViewModel.Dispose();
             base.Dispose();

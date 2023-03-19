@@ -14,5 +14,44 @@ namespace Attendance.Domain.Models
         }
 
         public string KeyValue { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Key other = (Key)obj;
+            return KeyValue == other.KeyValue;
+        }
+
+        /*
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode() ^ KeyValue.GetHashCode();
+        }
+        */
+
+
+        public static bool operator ==(Key a, Key b)
+        {
+            if (ReferenceEquals(a, b))
+            {
+                return true;
+            }
+
+            if (a is null || b is null)
+            {
+                return false;
+            }
+
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Key a, Key b)
+        {
+            return !(a == b);
+        }
     }
 }

@@ -14,14 +14,42 @@ namespace Attendance.WPF.ViewModels
     {
         private readonly CurrentUser _currentUser;
 
-        public NavigationBarViewModel(INavigationService navigateHomeService, CurrentUser currentUser)
+        public NavigationBarViewModel(INavigationService navigateHomeService, 
+                                      INavigationService navigateUsersKeysService,
+                                      INavigationService navigateUserMenuService,
+                                      CurrentUser currentUser)
         {
             NavigateHomeCommand = new NavigateCommand(navigateHomeService);
+            NavigateUsersKeysCommand = new NavigateCommand(navigateUsersKeysService);
+            NavigateUserMenuCommand = new NavigateCommand(navigateUserMenuService);
             _currentUser = currentUser;
+            _currentUser.CurrentUserChange += CurrentUser_CurrentUserChange;
         }
 
-        public string CurrentName => "test";//_currentUser.User.LastName + " " + _currentUser.User.FirstName;
+        private void CurrentUser_CurrentUserChange()
+        {
+            OnPropertyChanged(nameof(CurrentName));
+            OnPropertyChanged(nameof(UserLogOn));
+            OnPropertyChanged(nameof(UserIsAdmin));
+        }
 
-        public ICommand NavigateHomeCommand { get; set; }
+        public string CurrentName => _currentUser.User?.LastName + " " + _currentUser.User?.FirstName;
+
+
+        public bool UserLogOn => _currentUser.User != null;
+
+        public bool UserIsAdmin => UserLogOn && _currentUser.User.IsAdmin;
+
+        public bool UserIsSupervisor => UserLogOn && _currentUser.User.IsAdmin;
+
+        public ICommand NavigateHomeCommand { get; }
+        public ICommand NavigateUsersKeysCommand { get; }
+        public ICommand NavigateUserMenuCommand { get; }
+
+        public override void Dispose()
+        {
+            _currentUser.CurrentUserChange -= CurrentUser_CurrentUserChange;
+            base.Dispose();
+        }
     }
 }

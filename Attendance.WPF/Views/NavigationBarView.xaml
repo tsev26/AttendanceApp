@@ -70,46 +70,60 @@
             <StackPanel Orientation="Horizontal">
                 <Button
                     Margin="0,0,5,0"
+                    Command="{Binding NavigateHomeCommand}"
                     Content="Historie"
                     Focusable="False"
-                    Style="{StaticResource ViewButton}" />
+                    Style="{StaticResource ViewButton}"
+                    Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
 
                 <Button
                     Margin="0,0,5,0"
+                    Command="{Binding NavigateHomeCommand}"
                     Content="Profil"
                     Focusable="False"
-                    Style="{StaticResource ViewButton}" />
+                    Style="{StaticResource ViewButton}"
+                    Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
 
                 <Button
                     Margin="0,0,5,0"
+                    Command="{Binding NavigateHomeCommand}"
                     Content="Opravy"
                     Focusable="False"
-                    Style="{StaticResource ViewButton}" />
+                    Style="{StaticResource ViewButton}"
+                    Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
 
                 <Button
                     Margin="0,0,5,0"
+                    Command="{Binding NavigateHomeCommand}"
                     Content="Podřízení"
                     Focusable="False"
-                    Style="{StaticResource ViewButton}" />
+                    Style="{StaticResource ViewButton}"
+                    Visibility="{Binding UserIsSupervisor, Converter={StaticResource bool2VisibilityConverter}}" />
 
                 <Button
                     Margin="0,0,5,0"
+                    Command="{Binding NavigateUsersKeysCommand}"
                     Content="Klíče"
                     Focusable="False"
-                    Style="{StaticResource ViewButton}" />
+                    Style="{StaticResource ViewButton}"
+                    Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
 
 
                 <Button
                     Margin="0,0,5,0"
+                    Command="{Binding NavigateUserMenuCommand}"
                     Content="Aktivity"
                     Focusable="False"
-                    Style="{StaticResource ViewButton}" />
+                    Style="{StaticResource ViewButton}"
+                    Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
 
                 <Button
                     Margin="0,0,5,0"
+                    Command="{Binding NavigateHomeCommand}"
                     Content="Skupiny"
                     Focusable="False"
-                    Style="{StaticResource ViewButton}" />
+                    Style="{StaticResource ViewButton}"
+                    Visibility="{Binding UserIsAdmin, Converter={StaticResource bool2VisibilityConverter}}" />
 
 
                 <Button
@@ -117,12 +131,13 @@
                     Command="{Binding NavigateHomeCommand}"
                     Content="Zavřít"
                     Focusable="False"
-                    Style="{StaticResource ViewButton}" />
+                    Style="{StaticResource ViewButton}"
+                    Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
 
                 <TextBlock
                     Margin="0,0,5,0"
                     Style="{StaticResource DetailTextBlock}"
-                    Text="{Binding CurrentName}" />
+                    Text="{Binding CurrentName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </Grid>
     </Grid>
