@@ -181,6 +181,47 @@
     </Style>
 
 
+    <!--  ToggleButton  -->
+    <Style TargetType="ToggleButton">
+        <Setter Property="Width" Value="40" />
+        <Setter Property="Height" Value="20" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="#483e37" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid>
+                        <Rectangle
+                            x:Name="frame"
+                            Height="20"
+                            Fill="{TemplateBinding Background}"
+                            RadiusX="10"
+                            RadiusY="10"
+                            Stroke="{TemplateBinding BorderBrush}"
+                            StrokeThickness="2" />
+
+                        <Ellipse
+                            x:Name="thumb"
+                            Width="10"
+                            Height="10"
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            Fill="{TemplateBinding BorderBrush}" />
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="frame" Property="Stroke" Value="#483e37" />
+                            <Setter TargetName="frame" Property="Fill" Value="#483e37" />
+                            <Setter TargetName="thumb" Property="Fill" Value="AntiqueWhite" />
+                            <Setter TargetName="thumb" Property="HorizontalAlignment" Value="Right" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 
     <!--  Separator  -->
     <Style TargetType="{x:Type Separator}">

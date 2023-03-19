@@ -10,16 +10,17 @@ namespace Attendance.Domain.Models
     public class User : DomainObject
     {
         public User(
-                    string firstName, 
-                    string lastName, 
-                    string email, 
-                    bool isAdmin) : base()
+                    string firstName,
+                    string lastName,
+                    string email,
+                    bool isAdmin = false,
+                    bool toApprove = false) : base()
         {
             FirstName = firstName;
             LastName = lastName;
             Email = email;
             IsAdmin = isAdmin;
-            Groups = new List<Group>();
+            ToApprove = toApprove;
             Keys = new List<Key>();
         }
 
@@ -27,7 +28,8 @@ namespace Attendance.Domain.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public bool IsAdmin { get; set; }
-        public List<Group> Groups { get; set; }
+        public bool ToApprove { get; set; }
+        public Group Group { get; set; }
         public List<Key> Keys { get; set; }
         public Obligation? Obligation { get; set; }
 

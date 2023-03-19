@@ -9,8 +9,8 @@ namespace Attendance.Domain.Models
     public class Obligation : DomainObject
     {
         public Obligation(
-                          TimeSpan minTimeWorked, 
-                          bool hasRregularWorkingTime, 
+                          double minHoursWorked, 
+                          bool hasRegularWorkingTime, 
                           TimeOnly latestArival, 
                           TimeOnly earliestDeparture, 
                           bool worksRegularly, 
@@ -23,8 +23,8 @@ namespace Attendance.Domain.Models
                           bool worksSunday, 
                           List<Activity> availableActivities) : base()
         {
-            MinTimeWorked = minTimeWorked;
-            HasRregularWorkingTime = hasRregularWorkingTime;
+            MinHoursWorked = minHoursWorked;
+            HasRegularWorkingTime = hasRegularWorkingTime;
             LatestArival = latestArival;
             EarliestDeparture = earliestDeparture;
             WorksRegularly = worksRegularly;
@@ -38,8 +38,25 @@ namespace Attendance.Domain.Models
             AvailableActivities = availableActivities;
         }
 
-        public TimeSpan MinTimeWorked   { get; set; }
-        public bool HasRregularWorkingTime { get; set; }
+        public Obligation(Obligation obligation)
+        {
+            MinHoursWorked = obligation.MinHoursWorked;
+            HasRegularWorkingTime = obligation.HasRegularWorkingTime;
+            LatestArival = obligation.LatestArival;
+            EarliestDeparture = obligation.EarliestDeparture;
+            WorksRegularly = obligation.WorksRegularly;
+            WorksMonday = obligation.WorksMonday;
+            WorksTuesday = obligation.WorksTuesday;
+            WorksWednesday = obligation.WorksWednesday;
+            WorksThursday = obligation.WorksThursday;
+            WorksFriday = obligation.WorksFriday;
+            WorksSaturday = obligation.WorksSaturday;
+            WorksSunday = obligation.WorksSunday;
+            AvailableActivities = obligation.AvailableActivities;
+        }
+
+        public double MinHoursWorked { get; set; }
+        public bool HasRegularWorkingTime { get; set; }
         public TimeOnly LatestArival { get; set; }
         public TimeOnly EarliestDeparture { get; set; }
         public bool WorksRegularly { get; set; }

@@ -49,6 +49,10 @@
                 <views:UserKeyUpsertView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodels:UserProfileViewModel}">
+                <views:UserProfileView />
+            </DataTemplate>
+
         </Grid.Resources>
 
         <Grid.RowDefinitions>

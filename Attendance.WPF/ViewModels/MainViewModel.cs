@@ -2,6 +2,7 @@
 using Attendance.WPF.Stores;
 using System;
 using System.Security.Cryptography.X509Certificates;
+using System.Windows.Documents;
 
 namespace Attendance.WPF.ViewModels
 {
@@ -74,14 +75,20 @@ namespace Attendance.WPF.ViewModels
             activityStore.AddActivity(pauseActivity);
             */
 
+
+            Obligation obligation = new Obligation(8, true, new TimeOnly(9, 0, 0), new TimeOnly(15, 0, 0), true, true, true, true, true, true, false, false, activityStore.Activities);
+
             User admin = new User("admin", "admin", "tsevcu@gmail.com", true);
             admin.Keys.Add(new Key("admin"));
+            admin.Obligation = obligation;
             userStore.AddUser(admin);
+            
 
             User user1 = new User("Tomáš", "Ševců", "tsevcu@gmail.com", false);
             user1.Keys.Add(new Key("tse"));
             user1.Keys.Add(new Key("tom"));
             user1.Keys.Add(new Key("tre"));
+            user1.Obligation = obligation;
             userStore.AddUser(user1);
         }
 

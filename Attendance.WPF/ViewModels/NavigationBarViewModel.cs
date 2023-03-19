@@ -17,11 +17,13 @@ namespace Attendance.WPF.ViewModels
         public NavigationBarViewModel(INavigationService navigateHomeService, 
                                       INavigationService navigateUsersKeysService,
                                       INavigationService navigateUserMenuService,
+                                      INavigationService navigateUserProfileService,
                                       CurrentUser currentUser)
         {
             NavigateHomeCommand = new NavigateCommand(navigateHomeService);
             NavigateUsersKeysCommand = new NavigateCommand(navigateUsersKeysService);
             NavigateUserMenuCommand = new NavigateCommand(navigateUserMenuService);
+            NavigateProfileCommand = new NavigateCommand(navigateUserProfileService);
             _currentUser = currentUser;
             _currentUser.CurrentUserChange += CurrentUser_CurrentUserChange;
         }
@@ -45,6 +47,7 @@ namespace Attendance.WPF.ViewModels
         public ICommand NavigateHomeCommand { get; }
         public ICommand NavigateUsersKeysCommand { get; }
         public ICommand NavigateUserMenuCommand { get; }
+        public ICommand NavigateProfileCommand { get; }
 
         public override void Dispose()
         {

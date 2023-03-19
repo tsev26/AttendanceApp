@@ -19,10 +19,18 @@ namespace Attendance.Domain.Models
             Users = new List<User>();
         }
 
+        public Group(Group group)
+        {
+            Name = group.Name;
+            Priority = group.Priority;
+            SuperVisor = group.SuperVisor;
+            Users = group.Users;
+        }
+
         public string Name { get; set; }
         public int Priority { get; set; }
         public User SuperVisor { get; set; }
         public List<User> Users { get; set; }
-        public Obligation? Obligation { get; set; }
+        public Obligation Obligation { get; set; }
     }
 }
