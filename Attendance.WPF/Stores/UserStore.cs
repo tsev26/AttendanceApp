@@ -16,18 +16,30 @@ namespace Attendance.WPF.Stores
             _users = new List<User>();
         }
 
+        public event Action UsersChange;
+
         public IList<User> Users
         {
             get { return _users; }
             set 
             { 
-                _users = value; 
+                _users = value;
             }
         }
 
         public void AddUser(User newUser)
         {
-            _users.Add(newUser);
+            if (!_users.Contains(newUser))
+            {
+                _users.Add(newUser);
+            }
+            UsersChange?.Invoke();
+        }
+
+        public void DeleteUser(User deleteUser)
+        {
+            _users.Remove(deleteUser);
+            UsersChange?.Invoke();
         }
     }
 }

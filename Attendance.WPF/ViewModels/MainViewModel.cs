@@ -76,7 +76,7 @@ namespace Attendance.WPF.ViewModels
             */
 
 
-            Obligation obligation = new Obligation(8, true, new TimeOnly(9, 0, 0), new TimeOnly(15, 0, 0), true, true, true, true, true, true, false, false, activityStore.Activities);
+            Obligation obligation = new Obligation(8, true, new TimeOnly(9, 0, 0), new TimeOnly(15, 0, 0),  true, true, true, true, true, false, false, activityStore.Activities);
 
             User admin = new User("admin", "admin", "tsevcu@gmail.com", true);
             admin.Keys.Add(new Key("admin"));

@@ -53,7 +53,7 @@
                     Margin="5"
                     VerticalContentAlignment="Center"
                     FontSize="20"
-                    Text="{Binding UpdatesOnUser.FirstName}" />
+                    Text="{Binding FirstName}" />
 
                 <TextBlock
                     Grid.Row="1"
@@ -69,7 +69,7 @@
                     Margin="5"
                     VerticalContentAlignment="Center"
                     FontSize="20"
-                    Text="{Binding UpdatesOnUser.LastName}" />
+                    Text="{Binding LastName}" />
 
                 <TextBlock
                     Grid.Row="2"
@@ -85,7 +85,7 @@
                     Margin="5"
                     VerticalContentAlignment="Center"
                     FontSize="20"
-                    Text="{Binding UpdatesOnUser.Email}" />
+                    Text="{Binding Email}" />
 
                 <TextBlock
                     Grid.Row="3"
@@ -115,12 +115,12 @@
                     Height="35"
                     Margin="5"
                     VerticalContentAlignment="Center"
-                    IsChecked="{Binding UpdatesOnUser.Obligation.HasRegularWorkingTime, Mode=TwoWay}" />
+                    IsChecked="{Binding HasRegularWorkingTime, Mode=TwoWay}" />
 
                 <Grid
                     Grid.Row="6"
                     Grid.ColumnSpan="2"
-                    Visibility="{Binding UpdatesOnUser.Obligation.HasRegularWorkingTime, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Visibility="{Binding HasRegularWorkingTime, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
@@ -146,7 +146,7 @@
                         VerticalContentAlignment="Center"
                         FontSize="20"
                         PreviewTextInput="NumberValidationTextBox"
-                        Text="{Binding UpdatesOnUser.Obligation.MinHoursWorked}" />
+                        Text="{Binding MinHoursWorked, Mode=TwoWay}" />
 
                     <TextBlock
                         Grid.Row="1"
@@ -161,7 +161,7 @@
                         Margin="5"
                         VerticalContentAlignment="Center"
                         FontSize="20"
-                        Text="{Binding UpdatesOnUser.Obligation.LatestArival, StringFormat=HH:mm}" />
+                        Text="{Binding LatestArival, StringFormat=HH:mm, Mode=TwoWay, Converter={StaticResource TimeOnlyConverter}}" />
 
                     <TextBlock
                         Grid.Row="2"
@@ -176,7 +176,7 @@
                         Margin="5"
                         VerticalContentAlignment="Center"
                         FontSize="20"
-                        Text="{Binding UpdatesOnUser.Obligation.EarliestDeparture, StringFormat=HH:mm}" />
+                        Text="{Binding EarliestDeparture, StringFormat=HH:mm, Mode=TwoWay, Converter={StaticResource TimeOnlyConverter}}" />
 
 
                     <Grid
@@ -253,31 +253,31 @@
                         <ToggleButton
                             Grid.Row="2"
                             Grid.Column="0"
-                            IsChecked="{Binding UpdatesOnUser.Obligation.WorksMonday}" />
+                            IsChecked="{Binding WorksMonday}" />
                         <ToggleButton
                             Grid.Row="2"
                             Grid.Column="1"
-                            IsChecked="{Binding UpdatesOnUser.Obligation.WorksTuesday}" />
+                            IsChecked="{Binding WorksTuesday}" />
                         <ToggleButton
                             Grid.Row="2"
                             Grid.Column="2"
-                            IsChecked="{Binding UpdatesOnUser.Obligation.WorksWednesday}" />
+                            IsChecked="{Binding WorksWednesday}" />
                         <ToggleButton
                             Grid.Row="2"
                             Grid.Column="3"
-                            IsChecked="{Binding UpdatesOnUser.Obligation.WorksThursday}" />
+                            IsChecked="{Binding WorksThursday}" />
                         <ToggleButton
                             Grid.Row="2"
                             Grid.Column="4"
-                            IsChecked="{Binding UpdatesOnUser.Obligation.WorksFriday}" />
+                            IsChecked="{Binding WorksFriday}" />
                         <ToggleButton
                             Grid.Row="2"
                             Grid.Column="5"
-                            IsChecked="{Binding UpdatesOnUser.Obligation.WorksSaturday}" />
+                            IsChecked="{Binding WorksSaturday}" />
                         <ToggleButton
                             Grid.Row="2"
                             Grid.Column="6"
-                            IsChecked="{Binding UpdatesOnUser.Obligation.WorksSunday}" />
+                            IsChecked="{Binding WorksSunday}" />
                     </Grid>
                 </Grid>
 
@@ -294,15 +294,70 @@
                 CornerRadius="5" />
             <Grid Margin="20">
 
-                <Button
-                    Width="200"
-                    Height="50"
-                    Margin="10"
-                    Command="{Binding UpdatesOnUserCommand}"
-                    CommandParameter="Add"
-                    Content="Odeslat úpravy profilu"
-                    Style="{StaticResource MenuButton}" />
+                <Grid>
 
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Button
+                        Grid.Row="0"
+                        Width="200"
+                        Height="50"
+                        Margin="10"
+                        VerticalAlignment="Center"
+                        Command="{Binding UpdatesOnUserCommand}"
+                        CommandParameter="Add"
+                        Content="Odeslat úpravy profilu"
+                        Style="{StaticResource MenuButton}" />
+
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Margin="10"
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource DetailTextBlock}"
+                            Text="Odeslané žádosti o úpravu profilu" />
+
+                        <Button
+                            HorizontalAlignment="Right"
+                            Command="{Binding DeleteUpdateOnUserCommand}"
+                            Content="X"
+                            Style="{StaticResource ViewButton}"
+                            Visibility="{Binding IsSelected, Converter={StaticResource bool2VisibilityConverter}}" />
+
+                        <ListView
+                            x:Name="ListOfUsersUpdates"
+                            Grid.Row="1"
+                            Width="auto"
+                            Margin="10"
+                            BorderThickness="2"
+                            Focusable="False"
+                            ItemsSource="{Binding UserUpdates}"
+                            SelectedIndex="{Binding SelectedIndex}"
+                            SelectionMode="Single">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+
+                                    <GridViewColumn DisplayMemberBinding="{Binding FirstName}" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding LastName}" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Email}" />
+                                    <GridView.ColumnHeaderContainerStyle>
+                                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </Style>
+                                    </GridView.ColumnHeaderContainerStyle>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
 

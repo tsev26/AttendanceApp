@@ -11,6 +11,8 @@
 
     <BooleanToVisibilityConverter x:Key="bool2VisibilityConverter" />
 
+    <converters:TimeOnlyConverter x:Key="TimeOnlyConverter" />
+
     <!--  TextBlock  -->
     <Style TargetType="{x:Type TextBox}">
         <Setter Property="Padding" Value="2" />
@@ -930,7 +932,7 @@
     <Style x:Key="{x:Type GridViewColumnHeader}" TargetType="{x:Type GridViewColumnHeader}">
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="Foreground" Value="{DynamicResource MyWhiteBackground}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">

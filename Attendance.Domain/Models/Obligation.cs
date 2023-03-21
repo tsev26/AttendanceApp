@@ -13,7 +13,6 @@ namespace Attendance.Domain.Models
                           bool hasRegularWorkingTime, 
                           TimeOnly latestArival, 
                           TimeOnly earliestDeparture, 
-                          bool worksRegularly, 
                           bool worksMonday, 
                           bool worksTuesday, 
                           bool worksWednesday, 
@@ -27,7 +26,6 @@ namespace Attendance.Domain.Models
             HasRegularWorkingTime = hasRegularWorkingTime;
             LatestArival = latestArival;
             EarliestDeparture = earliestDeparture;
-            WorksRegularly = worksRegularly;
             WorksMonday = worksMonday;
             WorksTuesday = worksTuesday;
             WorksWednesday = worksWednesday;
@@ -44,7 +42,6 @@ namespace Attendance.Domain.Models
             HasRegularWorkingTime = obligation.HasRegularWorkingTime;
             LatestArival = obligation.LatestArival;
             EarliestDeparture = obligation.EarliestDeparture;
-            WorksRegularly = obligation.WorksRegularly;
             WorksMonday = obligation.WorksMonday;
             WorksTuesday = obligation.WorksTuesday;
             WorksWednesday = obligation.WorksWednesday;
@@ -55,11 +52,12 @@ namespace Attendance.Domain.Models
             AvailableActivities = obligation.AvailableActivities;
         }
 
+        public Obligation() { }
+
         public double MinHoursWorked { get; set; }
         public bool HasRegularWorkingTime { get; set; }
         public TimeOnly LatestArival { get; set; }
         public TimeOnly EarliestDeparture { get; set; }
-        public bool WorksRegularly { get; set; }
         public bool WorksMonday { get; set; }
         public bool WorksTuesday { get; set; }
         public bool WorksWednesday { get; set; }

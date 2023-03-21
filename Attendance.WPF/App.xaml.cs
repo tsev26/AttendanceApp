@@ -190,7 +190,8 @@ namespace Attendance.WPF
         private UserProfileViewModel CreateUserProfileViewModel(IServiceProvider serviceProvider)
         {
             return new UserProfileViewModel(
-                serviceProvider.GetRequiredService<CurrentUser>()
+                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<UserStore>()
                 );
         }
 

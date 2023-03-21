@@ -56,7 +56,7 @@ namespace Attendance.WPF.ViewModels
 
         public void CheckIfKeyIsUsers(string key)
 		{
-			User? user = _userStore.Users.FirstOrDefault(a => a.Keys.Any(c => c.KeyValue.ToUpper() == key));
+			User? user = _userStore.Users.FirstOrDefault(a => a.Keys.Any(c => c.KeyValue.ToUpper() == key) && a.ToApprove == false);
 
             if (user != null)
             {

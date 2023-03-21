@@ -9,6 +9,7 @@ namespace Attendance.Domain.Models
 {
     public class User : DomainObject
     {
+        private static int _nextId = 1;
         public User(
                     string firstName,
                     string lastName,
@@ -16,6 +17,7 @@ namespace Attendance.Domain.Models
                     bool isAdmin = false,
                     bool toApprove = false) : base()
         {
+            UserId = _nextId++;
             FirstName = firstName;
             LastName = lastName;
             Email = email;
@@ -24,6 +26,24 @@ namespace Attendance.Domain.Models
             Keys = new List<Key>();
         }
 
+        public User(
+                    int userId,
+                    string firstName,
+                    string lastName,
+                    string email,
+                    bool isAdmin = false,
+                    bool toApprove = false) : base()
+        {
+            UserId = userId;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            IsAdmin = isAdmin;
+            ToApprove = toApprove;
+            Keys = new List<Key>();
+        }
+
+        public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -41,7 +61,22 @@ namespace Attendance.Domain.Models
             }
 
             User other = (User)obj;
-            return Id == other.Id && FirstName == other.FirstName && LastName == other.LastName;
+            return UserId == other.UserId && 
+                   FirstName == other.FirstName && 
+                   LastName == other.LastName &&
+                   Email == other.Email &&
+                   ToApprove == other.ToApprove &&
+                   Obligation?.HasRegularWorkingTime == other.Obligation?.HasRegularWorkingTime &&
+                   Obligation?.MinHoursWorked == other.Obligation?.MinHoursWorked &&
+                   Obligation?.LatestArival == other.Obligation?.LatestArival &&
+                   Obligation?.EarliestDeparture == other.Obligation?.EarliestDeparture &&
+                   Obligation?.WorksMonday == other.Obligation?.WorksMonday &&
+                   Obligation?.WorksTuesday == other.Obligation?.WorksTuesday &&
+                   Obligation?.WorksWednesday == other.Obligation?.WorksWednesday &&
+                   Obligation?.WorksThursday == other.Obligation?.WorksThursday &&
+                   Obligation?.WorksFriday == other.Obligation?.WorksFriday &&
+                   Obligation?.WorksSaturday == other.Obligation?.WorksSaturday &&
+                   Obligation?.WorksSunday == other.Obligation?.WorksSunday;
         }
 
         public override int GetHashCode()

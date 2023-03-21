@@ -27,6 +27,7 @@ namespace Attendance.WPF.Stores
 
         public event Action CurrentUserChange;
         public event Action CurrentUserKeysChange;
+        public event Action CurrentUserUpdatesChange;
 
         private User? _user;
         public User? User
@@ -39,6 +40,20 @@ namespace Attendance.WPF.Stores
             {
                 _user = value;
                 CurrentUserChange?.Invoke();
+            }
+        }
+
+        private User? _userUpdates;
+        public User? UserUpdates
+        {
+            get
+            {
+                return _userUpdates;
+            }
+            set
+            {
+                _userUpdates = value;
+                CurrentUserUpdatesChange?.Invoke();
             }
         }
 
