@@ -19,7 +19,8 @@ namespace Attendance.WPF.ViewModels
                              NavigationStore navigationStore, 
                              ModalNavigationStore modalNavigationStore,
                              ActivityStore activityStore,
-                             UserStore userStore)
+                             UserStore userStore,
+                             GroupStore groupStore)
         {
             _navigationStore = navigationStore;
             _modalNavigationStore = modalNavigationStore;
@@ -28,6 +29,8 @@ namespace Attendance.WPF.ViewModels
 
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
             _modalNavigationStore.CurrentViewModelChanged += OnCurrentModelViewModelChanged;
+
+            
 
             ActivityProperty workActivityProperty = new ActivityProperty(false, true, false, true, TimeSpan.FromHours(6), TimeSpan.FromMinutes(30), false, false, false, false, "práce");
             Activity workActivity = new Activity("Práce", "P", workActivityProperty);
@@ -82,14 +85,41 @@ namespace Attendance.WPF.ViewModels
             admin.Keys.Add(new Key("admin"));
             admin.Obligation = obligation;
             userStore.AddUser(admin);
-            
+
+            Group group = new Group("Základní", admin);
+            group.Obligation = obligation;
+
+            Group group2 = new Group("Vedení", admin);
+            group2.Obligation = obligation;
+            group2.Users.Add(admin);
 
             User user1 = new User("Tomáš", "Ševců", "tsevcu@gmail.com", false);
             user1.Keys.Add(new Key("tse"));
             user1.Keys.Add(new Key("tom"));
             user1.Keys.Add(new Key("tre"));
-            user1.Obligation = obligation;
+            //user1.Obligation = obligation;
             userStore.AddUser(user1);
+
+            User user2 = new User("TEST", "8", "tsevcu@gmail.com", false);
+            user1.Keys.Add(new Key("test"));
+            userStore.AddUser(user2);
+
+            User user3 = new User("Petr", "Ševců", "tsevcu@gmail.com", false);
+            user1.Keys.Add(new Key("etr"));
+            userStore.AddUser(user3);
+
+            User user4 = new User("Eva", "Ševců", "tsevcu@gmail.com", false);
+            user1.Keys.Add(new Key("eva"));
+            userStore.AddUser(user4);
+
+
+            group.Users.Add(user1);
+            group.Users.Add(user2);
+            group.Users.Add(user3);
+            group.Users.Add(user4);
+
+            groupStore.AddGroup(group);
+            groupStore.AddGroup(group2);
         }
 
         public NavigationBarViewModel NavigationBarViewModel { get; }

@@ -43,8 +43,11 @@
 
     <!--  Control colors.  -->
     <Brush x:Key="BackgroundColor">#FFFFDAB9</Brush>
+
+
     <Brush x:Key="ListViewItemColorA">#FFFFDAB9</Brush>
     <Brush x:Key="ListViewItemColorB">#FFFFEBCD</Brush>
+
 
     <LinearGradientBrush x:Key="ListViewItemColorSelected" StartPoint="0.7,0" EndPoint="0.7,1">
         <GradientStop Offset="0" Color="{DynamicResource ControlLightColor}" />
@@ -1061,7 +1064,7 @@
                         BorderThickness="1"
                         CornerRadius="5">
                         <Border.Background>
-                            <SolidColorBrush Color="{StaticResource MyWhite}" />
+                            <SolidColorBrush Color="FloralWhite" />
                         </Border.Background>
                         <Border.BorderBrush>
                             <SolidColorBrush Color="Black" />

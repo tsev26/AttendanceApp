@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace Attendance.WPF.Views
 {
     /// <summary>
-    /// Interaction logic for GroupAddUser.xaml
+    /// Interaction logic for GroupAddUserView.xaml
     /// </summary>
-    public partial class GroupAddUser : UserControl
+    public partial class GroupAddUserView : UserControl
     {
-        public GroupAddUser()
+        public GroupAddUserView()
         {
             InitializeComponent();
         }

@@ -40,6 +40,7 @@ namespace Attendance.WPF
             services.AddSingleton<UserStore>();
             services.AddSingleton<ActivityStore>();
             services.AddSingleton<CurrentUser>();
+            services.AddSingleton<GroupStore>();
 
 
             //Navigation
@@ -60,6 +61,7 @@ namespace Attendance.WPF
             services.AddTransient<UserKeysViewModel>(CreateUserKeysViewModel);
             services.AddTransient<UserKeyUpsertViewModel>(CreateUserKeyUpsertViewModel);
             services.AddTransient<UserProfileViewModel>(CreateUserProfileViewModel);
+            services.AddTransient<GroupsViewModel>(CreateGroupsViewModel);
 
             services.AddSingleton<MainViewModel>();
 
@@ -166,8 +168,17 @@ namespace Attendance.WPF
                 CreateUserKeyNavigationService(serviceProvider),
                 CreateUserMenuNavigationService(serviceProvider),
                 CreateUserProfileNavigationService(serviceProvider),
+                CreateGroupNavigationService(serviceProvider),
                 serviceProvider.GetRequiredService<CurrentUser>()
                 );
+        }
+
+        private INavigationService CreateGroupNavigationService(IServiceProvider serviceProvider)
+        {
+            return new NavigationService<GroupsViewModel>(
+                serviceProvider.GetRequiredService<NavigationStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
+                () => serviceProvider.GetRequiredService<GroupsViewModel>());
         }
 
         private INavigationService CreateUserProfileNavigationService(IServiceProvider serviceProvider)
@@ -193,6 +204,32 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<CurrentUser>(),
                 serviceProvider.GetRequiredService<UserStore>()
                 );
+        }
+
+        private GroupsViewModel CreateGroupsViewModel(IServiceProvider serviceProvider)
+        {
+            return new GroupsViewModel(
+                serviceProvider.GetRequiredService<GroupStore>(),
+                CreateGroupUpsertNavigationService(serviceProvider),
+                CreateGroupAddUserNavigationService(serviceProvider)
+
+                );
+        }
+
+        private INavigationService CreateGroupAddUserNavigationService(IServiceProvider serviceProvider)
+        {
+            return new ModalNavigationService<GroupAddUserViewModel>(
+                serviceProvider.GetRequiredService<ModalNavigationStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
+                () => serviceProvider.GetRequiredService<GroupAddUserViewModel>());
+        }
+
+        private INavigationService CreateGroupUpsertNavigationService(IServiceProvider serviceProvider)
+        {
+            return new ModalNavigationService<GroupUpsertViewModel>(
+                serviceProvider.GetRequiredService<ModalNavigationStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
+                () => serviceProvider.GetRequiredService<GroupUpsertViewModel>());
         }
 
 

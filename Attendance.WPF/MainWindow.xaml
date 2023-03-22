@@ -53,6 +53,10 @@
                 <views:UserProfileView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodels:GroupsViewModel}">
+                <views:GroupsView />
+            </DataTemplate>
+
         </Grid.Resources>
 
         <Grid.RowDefinitions>
