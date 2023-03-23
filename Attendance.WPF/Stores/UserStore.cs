@@ -41,5 +41,10 @@ namespace Attendance.WPF.Stores
             _users.Remove(deleteUser);
             UsersChange?.Invoke();
         }
+
+        public void SetGroup(User user, Group group)
+        {
+            user.Group = group;
+        }
     }
 }

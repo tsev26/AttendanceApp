@@ -1,4 +1,5 @@
 ﻿using Attendance.WPF.Stores;
+using Attendance.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +10,18 @@ namespace Attendance.WPF.Commands
 {
     public class DeleteGroupCommand : CommandBase
     {
-        private GroupStore _groupStore;
+        private readonly GroupStore _groupStore;
+        private readonly GroupsViewModel _groupsViewModel;
 
-        public DeleteGroupCommand(GroupStore groupStore)
+        public DeleteGroupCommand(GroupStore groupStore, GroupsViewModel groupsViewModel)
         {
             _groupStore = groupStore;
+            _groupsViewModel = groupsViewModel;
         }
 
         public override void Execute(object? parameter)
         {
-            throw new NotImplementedException();
+            _groupStore.RemoveGroup(_groupsViewModel.SelectedGroup);
         }
     }
 }

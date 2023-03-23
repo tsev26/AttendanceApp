@@ -18,12 +18,13 @@
 
         <Border
             Grid.Column="0"
-            Margin="10,10,10,10"
+            Margin="10"
             Padding="5"
             Background="AntiqueWhite"
             BorderBrush="Black"
             BorderThickness="1"
             CornerRadius="5">
+
             <Grid Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -83,16 +84,31 @@
                         HorizontalAlignment="Center"
                         Orientation="Horizontal">
                         <Button
-                            Margin="0,0,10,0"
+                            Margin="0,0,5,0"
                             Command="{Binding NavigateCreateGroupCommand}"
-                            Content="Vytvořit skupinu"
+                            Content="Vytvořit"
                             Style="{StaticResource MenuButton}" />
+
                         <Button
-                            Margin="10,0,0,0"
+                            Margin="5,0,5,0"
                             Command="{Binding DeleteGroupCommand}"
-                            Content="Smazat skupinu"
+                            Content="Smazat"
                             Style="{StaticResource MenuButton}"
                             Visibility="{Binding IsGroupSelected, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                        <Button
+                            Margin="5,0,5,0"
+                            Command="{Binding GroupViewShowsCommand}"
+                            Content="Nastavení"
+                            Style="{StaticResource MenuButton}"
+                            Visibility="{Binding SettingButtonVisibility, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                        <Button
+                            Margin="5,0,5,0"
+                            Command="{Binding GroupViewShowsCommand}"
+                            Content="Aktivity"
+                            Style="{StaticResource MenuButton}"
+                            Visibility="{Binding SettingButtonVisibility, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </StackPanel>
 
                 </Grid>
@@ -138,9 +154,11 @@
                         Orientation="Horizontal">
                         <Button
                             Margin="0,0,10,0"
-                            Command="{Binding NavigateAddUser}"
-                            Content="Přadit uživatele"
-                            Style="{StaticResource MenuButton}" />
+                            Command="{Binding GroupViewShowsCommand}"
+                            CommandParameter="addUser"
+                            Content="Přidat uživatele"
+                            Style="{StaticResource MenuButton}"
+                            Visibility="{Binding AddUserButtonVisibility, Converter={StaticResource bool2VisibilityConverter}}" />
                         <Button
                             Margin="10,0,0,0"
                             Command="{Binding RemoveUserFromGroup}"
@@ -164,254 +182,314 @@
                 BorderThickness="1"
                 CornerRadius="5" />
             <Grid Margin="30">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
+                <Grid Visibility="{Binding GroupSetting, Converter={StaticResource bool2VisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
 
-                <TextBlock
-                    Grid.Row="0"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource DetailTextBlock}"
-                    Text="Nastavení skupiny" />
+                    <TextBlock
+                        Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource DetailTextBlock}"
+                        Text="Nastavení skupiny" />
 
-                <Border
-                    Grid.Row="1"
-                    Margin="10,5,10,10"
-                    Padding="5"
-                    Background="FloralWhite"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="5">
-                    <Grid Margin="20,10,20,20">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                                Grid.Column="0"
-                                Style="{StaticResource DetailTextBlock}"
-                                Text="Vedoucí" />
-                            <TextBlock
-                                Grid.Column="1"
-                                Width="200"
-                                Height="35"
-                                Margin="5"
-                                FontSize="20">
-                                <TextBlock.Text>
-                                    <MultiBinding StringFormat="{}{0} {1}">
-                                        <Binding Path="SelectedGroup.SuperVisor.LastName" />
-                                        <Binding Path="SelectedGroup.SuperVisor.FirstName" />
-                                    </MultiBinding>
-                                </TextBlock.Text>
-                            </TextBlock>
-
-                            <Button
-                                Grid.Column="1"
-                                HorizontalAlignment="Right"
-                                Command="{Binding ChangeSupervisorOfGroupCommand}"
-                                Content="Změnit"
-                                Style="{StaticResource ViewButton}" />
-                        </Grid>
-
-                        <Grid Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                                Grid.Column="0"
-                                Style="{StaticResource DetailTextBlock}"
-                                Text="Pravidelná pracovní doba" />
-                            <ToggleButton
-                                Grid.Column="1"
-                                Width="50"
-                                Height="35"
-                                Margin="15,0,0,0"
-                                HorizontalAlignment="Center"
-                                IsChecked="{Binding HasRegularWorkingTime, Mode=TwoWay}" />
-                        </Grid>
-
-
-                        <Grid Grid.Row="2" Visibility="{Binding HasRegularWorkingTime, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Border
+                        Grid.Row="1"
+                        Margin="10,5,10,10"
+                        Padding="5"
+                        Background="FloralWhite"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="5">
+                        <Grid Margin="20,10,20,20">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Style="{StaticResource DetailTextBlock}"
-                                Text="Pracovní doba" />
-                            <TextBox
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Width="200"
-                                Height="35"
-                                Margin="5"
-                                VerticalContentAlignment="Center"
-                                FontSize="20"
-                                PreviewTextInput="NumberValidationTextBox"
-                                Text="{Binding MinHoursWorked, Mode=TwoWay}" />
 
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Style="{StaticResource DetailTextBlock}"
-                                Text="Začátek pracovní doby" />
-                            <TextBox
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Width="200"
-                                Height="35"
-                                Margin="5"
-                                VerticalContentAlignment="Center"
-                                FontSize="20"
-                                Text="{Binding LatestArival, StringFormat=HH:mm, Mode=TwoWay, Converter={StaticResource TimeOnlyConverter}}" />
-
-                            <TextBlock
-                                Grid.Row="2"
-                                Grid.Column="0"
-                                Style="{StaticResource DetailTextBlock}"
-                                Text="Konec pracovní doby" />
-                            <TextBox
-                                Grid.Row="2"
-                                Grid.Column="1"
-                                Width="200"
-                                Height="35"
-                                Margin="5"
-                                VerticalContentAlignment="Center"
-                                FontSize="20"
-                                Text="{Binding EarliestDeparture, StringFormat=HH:mm, Mode=TwoWay, Converter={StaticResource TimeOnlyConverter}}" />
-
-                            <Grid
-                                Grid.Row="3"
-                                Grid.ColumnSpan="2"
-                                Margin="5">
+                            <Grid Grid.Row="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Vedoucí" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Width="200"
+                                    Height="35"
+                                    Margin="5,0"
+                                    FontSize="20">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} {1}">
+                                            <Binding Path="SelectedGroup.SuperVisor.LastName" />
+                                            <Binding Path="SelectedGroup.SuperVisor.FirstName" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+
+                                <Button
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding GroupViewShowsCommand}"
+                                    CommandParameter="setSupervisor"
+                                    Content="Změnit"
+                                    Style="{StaticResource ViewButton}" />
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Pravidelná pracovní doba" />
+                                <ToggleButton
+                                    Grid.Column="1"
+                                    Width="50"
+                                    Height="35"
+                                    Margin="15,0,0,0"
+                                    HorizontalAlignment="Center"
+                                    IsChecked="{Binding SelectedGroup.Obligation.HasRegularWorkingTime, Mode=TwoWay}" />
+                            </Grid>
 
+
+                            <Grid Grid.Row="2" Visibility="{Binding SelectedGroup.Obligation.HasRegularWorkingTime, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
-
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
                                 <TextBlock
                                     Grid.Row="0"
-                                    Grid.ColumnSpan="7"
+                                    Grid.Column="0"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Pracovní doba" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Width="200"
+                                    Height="35"
                                     Margin="5"
-                                    HorizontalAlignment="Center"
-                                    Style="{StaticResource DetailTextBlock}"
-                                    Text="Pracuje v dny" />
+                                    VerticalContentAlignment="Center"
+                                    FontSize="20"
+                                    PreviewTextInput="NumberValidationTextBox"
+                                    Text="{Binding SelectedGroup.Obligation.MinHoursWorked, Mode=TwoWay}" />
 
                                 <TextBlock
                                     Grid.Row="1"
                                     Grid.Column="0"
-                                    HorizontalAlignment="Center"
                                     Style="{StaticResource DetailTextBlock}"
-                                    Text="Po" />
-                                <TextBlock
+                                    Text="Začátek pracovní doby" />
+                                <TextBox
                                     Grid.Row="1"
                                     Grid.Column="1"
-                                    HorizontalAlignment="Center"
-                                    Style="{StaticResource DetailTextBlock}"
-                                    Text="Út" />
-                                <TextBlock
-                                    Grid.Row="1"
-                                    Grid.Column="2"
-                                    HorizontalAlignment="Center"
-                                    Style="{StaticResource DetailTextBlock}"
-                                    Text="St" />
-                                <TextBlock
-                                    Grid.Row="1"
-                                    Grid.Column="3"
-                                    HorizontalAlignment="Center"
-                                    Style="{StaticResource DetailTextBlock}"
-                                    Text="Čt" />
-                                <TextBlock
-                                    Grid.Row="1"
-                                    Grid.Column="4"
-                                    HorizontalAlignment="Center"
-                                    Style="{StaticResource DetailTextBlock}"
-                                    Text="Pá" />
-                                <TextBlock
-                                    Grid.Row="1"
-                                    Grid.Column="5"
-                                    HorizontalAlignment="Center"
-                                    Style="{StaticResource DetailTextBlock}"
-                                    Text="So" />
-                                <TextBlock
-                                    Grid.Row="1"
-                                    Grid.Column="6"
-                                    HorizontalAlignment="Center"
-                                    Style="{StaticResource DetailTextBlock}"
-                                    Text="Ne" />
+                                    Width="200"
+                                    Height="35"
+                                    Margin="0,0,0,5"
+                                    VerticalContentAlignment="Center"
+                                    FontSize="20"
+                                    Text="{Binding SelectedGroup.Obligation.LatestArival, StringFormat=HH:mm, Mode=TwoWay, Converter={StaticResource TimeOnlyConverter}}" />
 
-                                <ToggleButton
+                                <TextBlock
                                     Grid.Row="2"
                                     Grid.Column="0"
-                                    IsChecked="{Binding WorksMonday}" />
-                                <ToggleButton
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Konec pracovní doby" />
+                                <TextBox
                                     Grid.Row="2"
                                     Grid.Column="1"
-                                    IsChecked="{Binding WorksTuesday}" />
-                                <ToggleButton
-                                    Grid.Row="2"
-                                    Grid.Column="2"
-                                    IsChecked="{Binding WorksWednesday}" />
-                                <ToggleButton
-                                    Grid.Row="2"
-                                    Grid.Column="3"
-                                    IsChecked="{Binding WorksThursday}" />
-                                <ToggleButton
-                                    Grid.Row="2"
-                                    Grid.Column="4"
-                                    IsChecked="{Binding WorksFriday}" />
-                                <ToggleButton
-                                    Grid.Row="2"
-                                    Grid.Column="5"
-                                    IsChecked="{Binding WorksSaturday}" />
-                                <ToggleButton
-                                    Grid.Row="2"
-                                    Grid.Column="6"
-                                    IsChecked="{Binding WorksSunday}" />
+                                    Width="200"
+                                    Height="35"
+                                    Margin="5,0"
+                                    VerticalContentAlignment="Center"
+                                    FontSize="20"
+                                    Text="{Binding SelectedGroup.Obligation.EarliestDeparture, StringFormat=HH:mm, Mode=TwoWay, Converter={StaticResource TimeOnlyConverter}}" />
+
+                                <Grid
+                                    Grid.Row="3"
+                                    Grid.ColumnSpan="2"
+                                    Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Grid.ColumnSpan="7"
+                                        Margin="0,5"
+                                        HorizontalAlignment="Center"
+                                        Style="{StaticResource DetailTextBlock}"
+                                        Text="Pracuje v dny" />
+
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Center"
+                                        Style="{StaticResource DetailTextBlock}"
+                                        Text="Po" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Center"
+                                        Style="{StaticResource DetailTextBlock}"
+                                        Text="Út" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="2"
+                                        HorizontalAlignment="Center"
+                                        Style="{StaticResource DetailTextBlock}"
+                                        Text="St" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="3"
+                                        HorizontalAlignment="Center"
+                                        Style="{StaticResource DetailTextBlock}"
+                                        Text="Čt" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="4"
+                                        HorizontalAlignment="Center"
+                                        Style="{StaticResource DetailTextBlock}"
+                                        Text="Pá" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="5"
+                                        HorizontalAlignment="Center"
+                                        Style="{StaticResource DetailTextBlock}"
+                                        Text="So" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="6"
+                                        HorizontalAlignment="Center"
+                                        Style="{StaticResource DetailTextBlock}"
+                                        Text="Ne" />
+
+                                    <ToggleButton
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        IsChecked="{Binding SelectedGroup.Obligation.WorksMonday}" />
+                                    <ToggleButton
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        IsChecked="{Binding SelectedGroup.Obligation.WorksTuesday}" />
+                                    <ToggleButton
+                                        Grid.Row="2"
+                                        Grid.Column="2"
+                                        IsChecked="{Binding SelectedGroup.Obligation.WorksWednesday}" />
+                                    <ToggleButton
+                                        Grid.Row="2"
+                                        Grid.Column="3"
+                                        IsChecked="{Binding SelectedGroup.Obligation.WorksThursday}" />
+                                    <ToggleButton
+                                        Grid.Row="2"
+                                        Grid.Column="4"
+                                        IsChecked="{Binding SelectedGroup.Obligation.WorksFriday}" />
+                                    <ToggleButton
+                                        Grid.Row="2"
+                                        Grid.Column="5"
+                                        IsChecked="{Binding SelectedGroup.Obligation.WorksSaturday}" />
+                                    <ToggleButton
+                                        Grid.Row="2"
+                                        Grid.Column="6"
+                                        IsChecked="{Binding SelectedGroup.Obligation.WorksSunday}" />
+                                </Grid>
+
                             </Grid>
+
+                            <Button
+                                Grid.Row="4"
+                                MaxWidth="140"
+                                Margin="20"
+                                Command="{Binding SaveGroupChanges}"
+                                Content="Uložit změny"
+                                Style="{StaticResource MenuButton}" />
                         </Grid>
 
-                    </Grid>
 
+                    </Border>
 
-                </Border>
+                </Grid>
 
-                <Button
-                    Grid.Row="2"
-                    Command="{Binding SaveGroupChanges}"
-                    Content="Uložit změny"
-                    Style="{StaticResource MenuButton}" />
+                <Grid Visibility="{Binding AddUserOrSetSupervisor, Converter={StaticResource bool2VisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
 
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        d:Text="Přidat uživatele"
+                        Style="{StaticResource DetailTextBlock}"
+                        Text="{Binding GroupViewAddUserOrSetSupervisorText}" />
+
+                    <ListView
+                        x:Name="ListOfUsersToAdd"
+                        Grid.Row="1"
+                        Margin="10,5"
+                        HorizontalContentAlignment="Stretch"
+                        BorderThickness="2"
+                        Focusable="False"
+                        ItemsSource="{Binding UsersToSet}"
+                        SelectedIndex="{Binding SelectedUserToSetIndex}"
+                        SelectionMode="Single">
+
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="False">
+                                <GridView.ColumnHeaderContainerStyle>
+                                    <Style TargetType="{x:Type GridViewColumnHeader}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Style>
+                                </GridView.ColumnHeaderContainerStyle>
+                                <GridViewColumn Width="125" DisplayMemberBinding="{Binding FirstName, Mode=TwoWay}" />
+                                <GridViewColumn Width="125" DisplayMemberBinding="{Binding LastName, Mode=TwoWay}" />
+                                <GridViewColumn Width="125" DisplayMemberBinding="{Binding Group.Name, Mode=TwoWay}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <Button
+                        Grid.Row="2"
+                        Command="{Binding SetUserToGroupCommand}"
+                        CommandParameter="addUserToGroup"
+                        Content="Přidat uživatele"
+                        Style="{StaticResource MenuButton}"
+                        Visibility="{Binding GroupViewAddUser, Converter={StaticResource bool2VisibilityConverter}}" />
+                    <Button
+                        Grid.Row="2"
+                        Command="{Binding SetUserToGroupCommand}"
+                        CommandParameter="setSupervisorToGroup"
+                        Content="Nastavit vedoucího"
+                        Style="{StaticResource MenuButton}"
+                        Visibility="{Binding GroupViewSetUser, Converter={StaticResource bool2VisibilityConverter}}" />
+                </Grid>
             </Grid>
         </Grid>
 

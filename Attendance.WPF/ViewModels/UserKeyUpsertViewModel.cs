@@ -15,11 +15,11 @@ namespace Attendance.WPF.ViewModels
         private readonly CurrentUser _currentUser;
 
         public UserKeyUpsertViewModel(CurrentUser currentUser,
-                                      INavigationService closeAndReloadModalService)
+                                      INavigationService closeModalNavigationService)
         {
             _currentUser = currentUser;
-            CloseModalCommand = new CloseModalCommand(closeAndReloadModalService);
-            KeyUpsertCommand = new KeyUpsertCommand(currentUser, closeAndReloadModalService);
+            CloseModalCommand = new CloseModalCommand(closeModalNavigationService);
+            KeyUpsertCommand = new KeyUpsertCommand(currentUser, closeModalNavigationService);
             NewKeyValue = _currentUser.SelectedKeyValue?.KeyValue;
         }
 

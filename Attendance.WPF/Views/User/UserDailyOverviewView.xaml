@@ -10,13 +10,19 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid Grid.IsSharedSizeScope="True">
+    <Grid Margin="10" Grid.IsSharedSizeScope="True">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                HorizontalAlignment="Center"
+                Style="{StaticResource DetailTextBlock}"
+                Text="Denní statistika" />
 
             <!--  prumer  -->
             <!--
@@ -111,7 +117,7 @@
             <!--  tabulka realne odpracovano, odpracovano a celkem prestavka  -->
             <Border
                 Grid.Row="1"
-                Margin="0,0,0,10"
+                Margin="10"
                 Padding="0,0,0,5"
                 Background="FloralWhite"
                 BorderBrush="Black"
@@ -209,7 +215,7 @@
                     TextDecorations="Underline" />-->
                 <Border
                     Grid.Column="0"
-                    Margin="0,0,5,0"
+                    Margin="10"
                     Background="FloralWhite"
                     BorderBrush="Black"
                     BorderThickness="1"
@@ -281,7 +287,7 @@
                     TextDecorations="Underline" />-->
                 <Border
                     Grid.Column="1"
-                    Margin="5,0,0,0"
+                    Margin="10"
                     Background="FloralWhite"
                     BorderBrush="Black"
                     BorderThickness="1"

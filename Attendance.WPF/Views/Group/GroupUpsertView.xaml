@@ -1,12 +1,64 @@
-﻿<UserControl x:Class="Attendance.WPF.Views.GroupUpsertView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Attendance.WPF.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+﻿<UserControl
+    x:Class="Attendance.WPF.Views.GroupUpsertView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Attendance.WPF.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:Attendance.WPF.ViewModels"
+    d:DataContext="{d:DesignInstance viewmodels:GroupUpsertViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <Grid Margin="50" Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            Margin="0,0,0,20"
+            Style="{StaticResource Header}"
+            Text="Vytvoření skupiny" />
+
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            FontSize="24"
+            Style="{StaticResource DetailTextBlock}"
+            Text="Název" />
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Width="150"
+            Margin="10,0,0,0"
+            FontSize="22"
+            Text="{Binding GroupName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+        <Button
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Margin="20"
+            Command="{Binding CreateGroupCommand}"
+            Content="Vytvořit"
+            Style="{StaticResource MenuButton}" />
+
+        <Button
+            Grid.Row="3"
+            Grid.ColumnSpan="2"
+            Width="100"
+            Height="30"
+            Command="{Binding CloseModalCommand}"
+            Content="Zavřít"
+            Style="{StaticResource MenuButton}" />
     </Grid>
 </UserControl>

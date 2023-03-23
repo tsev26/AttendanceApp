@@ -80,18 +80,22 @@ namespace Attendance.WPF.ViewModels
 
 
             Obligation obligation = new Obligation(8, true, new TimeOnly(9, 0, 0), new TimeOnly(15, 0, 0),  true, true, true, true, true, false, false, activityStore.Activities);
+            Obligation obligationVedeni = new Obligation(6, true, new TimeOnly(12, 0, 0), new TimeOnly(13, 0, 0), true, true, false, true, true, false, false, activityStore.Activities);
 
             User admin = new User("admin", "admin", "tsevcu@gmail.com", true);
             admin.Keys.Add(new Key("admin"));
-            admin.Obligation = obligation;
+            admin.Keys.Add(new Key("aaa"));
+            //admin.Obligation = obligation;
             userStore.AddUser(admin);
 
             Group group = new Group("Základní", admin);
             group.Obligation = obligation;
 
             Group group2 = new Group("Vedení", admin);
-            group2.Obligation = obligation;
+            group2.Obligation = obligationVedeni;
             group2.Users.Add(admin);
+
+            userStore.SetGroup(admin, group2);
 
             User user1 = new User("Tomáš", "Ševců", "tsevcu@gmail.com", false);
             user1.Keys.Add(new Key("tse"));
@@ -117,6 +121,12 @@ namespace Attendance.WPF.ViewModels
             group.Users.Add(user2);
             group.Users.Add(user3);
             group.Users.Add(user4);
+
+            userStore.SetGroup(user1, group);
+            userStore.SetGroup(user2, group);
+            userStore.SetGroup(user3, group);
+            userStore.SetGroup(user4, group);
+
 
             groupStore.AddGroup(group);
             groupStore.AddGroup(group2);

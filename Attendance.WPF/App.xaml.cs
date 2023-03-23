@@ -62,6 +62,7 @@ namespace Attendance.WPF
             services.AddTransient<UserKeyUpsertViewModel>(CreateUserKeyUpsertViewModel);
             services.AddTransient<UserProfileViewModel>(CreateUserProfileViewModel);
             services.AddTransient<GroupsViewModel>(CreateGroupsViewModel);
+            services.AddTransient<GroupUpsertViewModel>(CreateGroupUpsertViewModel);
 
             services.AddSingleton<MainViewModel>();
 
@@ -210,18 +211,10 @@ namespace Attendance.WPF
         {
             return new GroupsViewModel(
                 serviceProvider.GetRequiredService<GroupStore>(),
-                CreateGroupUpsertNavigationService(serviceProvider),
-                CreateGroupAddUserNavigationService(serviceProvider)
+                serviceProvider.GetRequiredService<UserStore>(),
+                CreateGroupUpsertNavigationService(serviceProvider)
 
                 );
-        }
-
-        private INavigationService CreateGroupAddUserNavigationService(IServiceProvider serviceProvider)
-        {
-            return new ModalNavigationService<GroupAddUserViewModel>(
-                serviceProvider.GetRequiredService<ModalNavigationStore>(),
-                serviceProvider.GetRequiredService<MessageStore>(),
-                () => serviceProvider.GetRequiredService<GroupAddUserViewModel>());
         }
 
         private INavigationService CreateGroupUpsertNavigationService(IServiceProvider serviceProvider)
@@ -232,6 +225,14 @@ namespace Attendance.WPF
                 () => serviceProvider.GetRequiredService<GroupUpsertViewModel>());
         }
 
+        private GroupUpsertViewModel CreateGroupUpsertViewModel(IServiceProvider serviceProvider)
+        {
+            return new GroupUpsertViewModel(
+                serviceProvider.GetRequiredService<GroupStore>(),
+                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<CloseModalNavigationService>()
+                );
+        }
 
     }
 }

@@ -30,5 +30,10 @@ namespace Attendance.Domain.Models
         public User SuperVisor { get; set; }
         public List<User> Users { get; set; }
         public Obligation Obligation { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

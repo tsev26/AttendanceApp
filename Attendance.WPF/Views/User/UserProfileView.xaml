@@ -24,112 +24,30 @@
             BorderBrush="Black"
             BorderThickness="1"
             CornerRadius="5">
-            <Border
-                Grid.Row="1"
-                Margin="5"
-                Padding="10"
-                Background="FloralWhite"
-                BorderBrush="Black"
-                BorderThickness="1"
-                CornerRadius="5">
-                <Grid Margin="10" HorizontalAlignment="Center">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
 
-                    <TextBlock
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Margin="5"
-                        Style="{StaticResource DetailTextBlock}"
-                        Text="Jméno" />
-                    <TextBox
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Width="200"
-                        Height="35"
-                        Margin="5"
-                        VerticalContentAlignment="Center"
-                        FontSize="20"
-                        Text="{Binding FirstName}" />
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Margin="5"
-                        Style="{StaticResource DetailTextBlock}"
-                        Text="Příjmení" />
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Width="200"
-                        Height="35"
-                        Margin="5"
-                        VerticalContentAlignment="Center"
-                        FontSize="20"
-                        Text="{Binding LastName}" />
-
-                    <TextBlock
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        Margin="5"
-                        Style="{StaticResource DetailTextBlock}"
-                        Text="Email" />
-                    <TextBox
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Width="200"
-                        Height="35"
-                        Margin="5"
-                        VerticalContentAlignment="Center"
-                        FontSize="20"
-                        Text="{Binding Email}" />
-
-                    <TextBlock
-                        Grid.Row="3"
-                        Grid.ColumnSpan="2"
-                        Margin="5,30,5,0"
-                        HorizontalAlignment="Center"
-                        Style="{StaticResource DetailTextBlock}"
-                        Text="Závazek" />
-                    <TextBlock
-                        Grid.Row="4"
-                        Grid.ColumnSpan="2"
-                        Margin="0,0,0,5"
-                        HorizontalAlignment="Center"
-                        FontSize="14"
-                        Style="{StaticResource DetailTextBlock}"
-                        Text="{Binding ObligationFrom}" />
-
-                    <TextBlock
-                        Grid.Row="5"
-                        Grid.Column="0"
-                        Style="{StaticResource DetailTextBlock}"
-                        Text="Pravidelná pracovní doba" />
-                    <ToggleButton
-                        Grid.Row="5"
-                        Grid.Column="1"
-                        Width="50"
-                        Height="35"
-                        Margin="5"
-                        VerticalContentAlignment="Center"
-                        IsChecked="{Binding HasRegularWorkingTime, Mode=TwoWay}" />
-
-                    <Grid
-                        Grid.Row="6"
-                        Grid.ColumnSpan="2"
-                        Visibility="{Binding HasRegularWorkingTime, Converter={StaticResource BoolToVisibilityConverter}}">
+                <TextBlock
+                    Grid.Row="0"
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource DetailTextBlock}"
+                    Text="Profil" />
+                <Border
+                    Grid.Row="1"
+                    Margin="10"
+                    Padding="10"
+                    Background="FloralWhite"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    CornerRadius="5">
+                    <Grid Margin="10" HorizontalAlignment="Center">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
@@ -140,11 +58,13 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
+
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="0"
+                            Margin="5"
                             Style="{StaticResource DetailTextBlock}"
-                            Text="Pracovní doba" />
+                            Text="Jméno" />
                         <TextBox
                             Grid.Row="0"
                             Grid.Column="1"
@@ -153,14 +73,14 @@
                             Margin="5"
                             VerticalContentAlignment="Center"
                             FontSize="20"
-                            PreviewTextInput="NumberValidationTextBox"
-                            Text="{Binding MinHoursWorked, Mode=TwoWay}" />
+                            Text="{Binding FirstName}" />
 
                         <TextBlock
                             Grid.Row="1"
                             Grid.Column="0"
+                            Margin="5"
                             Style="{StaticResource DetailTextBlock}"
-                            Text="Začátek pracovní doby" />
+                            Text="Příjmení" />
                         <TextBox
                             Grid.Row="1"
                             Grid.Column="1"
@@ -169,13 +89,14 @@
                             Margin="5"
                             VerticalContentAlignment="Center"
                             FontSize="20"
-                            Text="{Binding LatestArival, StringFormat=HH:mm, Mode=TwoWay, Converter={StaticResource TimeOnlyConverter}}" />
+                            Text="{Binding LastName}" />
 
                         <TextBlock
                             Grid.Row="2"
                             Grid.Column="0"
+                            Margin="5"
                             Style="{StaticResource DetailTextBlock}"
-                            Text="Konec pracovní doby" />
+                            Text="Email" />
                         <TextBox
                             Grid.Row="2"
                             Grid.Column="1"
@@ -184,113 +105,207 @@
                             Margin="5"
                             VerticalContentAlignment="Center"
                             FontSize="20"
-                            Text="{Binding EarliestDeparture, StringFormat=HH:mm, Mode=TwoWay, Converter={StaticResource TimeOnlyConverter}}" />
+                            Text="{Binding Email}" />
 
-
-                        <Grid
+                        <TextBlock
                             Grid.Row="3"
                             Grid.ColumnSpan="2"
-                            Margin="5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                            Margin="5,30,5,0"
+                            HorizontalAlignment="Center"
+                            Style="{StaticResource DetailTextBlock}"
+                            Text="Závazek" />
+                        <TextBlock
+                            Grid.Row="4"
+                            Grid.ColumnSpan="2"
+                            Margin="0,0,0,5"
+                            HorizontalAlignment="Center"
+                            FontSize="14"
+                            Style="{StaticResource DetailTextBlock}"
+                            Text="{Binding ObligationFrom}" />
 
+                        <TextBlock
+                            Grid.Row="5"
+                            Grid.Column="0"
+                            Style="{StaticResource DetailTextBlock}"
+                            Text="Pravidelná pracovní doba" />
+                        <ToggleButton
+                            Grid.Row="5"
+                            Grid.Column="1"
+                            Width="50"
+                            Height="35"
+                            Margin="5"
+                            VerticalContentAlignment="Center"
+                            IsChecked="{Binding HasRegularWorkingTime, Mode=TwoWay}" />
+
+                        <Grid
+                            Grid.Row="6"
+                            Grid.ColumnSpan="2"
+                            Visibility="{Binding HasRegularWorkingTime, Converter={StaticResource BoolToVisibilityConverter}}">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
-
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
                             <TextBlock
                                 Grid.Row="0"
-                                Grid.ColumnSpan="7"
+                                Grid.Column="0"
+                                Style="{StaticResource DetailTextBlock}"
+                                Text="Pracovní doba" />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Width="200"
+                                Height="35"
                                 Margin="5"
-                                HorizontalAlignment="Center"
-                                Style="{StaticResource DetailTextBlock}"
-                                Text="Pracuje v dny" />
+                                VerticalContentAlignment="Center"
+                                FontSize="20"
+                                PreviewTextInput="NumberValidationTextBox"
+                                Text="{Binding MinHoursWorked, Mode=TwoWay}" />
 
                             <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="0"
-                                HorizontalAlignment="Center"
                                 Style="{StaticResource DetailTextBlock}"
-                                Text="Po" />
-                            <TextBlock
+                                Text="Začátek pracovní doby" />
+                            <TextBox
                                 Grid.Row="1"
                                 Grid.Column="1"
-                                HorizontalAlignment="Center"
-                                Style="{StaticResource DetailTextBlock}"
-                                Text="Út" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="2"
-                                HorizontalAlignment="Center"
-                                Style="{StaticResource DetailTextBlock}"
-                                Text="St" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="3"
-                                HorizontalAlignment="Center"
-                                Style="{StaticResource DetailTextBlock}"
-                                Text="Čt" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="4"
-                                HorizontalAlignment="Center"
-                                Style="{StaticResource DetailTextBlock}"
-                                Text="Pá" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="5"
-                                HorizontalAlignment="Center"
-                                Style="{StaticResource DetailTextBlock}"
-                                Text="So" />
-                            <TextBlock
-                                Grid.Row="1"
-                                Grid.Column="6"
-                                HorizontalAlignment="Center"
-                                Style="{StaticResource DetailTextBlock}"
-                                Text="Ne" />
+                                Width="200"
+                                Height="35"
+                                Margin="5"
+                                VerticalContentAlignment="Center"
+                                FontSize="20"
+                                Text="{Binding LatestArival, StringFormat=HH:mm, Mode=TwoWay, Converter={StaticResource TimeOnlyConverter}}" />
 
-                            <ToggleButton
+                            <TextBlock
                                 Grid.Row="2"
                                 Grid.Column="0"
-                                IsChecked="{Binding WorksMonday}" />
-                            <ToggleButton
+                                Style="{StaticResource DetailTextBlock}"
+                                Text="Konec pracovní doby" />
+                            <TextBox
                                 Grid.Row="2"
                                 Grid.Column="1"
-                                IsChecked="{Binding WorksTuesday}" />
-                            <ToggleButton
-                                Grid.Row="2"
-                                Grid.Column="2"
-                                IsChecked="{Binding WorksWednesday}" />
-                            <ToggleButton
-                                Grid.Row="2"
-                                Grid.Column="3"
-                                IsChecked="{Binding WorksThursday}" />
-                            <ToggleButton
-                                Grid.Row="2"
-                                Grid.Column="4"
-                                IsChecked="{Binding WorksFriday}" />
-                            <ToggleButton
-                                Grid.Row="2"
-                                Grid.Column="5"
-                                IsChecked="{Binding WorksSaturday}" />
-                            <ToggleButton
-                                Grid.Row="2"
-                                Grid.Column="6"
-                                IsChecked="{Binding WorksSunday}" />
+                                Width="200"
+                                Height="35"
+                                Margin="5"
+                                VerticalContentAlignment="Center"
+                                FontSize="20"
+                                Text="{Binding EarliestDeparture, StringFormat=HH:mm, Mode=TwoWay, Converter={StaticResource TimeOnlyConverter}}" />
+
+
+                            <Grid
+                                Grid.Row="3"
+                                Grid.ColumnSpan="2"
+                                Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.ColumnSpan="7"
+                                    Margin="5"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Pracuje v dny" />
+
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Po" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Út" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="St" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="3"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Čt" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="4"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Pá" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="5"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="So" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="6"
+                                    HorizontalAlignment="Center"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Ne" />
+
+                                <ToggleButton
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    IsChecked="{Binding WorksMonday}" />
+                                <ToggleButton
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    IsChecked="{Binding WorksTuesday}" />
+                                <ToggleButton
+                                    Grid.Row="2"
+                                    Grid.Column="2"
+                                    IsChecked="{Binding WorksWednesday}" />
+                                <ToggleButton
+                                    Grid.Row="2"
+                                    Grid.Column="3"
+                                    IsChecked="{Binding WorksThursday}" />
+                                <ToggleButton
+                                    Grid.Row="2"
+                                    Grid.Column="4"
+                                    IsChecked="{Binding WorksFriday}" />
+                                <ToggleButton
+                                    Grid.Row="2"
+                                    Grid.Column="5"
+                                    IsChecked="{Binding WorksSaturday}" />
+                                <ToggleButton
+                                    Grid.Row="2"
+                                    Grid.Column="6"
+                                    IsChecked="{Binding WorksSunday}" />
+                            </Grid>
                         </Grid>
-                    </Grid>
 
-                </Grid>
-            </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+
+
 
         </Border>
 

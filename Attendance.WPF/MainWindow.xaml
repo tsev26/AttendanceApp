@@ -57,6 +57,10 @@
                 <views:GroupsView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodels:GroupUpsertViewModel}">
+                <views:GroupUpsertView />
+            </DataTemplate>
+
         </Grid.Resources>
 
         <Grid.RowDefinitions>

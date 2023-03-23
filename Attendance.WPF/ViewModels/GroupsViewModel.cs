@@ -17,26 +17,50 @@ namespace Attendance.WPF.ViewModels
     public class GroupsViewModel : ViewModelBase
     {
         private readonly GroupStore _groupStore;
+        private readonly UserStore _userStore;
 
         public GroupsViewModel(GroupStore groupStore, 
-                               INavigationService navigateAddGroup, 
-                               INavigationService navigateAddUserToGroup)
+                               UserStore userStore,
+                               INavigationService navigateAddGroup)
         {
             _groupStore = groupStore;
+            _userStore = userStore;
 
             Groups = new ObservableCollection<Group>();
 
             NavigateCreateGroupCommand = new NavigateCommand(navigateAddGroup);
-            DeleteGroupCommand = new DeleteGroupCommand(_groupStore);
-            NavigateAddUser = new NavigateCommand(navigateAddUserToGroup);
+            DeleteGroupCommand = new DeleteGroupCommand(_groupStore, this);
             RemoveUserFromGroup = new RemoveUserFromGroupCommand(_groupStore);
-            SaveGroupChanges = new SaveGroupChangesCommand(_groupStore);
-            ChangeSupervisorOfGroupCommand = new ChangeSupervisorOfGroupCommand(_groupStore);
+            SaveGroupChanges = new SaveGroupChangesCommand(_groupStore, this);
+            GroupViewShowsCommand = new GroupViewShowsCommand(this);
+            SetUserToGroupCommand = new SetUserToGroupCommand(this, _userStore, _groupStore);
 
             _groupStore.GroupsChange += GroupStore_GroupsChange;
 
             GroupStore_GroupsChange();
         }
+
+
+        public IList<User> UsersToSet => (IsGroupSelected) ? ((GroupViewAddUser) 
+                                        ? _userStore.Users.Except(SelectedGroup.Users).ToList() 
+                                        : _userStore.Users.Where(a => a != SelectedGroup.SuperVisor).ToList()) 
+                                        : null;
+
+        private int _selectedUserToSetIndex = -1;
+        public int SelectedUserToSetIndex
+        {
+            get
+            {
+                return _selectedUserToSetIndex;
+            }
+            set
+            {
+                _selectedUserToSetIndex = value;
+                OnPropertyChanged(nameof(SelectedUserToSetIndex));
+            }
+        }
+
+        public User? SelectedUserToSet => (SelectedUserToSetIndex != -1) ? UsersToSet[SelectedUserToSetIndex] : null;
 
         private void GroupStore_GroupsChange()
         {
@@ -47,6 +71,7 @@ namespace Attendance.WPF.ViewModels
             }
         }
 
+        /*
         private void GroupSelectionChange()
         {
             Groups.Clear();
@@ -55,14 +80,14 @@ namespace Attendance.WPF.ViewModels
                 Groups.Add(group);
             }
         }
+        */
 
+        public ICommand SetUserToGroupCommand { get; }
         public ICommand NavigateCreateGroupCommand { get; }
         public ICommand DeleteGroupCommand { get; }
-        public ICommand NavigateAddUser { get; }
         public ICommand RemoveUserFromGroup { get; }
         public ICommand SaveGroupChanges { get; }
-        public ICommand ChangeSupervisorOfGroupCommand { get; }
-
+        public ICommand GroupViewShowsCommand { get; }
 
 
         public ObservableCollection<Group> Groups { get; set; }
@@ -80,6 +105,10 @@ namespace Attendance.WPF.ViewModels
                 OnPropertyChanged(nameof(SelectedGroupIndex));
                 OnPropertyChanged(nameof(IsGroupSelected));
                 OnPropertyChanged(nameof(SelectedGroup));
+                OnPropertyChanged(nameof(AddUserButtonVisibility));
+                OnPropertyChanged(nameof(SettingButtonVisibility));
+                OnPropertyChanged(nameof(UsersToSet));
+
             }
         }
 
@@ -99,165 +128,84 @@ namespace Attendance.WPF.ViewModels
                 _selectedUserIndex = value;
                 OnPropertyChanged(nameof(SelectedUserIndex));
                 OnPropertyChanged(nameof(IsUserSelected));
-            }
-        }
 
-        public bool IsUserSelected => SelectedUserIndex != -1;
-
-        private bool _hasRegularWorkingTime;
-        public bool HasRegularWorkingTime
-        {
-            get
-            {
-                return _hasRegularWorkingTime;
-            }
-            set
-            {
-                _hasRegularWorkingTime = value;
                 OnPropertyChanged(nameof(HasRegularWorkingTime));
-            }
-        }
-
-        private double _minHoursWorked;
-        public double MinHoursWorked
-        {
-            get
-            {
-                return _minHoursWorked;
-            }
-            set
-            {
-                _minHoursWorked = value;
                 OnPropertyChanged(nameof(MinHoursWorked));
-            }
-        }
-
-        private TimeOnly _latestArival;
-        public TimeOnly LatestArival
-        {
-            get
-            {
-                return _latestArival;
-            }
-            set
-            {
-                _latestArival = value;
                 OnPropertyChanged(nameof(LatestArival));
-            }
-        }
-
-        private TimeOnly _earliestDeparture;
-        public TimeOnly EarliestDeparture
-        {
-            get
-            {
-                return _earliestDeparture;
-            }
-            set
-            {
-                _earliestDeparture = value;
                 OnPropertyChanged(nameof(EarliestDeparture));
-            }
-        }
-
-        private bool _worksMonday;
-        public bool WorksMonday
-        {
-            get
-            {
-                return _worksMonday;
-            }
-            set
-            {
-                _worksMonday = value;
                 OnPropertyChanged(nameof(WorksMonday));
-            }
-        }
-
-        private bool _worksTuesday;
-        public bool WorksTuesday
-        {
-            get
-            {
-                return _worksTuesday;
-            }
-            set
-            {
-                _worksTuesday = value;
                 OnPropertyChanged(nameof(WorksTuesday));
-            }
-        }
-
-
-        private bool _worksWednesday;
-        public bool WorksWednesday
-        {
-            get
-            {
-                return _worksWednesday;
-            }
-            set
-            {
-                _worksWednesday = value;
                 OnPropertyChanged(nameof(WorksWednesday));
-            }
-        }
-
-
-        private bool _worksThursday;
-        public bool WorksThursday
-        {
-            get
-            {
-                return _worksThursday;
-            }
-            set
-            {
-                _worksThursday = value;
                 OnPropertyChanged(nameof(WorksThursday));
-            }
-        }
-
-        private bool _worksFriday;
-        public bool WorksFriday
-        {
-            get
-            {
-                return _worksFriday;
-            }
-            set
-            {
-                _worksFriday = value;
                 OnPropertyChanged(nameof(WorksFriday));
-            }
-        }
-
-        private bool _worksSaturday;
-        public bool WorksSaturday
-        {
-            get
-            {
-                return _worksSaturday;
-            }
-            set
-            {
-                _worksSaturday = value;
                 OnPropertyChanged(nameof(WorksSaturday));
-            }
-        }
-
-        private bool _worksSunday;
-        public bool WorksSunday
-        {
-            get
-            {
-                return _worksSunday;
-            }
-            set
-            {
-                _worksSunday = value;
                 OnPropertyChanged(nameof(WorksSunday));
             }
         }
+
+        private bool _addUserOrSetSupervisor;
+        public bool AddUserOrSetSupervisor
+        {
+            get
+            {
+                return _addUserOrSetSupervisor;
+            }
+            set
+            {
+                _addUserOrSetSupervisor = value;
+                OnPropertyChanged(nameof(AddUserOrSetSupervisor));
+                OnPropertyChanged(nameof(GroupSetting));
+                OnPropertyChanged(nameof(AddUserButtonVisibility));
+                OnPropertyChanged(nameof(SettingButtonVisibility));
+            }
+        }
+
+        private bool _groupViewAddUser;
+        public bool GroupViewAddUser
+        {
+            get
+            {
+                return _groupViewAddUser;
+            }
+            set
+            {
+                _groupViewAddUser = value;
+                OnPropertyChanged(nameof(GroupViewAddUser));
+                OnPropertyChanged(nameof(GroupViewSetUser));
+                OnPropertyChanged(nameof(AddUserButtonVisibility));
+                OnPropertyChanged(nameof(GroupViewAddUserOrSetSupervisorText));
+                OnPropertyChanged(nameof(UsersToSet));
+            }
+        }
+
+        public bool GroupViewSetUser => !GroupViewAddUser;
+
+        public string GroupViewAddUserOrSetSupervisorText => GroupViewAddUser ? "Přidat uživatele" : "Nastavit vedoucího";
+
+
+        public bool GroupSetting => !AddUserOrSetSupervisor;
+
+        public bool AddUserButtonVisibility => (GroupSetting || !GroupViewAddUser) && IsGroupSelected;
+
+        public bool SettingButtonVisibility => IsGroupSelected && AddUserOrSetSupervisor;
+
+        public bool IsUserSelected => SelectedUserIndex != -1;
+
+        public bool HasRegularWorkingTime => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.HasRegularWorkingTime : false;
+
+        public double MinHoursWorked => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.MinHoursWorked : 0;
+
+        public TimeOnly LatestArival => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.LatestArival : new TimeOnly();
+
+        public TimeOnly EarliestDeparture => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.EarliestDeparture : new TimeOnly();
+
+        public bool WorksMonday => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.WorksMonday : false;
+        public bool WorksTuesday => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.WorksTuesday : false;
+        public bool WorksWednesday => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.WorksWednesday : false;
+        public bool WorksThursday => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.WorksThursday : false;
+        public bool WorksFriday => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.WorksFriday : false;
+        public bool WorksSaturday => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.WorksSaturday : false;
+        public bool WorksSunday => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.WorksSunday : false;
+
     }
 }

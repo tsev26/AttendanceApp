@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Attendance.WPF.Stores
 {
@@ -44,17 +45,45 @@ namespace Attendance.WPF.Stores
 
         public void AddUserToGroup(Group group, User user)
         {
+            Group? existingGroup = _groups.FirstOrDefault(a => a.Users.Any(c => c == user));
+            if (existingGroup != null)
+            {
+                existingGroup.Users.Remove(user);
+            }
             if (!group.Users.Contains(user))
             {
                 group.Users.Add(user);
             }
+            user.Group = group;
             GroupsChange?.Invoke();
         }
 
         public void RemoveUserToGroup(Group group, User user)
         {
             group.Users.Remove(user);
+            user.Group = null;
             GroupsChange?.Invoke();
+        }
+
+        public void RemoveGroup(Group group)
+        {
+            _groups.Remove(group);
+            GroupsChange?.Invoke();
+        }
+
+        public void SetSupervisor(User? user, Group group)
+        {
+            group.SuperVisor = user;
+            GroupsChange?.Invoke();
+        }
+
+        public void UpdateGroupObligation(Group group)
+        {
+            Group? existingGroup = _groups.FirstOrDefault(a => a.Id == group.Id);
+            if (existingGroup != null)
+            {
+                existingGroup = group;
+            }
         }
     }
 }

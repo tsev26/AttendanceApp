@@ -52,7 +52,11 @@ namespace Attendance.Domain.Models
             AvailableActivities = obligation.AvailableActivities;
         }
 
-        public Obligation() { }
+        public Obligation() 
+        {
+            MinHoursWorked = 0;
+            HasRegularWorkingTime = false;
+        }
 
         public double MinHoursWorked { get; set; }
         public bool HasRegularWorkingTime { get; set; }
