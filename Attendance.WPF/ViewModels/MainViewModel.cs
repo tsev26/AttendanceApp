@@ -32,17 +32,17 @@ namespace Attendance.WPF.ViewModels
 
             
 
-            ActivityProperty workActivityProperty = new ActivityProperty(false, true, false, true, TimeSpan.FromHours(6), TimeSpan.FromMinutes(30), false, false, false, false, "práce");
+            ActivityProperty workActivityProperty = new ActivityProperty(false, true, false, true, TimeSpan.FromHours(6), TimeSpan.FromMinutes(30), false, false, "práce");
             Activity workActivity = new Activity("Práce", "P", workActivityProperty);
 
             activityStore.AddActivity(workActivity);
 
-            ActivityProperty pauseActivityProperty = new ActivityProperty(false, true, true, false, TimeSpan.FromHours(0), TimeSpan.FromMinutes(0), false, false, false, false, "pauza");
+            ActivityProperty pauseActivityProperty = new ActivityProperty(false, true, true, false, TimeSpan.FromHours(0), TimeSpan.FromMinutes(0), false, false, "pauza");
             Activity pauseActivity = new Activity("Pauza", "A", pauseActivityProperty);
 
             activityStore.AddActivity(pauseActivity);
 
-            ActivityProperty homeActivityProperty = new ActivityProperty(false, false, false, false, TimeSpan.FromHours(0), TimeSpan.FromMinutes(0), false, false, false, false, "domov");
+            ActivityProperty homeActivityProperty = new ActivityProperty(false, false, false, false, TimeSpan.FromHours(0), TimeSpan.FromMinutes(0), false, false, "domov");
             Activity homeActivity = new Activity("Domov", "D", homeActivityProperty);
 
             activityStore.AddActivity(homeActivity);

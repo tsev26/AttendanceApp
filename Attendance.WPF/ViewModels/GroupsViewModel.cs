@@ -26,11 +26,9 @@ namespace Attendance.WPF.ViewModels
             _groupStore = groupStore;
             _userStore = userStore;
 
-            Groups = new ObservableCollection<Group>();
-
             NavigateCreateGroupCommand = new NavigateCommand(navigateAddGroup);
             DeleteGroupCommand = new DeleteGroupCommand(_groupStore, this);
-            RemoveUserFromGroup = new RemoveUserFromGroupCommand(_groupStore);
+            RemoveUserFromGroup = new RemoveUserFromGroupCommand(_groupStore, this);
             SaveGroupChanges = new SaveGroupChangesCommand(_groupStore, this);
             GroupViewShowsCommand = new GroupViewShowsCommand(this);
             SetUserToGroupCommand = new SetUserToGroupCommand(this, _userStore, _groupStore);
@@ -43,7 +41,7 @@ namespace Attendance.WPF.ViewModels
 
         public IList<User> UsersToSet => (IsGroupSelected) ? ((GroupViewAddUser) 
                                         ? _userStore.Users.Except(SelectedGroup.Users).ToList() 
-                                        : _userStore.Users.Where(a => a != SelectedGroup.SuperVisor).ToList()) 
+                                        : _userStore.Users.Where(a => a != SelectedGroup.Supervisor).ToList()) 
                                         : null;
 
         private int _selectedUserToSetIndex = -1;
@@ -64,11 +62,8 @@ namespace Attendance.WPF.ViewModels
 
         private void GroupStore_GroupsChange()
         {
-            Groups.Clear();
-            foreach (var group in _groupStore.Groups.ToList())
-            {
-                Groups.Add(group);
-            }
+            Groups = _groupStore.Groups.Select(a => a.Clone(a)).ToList();
+            OnPropertyChanged(nameof(Groups));
         }
 
         /*
@@ -90,7 +85,7 @@ namespace Attendance.WPF.ViewModels
         public ICommand GroupViewShowsCommand { get; }
 
 
-        public ObservableCollection<Group> Groups { get; set; }
+        public List<Group> Groups { get; set; }
 
         private int _selectedGroupIndex = -1;
         public int SelectedGroupIndex
@@ -128,6 +123,7 @@ namespace Attendance.WPF.ViewModels
                 _selectedUserIndex = value;
                 OnPropertyChanged(nameof(SelectedUserIndex));
                 OnPropertyChanged(nameof(IsUserSelected));
+                OnPropertyChanged(nameof(SelectedUser));
 
                 OnPropertyChanged(nameof(HasRegularWorkingTime));
                 OnPropertyChanged(nameof(MinHoursWorked));
@@ -142,6 +138,8 @@ namespace Attendance.WPF.ViewModels
                 OnPropertyChanged(nameof(WorksSunday));
             }
         }
+
+        public User SelectedUser => (SelectedUserIndex != 1) ? SelectedGroup.Users[SelectedUserIndex] : null;
 
         private bool _addUserOrSetSupervisor;
         public bool AddUserOrSetSupervisor
@@ -183,11 +181,11 @@ namespace Attendance.WPF.ViewModels
         public string GroupViewAddUserOrSetSupervisorText => GroupViewAddUser ? "Přidat uživatele" : "Nastavit vedoucího";
 
 
-        public bool GroupSetting => !AddUserOrSetSupervisor;
+        public bool GroupSetting => !AddUserOrSetSupervisor && IsGroupSelected;
 
         public bool AddUserButtonVisibility => (GroupSetting || !GroupViewAddUser) && IsGroupSelected;
 
-        public bool SettingButtonVisibility => IsGroupSelected && AddUserOrSetSupervisor;
+        public bool SettingButtonVisibility => IsGroupSelected;
 
         public bool IsUserSelected => SelectedUserIndex != -1;
 
@@ -207,5 +205,11 @@ namespace Attendance.WPF.ViewModels
         public bool WorksSaturday => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.WorksSaturday : false;
         public bool WorksSunday => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.WorksSunday : false;
 
+
+        public override void Dispose()
+        {
+            _groupStore.GroupsChange -= GroupStore_GroupsChange;
+            base.Dispose();
+        }
     }
 }

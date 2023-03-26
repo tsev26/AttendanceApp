@@ -43,6 +43,8 @@ namespace Attendance.WPF.Stores
             }
         }
 
+        public AttendanceRecord? CurrentAttendanceRecord => AttendanceRecords.LastOrDefault(a => a.Entry <= DateTime.Now);
+
         private User? _userUpdates;
         public User? UserUpdates
         {

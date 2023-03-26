@@ -43,6 +43,18 @@ namespace Attendance.Domain.Models
             Keys = new List<Key>();
         }
 
+        public User(User user) : base()
+        {
+            UserId = user.UserId;
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+            Email = user.Email;
+            IsAdmin = user.IsAdmin;
+            ToApprove = user.ToApprove;
+            Keys = user.Keys;
+            Group = user.Group;
+        }
+
         public int UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -102,6 +114,16 @@ namespace Attendance.Domain.Models
         public static bool operator !=(User a, User b)
         {
             return !(a == b);
+        }
+
+
+        public User Clone(User user)
+        {
+            return new User(user)
+            {
+                Id = user.Id,
+                Obligation = Obligation?.Clone(Obligation)
+            };
         }
     }
 }

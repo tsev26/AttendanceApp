@@ -15,6 +15,14 @@ namespace Attendance.Domain.Models
             Property = property;
         }
 
+        public Activity(Activity activity) : base()
+        {
+            Id = activity.Id;
+            Name = activity.Name;
+            Shortcut = activity.Shortcut;
+            Property = activity.Property.Clone(activity.Property);
+        }
+
         public string Name { get; set; }
         public string Shortcut { get; set; }
         public ActivityProperty Property { get; set; }
@@ -28,5 +36,13 @@ namespace Attendance.Domain.Models
         public string ActName2 => Shortcut;
         public string ActName3 => (PositionOfShortCutInName != 0) ? Name.Substring(PositionOfShortCutInName, LenghtOfName - PositionOfShortCutInName) : "";
 
+        public Activity Clone(Activity activity)
+        {
+            return new Activity(activity)
+            {
+                Id = activity.Id,
+                Property = Property?.Clone(activity.Property)
+            };
+        }
     }
 }

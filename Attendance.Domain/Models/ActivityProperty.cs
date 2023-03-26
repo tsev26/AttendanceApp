@@ -16,8 +16,6 @@ namespace Attendance.Domain.Models
                                 TimeSpan pauseDuration, 
                                 bool hasExpectedStart, 
                                 bool hasExpectedReturn, 
-                                bool isFullDayActivity, 
-                                bool isHalfDayActivity, 
                                 string groupByName) : base()
         {
             IsPlan = isPlan;
@@ -28,9 +26,21 @@ namespace Attendance.Domain.Models
             PauseDuration = pauseDuration;
             HasExpectedStart = hasExpectedStart;
             HasExpectedReturn = hasExpectedReturn;
-            IsFullDayActivity = isFullDayActivity;
-            IsHalfDayActivity = isHalfDayActivity;
             GroupByName = groupByName;
+        }
+
+        public ActivityProperty(ActivityProperty activityProperty) : base()
+        {
+            Id = activityProperty.Id;
+            IsPlan = activityProperty.IsPlan;
+            Count = activityProperty.Count;
+            IsPause = activityProperty.IsPause;
+            HasPause = activityProperty.HasPause;
+            PauseEvery = activityProperty.PauseEvery;
+            PauseDuration = activityProperty.PauseDuration;
+            HasExpectedStart = activityProperty.HasExpectedStart;
+            HasExpectedReturn= activityProperty.HasExpectedReturn;
+            GroupByName= activityProperty.GroupByName;
         }
 
         public bool IsPlan { get; set; }
@@ -41,8 +51,14 @@ namespace Attendance.Domain.Models
         public TimeSpan PauseDuration { get; set; }
         public bool HasExpectedStart { get; set; }
         public bool HasExpectedReturn { get; set; }
-        public bool IsFullDayActivity { get; set; }
-        public bool IsHalfDayActivity { get; set; }
         public string GroupByName { get; set; }
+
+        public ActivityProperty Clone(ActivityProperty property)
+        {
+            return new ActivityProperty(property)
+            {
+                Id = property.Id
+            };
+        }
     }
 }

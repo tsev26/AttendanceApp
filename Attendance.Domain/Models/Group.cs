@@ -13,7 +13,7 @@ namespace Attendance.Domain.Models
                      User superVisor) : base ()
         {
             Name = name;
-            SuperVisor = superVisor;
+            Supervisor = superVisor;
             Users = new List<User>();
             Obligation = new Obligation();
         }
@@ -21,19 +21,30 @@ namespace Attendance.Domain.Models
         public Group(Group group)
         {
             Name = group.Name;
-            SuperVisor = group.SuperVisor;
+            Supervisor = group.Supervisor;
             Users = group.Users;
             Obligation = new Obligation();
         }
 
         public string Name { get; set; }
-        public User SuperVisor { get; set; }
+        public User Supervisor { get; set; }
         public List<User> Users { get; set; }
         public Obligation Obligation { get; set; }
 
         public override string ToString()
         {
             return Name;
+        }
+
+        public Group Clone(Group group)
+        {
+            return new Group(group)
+            {
+                Id = group.Id,
+                Obligation = group.Obligation.Clone(group.Obligation),
+                Supervisor = group.Supervisor,
+                Users = group.Users
+            };
         }
     }
 }

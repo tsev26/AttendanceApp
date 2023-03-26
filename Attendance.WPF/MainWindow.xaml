@@ -61,6 +61,14 @@
                 <views:GroupUpsertView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodels:ActivitiesViewModel}">
+                <views:ActivitiesView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodels:ActivityUpsertViewModel}">
+                <views:ActivityUpsertView />
+            </DataTemplate>
+
         </Grid.Resources>
 
         <Grid.RowDefinitions>

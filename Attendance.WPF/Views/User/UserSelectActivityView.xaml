@@ -156,7 +156,7 @@
                             <TextBlock
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
-                                FontSize="23"
+                                FontSize="26"
                                 TextAlignment="Center">
                                 <Run Text="{Binding ActName1, Mode=OneWay}" /><Run
                                     FontWeight="Bold"

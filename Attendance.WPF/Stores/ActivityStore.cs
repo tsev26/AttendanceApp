@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Attendance.WPF.Stores
@@ -16,6 +17,8 @@ namespace Attendance.WPF.Stores
             _activities = new List<Activity>();
         }
 
+        public event Action ActivitiesChange;
+
         public List<Activity> Activities
         {
             get { return _activities; }
@@ -25,9 +28,21 @@ namespace Attendance.WPF.Stores
             }
         }
 
-        public void AddActivity(Activity newActivity)
+        public void AddActivity(Activity activity)
         {
-            _activities.Add(newActivity);
+            _activities.Add(activity);
+            ActivitiesChange?.Invoke();
         }
+
+        public void UpdateActivity(Activity activity)
+        {
+            int index = _activities.FindIndex(a => a.Id == activity.Id);
+            if (index != -1)
+            {
+                _activities[index] = activity;
+            }
+            ActivitiesChange?.Invoke();
+        }
+
     }
 }

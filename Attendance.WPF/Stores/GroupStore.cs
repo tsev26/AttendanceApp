@@ -1,6 +1,7 @@
 ﻿using Attendance.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace Attendance.WPF.Stores
 {
     public class GroupStore
     {
-        private IList<Group> _groups;
+        private List<Group> _groups;
 
         public GroupStore()
         {
@@ -19,7 +20,7 @@ namespace Attendance.WPF.Stores
 
         public event Action GroupsChange;
 
-        public IList<Group> Groups
+        public List<Group> Groups
         {
             get { return _groups; }
             set
@@ -73,17 +74,19 @@ namespace Attendance.WPF.Stores
 
         public void SetSupervisor(User? user, Group group)
         {
-            group.SuperVisor = user;
+            group.Supervisor = user;
             GroupsChange?.Invoke();
         }
 
         public void UpdateGroupObligation(Group group)
         {
-            Group? existingGroup = _groups.FirstOrDefault(a => a.Id == group.Id);
-            if (existingGroup != null)
+            int index = _groups.FindIndex(a => a.Id == group.Id);
+
+            if (index != -1)
             {
-                existingGroup = group;
+                _groups[index] = group;
             }
+            GroupsChange?.Invoke();
         }
     }
 }

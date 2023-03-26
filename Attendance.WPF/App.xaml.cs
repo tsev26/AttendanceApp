@@ -63,6 +63,8 @@ namespace Attendance.WPF
             services.AddTransient<UserProfileViewModel>(CreateUserProfileViewModel);
             services.AddTransient<GroupsViewModel>(CreateGroupsViewModel);
             services.AddTransient<GroupUpsertViewModel>(CreateGroupUpsertViewModel);
+            services.AddTransient<ActivitiesViewModel>(CreateActivitiesViewModel);
+            services.AddTransient<ActivityUpsertViewModel>(CreateActivityUpsertViewModel);
 
             services.AddSingleton<MainViewModel>();
 
@@ -170,6 +172,7 @@ namespace Attendance.WPF
                 CreateUserMenuNavigationService(serviceProvider),
                 CreateUserProfileNavigationService(serviceProvider),
                 CreateGroupNavigationService(serviceProvider),
+                CreateActivitiesNavigationService(serviceProvider),
                 serviceProvider.GetRequiredService<CurrentUser>()
                 );
         }
@@ -232,6 +235,38 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<CurrentUser>(),
                 serviceProvider.GetRequiredService<CloseModalNavigationService>()
                 );
+        }
+
+        private ActivitiesViewModel CreateActivitiesViewModel(IServiceProvider serviceProvider)
+        {
+            return new ActivitiesViewModel(
+                serviceProvider.GetRequiredService<ActivityStore>(),
+                CreateActivityUpsertNavigationService(serviceProvider)
+                );
+        }
+
+        private ActivityUpsertViewModel CreateActivityUpsertViewModel(IServiceProvider serviceProvider)
+        {
+            return new ActivityUpsertViewModel(
+                serviceProvider.GetRequiredService<ActivityStore>(),
+                serviceProvider.GetRequiredService<CloseModalNavigationService>()
+                );
+        }
+
+        private INavigationService CreateActivityUpsertNavigationService(IServiceProvider serviceProvider)
+        {
+            return new ModalNavigationService<ActivityUpsertViewModel>(
+                serviceProvider.GetRequiredService<ModalNavigationStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
+                () => serviceProvider.GetRequiredService<ActivityUpsertViewModel>());
+        }
+
+        private INavigationService CreateActivitiesNavigationService(IServiceProvider serviceProvider)
+        {
+            return new NavigationService<ActivitiesViewModel>(
+                serviceProvider.GetRequiredService<NavigationStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
+                () => serviceProvider.GetRequiredService<ActivitiesViewModel>());
         }
 
     }

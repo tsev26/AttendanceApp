@@ -35,13 +35,14 @@
                 Padding="5"
                 Background="FloralWhite"
                 BorderBrush="Black"
-                BorderThickness="1"
+                BorderThickness="0.5"
                 CornerRadius="5">
                 <clock:DigitalClock
                     HorizontalAlignment="Left"
                     FontSize="25"
                     ShowTime="False" />
             </Border>
+
             <StackPanel
                 Grid.Column="1"
                 HorizontalAlignment="Center"
@@ -60,85 +61,172 @@
                 Padding="5"
                 Background="FloralWhite"
                 BorderBrush="Black"
-                BorderThickness="1"
+                BorderThickness="0.5"
                 CornerRadius="5">
                 <clock:DigitalClock FontSize="25" ShowDate="False" />
             </Border>
         </Grid>
 
-        <Grid Grid.Row="1" Margin="25,0,0,0">
-            <StackPanel Orientation="Horizontal">
-                <Button
-                    Margin="0,0,5,0"
-                    Command="{Binding NavigateHomeCommand}"
-                    Content="Historie"
-                    Focusable="False"
-                    Style="{StaticResource ViewButton}"
-                    Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
+        <Grid Grid.Row="1" Visibility="{Binding UserLogOn, Converter={StaticResource BoolToVisibilityConverter}}">
 
-                <Button
-                    Margin="0,0,5,0"
-                    Command="{Binding NavigateProfileCommand}"
-                    Content="Profil"
-                    Focusable="False"
-                    Style="{StaticResource ViewButton}"
-                    Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
+            <Border
+                Margin="5,5,5,5"
+                Padding="5"
+                Background="FloralWhite"
+                BorderBrush="Black"
+                BorderThickness="0.5"
+                CornerRadius="5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
 
-                <Button
-                    Margin="0,0,5,0"
-                    Command="{Binding NavigateHomeCommand}"
-                    Content="Opravy"
-                    Focusable="False"
-                    Style="{StaticResource ViewButton}"
-                    Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
+                    <Grid Grid.Column="0" HorizontalAlignment="Left">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
 
-                <Button
-                    Margin="0,0,5,0"
-                    Command="{Binding NavigateHomeCommand}"
-                    Content="Podřízení"
-                    Focusable="False"
-                    Style="{StaticResource ViewButton}"
-                    Visibility="{Binding UserIsSupervisor, Converter={StaticResource bool2VisibilityConverter}}" />
+                        <Button
+                            Grid.Column="0"
+                            Margin="0,0,5,0"
+                            Command="{Binding NavigateUserMenuCommand}"
+                            Content="Zápis"
+                            Focusable="False"
+                            FontSize="20"
+                            Style="{StaticResource ViewButton}"
+                            Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
 
-                <Button
-                    Margin="0,0,5,0"
-                    Command="{Binding NavigateUsersKeysCommand}"
-                    Content="Klíče"
-                    Focusable="False"
-                    Style="{StaticResource ViewButton}"
-                    Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
+                        <Button
+                            Grid.Column="1"
+                            Margin="0,0,5,0"
+                            Command="{Binding NavigateHomeCommand}"
+                            Content="Historie"
+                            Focusable="False"
+                            FontSize="20"
+                            Style="{StaticResource ViewButton}"
+                            Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
+
+                        <Button
+                            Grid.Column="2"
+                            Margin="0,0,5,0"
+                            Command="{Binding NavigateHomeCommand}"
+                            Content="Opravy"
+                            Focusable="False"
+                            FontSize="20"
+                            Style="{StaticResource ViewButton}"
+                            Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
+
+                        <Button
+                            Grid.Column="3"
+                            Margin="0,0,5,0"
+                            Command="{Binding NavigateProfileCommand}"
+                            Content="Profil"
+                            Focusable="False"
+                            FontSize="20"
+                            Style="{StaticResource ViewButton}"
+                            Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
+
+                        <Button
+                            Grid.Column="4"
+                            Margin="0,0,5,0"
+                            Command="{Binding NavigateUsersKeysCommand}"
+                            Content="Klíče"
+                            Focusable="False"
+                            FontSize="20"
+                            Style="{StaticResource ViewButton}"
+                            Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
+
+                    </Grid>
+
+                    <StackPanel
+                        Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
 
 
-                <Button
-                    Margin="0,0,5,0"
-                    Command="{Binding NavigateUserMenuCommand}"
-                    Content="Aktivity"
-                    Focusable="False"
-                    Style="{StaticResource ViewButton}"
-                    Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            d:Text="Jméno přihlášeného"
+                            FontSize="24"
+                            Style="{StaticResource DetailTextBlock}"
+                            Text="{Binding CurrentName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                <Button
-                    Margin="0,0,5,0"
-                    Command="{Binding NavigateGroupsCommand}"
-                    Content="Skupiny"
-                    Focusable="False"
-                    Style="{StaticResource ViewButton}"
-                    Visibility="{Binding UserIsAdmin, Converter={StaticResource bool2VisibilityConverter}}" />
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            FontSize="16"
+                            Style="{StaticResource DetailTextBlock}"
+                            Text=" - " />
+
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            d:Text="Současná aktivita"
+                            FontSize="24"
+                            Style="{StaticResource DetailTextBlock}"
+                            Text="{Binding CurrentActivity, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
 
 
-                <Button
-                    Margin="0,0,5,0"
-                    Command="{Binding NavigateHomeCommand}"
-                    Content="Zavřít"
-                    Focusable="False"
-                    Style="{StaticResource ViewButton}"
-                    Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
 
-                <TextBlock
-                    Margin="0,0,5,0"
-                    Style="{StaticResource DetailTextBlock}"
-                    Text="{Binding CurrentName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-            </StackPanel>
+                    <Grid Grid.Column="2" HorizontalAlignment="Right">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button
+                            Grid.Column="0"
+                            Margin="0,0,5,0"
+                            Command="{Binding NavigateHomeCommand}"
+                            Content="Podřízení"
+                            Focusable="False"
+                            FontSize="20"
+                            Style="{StaticResource ViewButton}"
+                            Visibility="{Binding UserIsSupervisor, Converter={StaticResource bool2VisibilityConverter}}" />
+
+                        <Button
+                            Grid.Column="1"
+                            Margin="0,0,5,0"
+                            Command="{Binding NavigateGroupsCommand}"
+                            Content="Skupiny"
+                            Focusable="False"
+                            FontSize="20"
+                            Style="{StaticResource ViewButton}"
+                            Visibility="{Binding UserIsAdmin, Converter={StaticResource bool2VisibilityConverter}}" />
+
+                        <Button
+                            Grid.Column="2"
+                            Margin="0,0,5,0"
+                            Command="{Binding NavigateActivitiesCommand}"
+                            Content="Aktivity"
+                            Focusable="False"
+                            FontSize="20"
+                            Style="{StaticResource ViewButton}"
+                            Visibility="{Binding UserIsAdmin, Converter={StaticResource bool2VisibilityConverter}}" />
+
+                        <Button
+                            Grid.Column="3"
+                            Margin="0,0,5,0"
+                            HorizontalAlignment="Right"
+                            Command="{Binding NavigateHomeCommand}"
+                            Content="Zavřít"
+                            Focusable="False"
+                            FontSize="20"
+                            Style="{StaticResource ViewButton}"
+                            Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
+
+                    </Grid>
+                </Grid>
+            </Border>
+
         </Grid>
     </Grid>
 </UserControl>

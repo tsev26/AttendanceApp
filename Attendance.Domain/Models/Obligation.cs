@@ -69,6 +69,14 @@ namespace Attendance.Domain.Models
         public bool WorksFriday { get; set; }
         public bool WorksSaturday { get; set; }
         public bool WorksSunday { get; set; }
-        public List<Activity> AvailableActivities { get; set; }
+        public List<Activity> AvailableActivities { get; set; } 
+
+        public Obligation Clone(Obligation obligation)
+        {
+            return new Obligation(obligation)
+            {
+                Id = obligation.Id
+            };
+        }
     }
 }
