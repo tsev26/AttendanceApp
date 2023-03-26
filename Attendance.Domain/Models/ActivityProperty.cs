@@ -53,11 +53,11 @@ namespace Attendance.Domain.Models
         public bool HasExpectedReturn { get; set; }
         public string GroupByName { get; set; }
 
-        public ActivityProperty Clone(ActivityProperty property)
+        public ActivityProperty Clone()
         {
-            return new ActivityProperty(property)
+            return new ActivityProperty(this)
             {
-                Id = property.Id
+                Id = this.Id
             };
         }
     }

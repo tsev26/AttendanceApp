@@ -10,18 +10,19 @@ namespace Attendance.WPF.Commands
 {
     public class CreateUpdateOnUserCommand : CommandBase
     {
-        private CurrentUser _currentUser;
         private UserStore _userStore;
+        private UserProfileViewModel _userProfileViewModel;
 
-        public CreateUpdateOnUserCommand(CurrentUser currentUser, UserStore userStore)
+
+        public CreateUpdateOnUserCommand(UserStore userStore, UserProfileViewModel userProfileViewModel)
         {
-            _currentUser = currentUser;
             _userStore = userStore;
+            _userProfileViewModel = userProfileViewModel;
         }
 
         public override void Execute(object? parameter)
         {
-            _userStore.AddUser(_currentUser.UserUpdates);
+            _userStore.AddUser(_userProfileViewModel.UserUpdate);
         }
     }
 }

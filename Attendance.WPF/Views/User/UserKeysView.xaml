@@ -35,6 +35,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock
@@ -65,6 +66,16 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+
+                    <Button
+                        Grid.Row="3"
+                        Width="300"
+                        Height="40"
+                        Margin="10"
+                        Command="{Binding NavigateUpsertKey}"
+                        CommandParameter="Add"
+                        Content="Přidat nový klíč"
+                        Style="{StaticResource MenuButton}" />
                 </Grid>
 
 
@@ -82,77 +93,85 @@
                 BorderThickness="1"
                 CornerRadius="5" />
             <Grid Margin="20">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
 
-
-
-                <Grid Grid.Row="1" Visibility="{Binding IsKeySelected, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                        Grid.Column="0"
-                        Margin="10"
-                        HorizontalAlignment="Right"
-                        Style="{StaticResource DetailTextBlock}"
-                        Text="Vybraný klíč:" />
-                    <TextBlock
-                        Grid.Column="1"
-                        Margin="0,0,0,8"
-                        FontSize="30"
-                        Style="{StaticResource DetailTextBlock}"
-                        Text="{Binding SelectedKey}"
-                        Typography.Capitals="AllSmallCaps" />
-                </Grid>
-
-                <Grid Grid.Row="2" Visibility="{Binding IsKeySelected, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Button
-                        Grid.Column="0"
-                        Width="80"
-                        Height="30"
-                        Margin="10"
-                        HorizontalAlignment="Right"
-                        Command="{Binding NavigateUpsertKey}"
-                        CommandParameter="Update"
-                        Content="Upravit"
-                        Style="{StaticResource MenuButton}" />
-
-                    <Button
-                        Grid.Column="1"
-                        Width="80"
-                        Height="30"
-                        Margin="10"
-                        HorizontalAlignment="Left"
-                        Command="{Binding NavigateUpsertKey}"
-                        CommandParameter="Remove"
-                        Content="Smazat"
-                        Style="{StaticResource MenuButton}" />
-                </Grid>
-
-
-                <Button
-                    Grid.Row="3"
-                    Width="300"
-                    Height="40"
+                <Grid
+                    Grid.Row="1"
                     Margin="10"
-                    Command="{Binding NavigateUpsertKey}"
-                    CommandParameter="Add"
-                    Content="Přidat nový klíč"
-                    Style="{StaticResource MenuButton}" />
+                    Visibility="{Binding IsKeySelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
 
+                    <TextBlock
+                        Grid.Row="0"
+                        Margin="0"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource DetailTextBlock}"
+                        Text="Vybraný klíč" />
+
+                    <Border
+                        Grid.Row="1"
+                        Margin="10"
+                        Padding="10"
+                        Background="FloralWhite"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="5">
+                        <Grid Margin="10" HorizontalAlignment="Center">
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock
+                                Grid.Row="0"
+                                Margin="0,0,0,0"
+                                HorizontalAlignment="Center"
+                                FontSize="30"
+                                Style="{StaticResource DetailTextBlock}"
+                                Text="{Binding SelectedKey}"
+                                Typography.Capitals="AllSmallCaps" />
+
+                            <Grid Grid.Row="1" Margin="0,20,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Button
+                                    Grid.Column="0"
+                                    Width="80"
+                                    Height="30"
+                                    Margin="10"
+                                    HorizontalAlignment="Right"
+                                    Command="{Binding NavigateUpsertKey}"
+                                    CommandParameter="Update"
+                                    Content="Upravit"
+                                    Style="{StaticResource MenuButton}" />
+
+                                <Button
+                                    Grid.Column="1"
+                                    Width="80"
+                                    Height="30"
+                                    Margin="10"
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding NavigateUpsertKey}"
+                                    CommandParameter="Remove"
+                                    Content="Smazat"
+                                    Style="{StaticResource MenuButton}" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+
+                </Grid>
             </Grid>
+
+
         </Grid>
+
+
 
     </Grid>
 </UserControl>

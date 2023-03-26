@@ -14,20 +14,12 @@ namespace Attendance.WPF.Stores
 {
     public class CurrentUser
     {
-        private List<AttendanceRecord> _attendanceRecords;
-        private List<AttendanceTotal> _attendanceTotal;
-        //private List<AttendanceRecord> _userAttendanceRecords;
-        //private List<AttendanceTotal> _userAttendanceTotal;
-
-        public CurrentUser()
-        {
-            _attendanceRecords = new List<AttendanceRecord>();
-            _attendanceTotal = new List<AttendanceTotal>();
-        }
+        private List<AttendanceRecord> _attendanceRecords = new List<AttendanceRecord>();
+        private List<AttendanceTotal> _attendanceTotal = new List<AttendanceTotal>();
 
         public event Action CurrentUserChange;
         public event Action CurrentUserKeysChange;
-        public event Action CurrentUserUpdatesChange;
+        //public event Action CurrentUserUpdatesChange;
 
         private User? _user;
         public User? User
@@ -45,6 +37,7 @@ namespace Attendance.WPF.Stores
 
         public AttendanceRecord? CurrentAttendanceRecord => AttendanceRecords.LastOrDefault(a => a.Entry <= DateTime.Now);
 
+        /*
         private User? _userUpdates;
         public User? UserUpdates
         {
@@ -58,6 +51,7 @@ namespace Attendance.WPF.Stores
                 CurrentUserUpdatesChange?.Invoke();
             }
         }
+        */
 
         public Key SelectedKeyValue { get; set; }
 

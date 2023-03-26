@@ -71,11 +71,11 @@ namespace Attendance.Domain.Models
         public bool WorksSunday { get; set; }
         public List<Activity> AvailableActivities { get; set; } 
 
-        public Obligation Clone(Obligation obligation)
+        public Obligation Clone()
         {
-            return new Obligation(obligation)
+            return new Obligation(this)
             {
-                Id = obligation.Id
+                Id = this.Id
             };
         }
     }

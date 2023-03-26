@@ -466,7 +466,7 @@
         <Setter Property="MinWidth" Value="75" />
         <Setter Property="FontSize" Value="18" />
         <Setter Property="Foreground" Value="AntiqueWhite" />
-        <Setter Property="Margin" Value="0,0,0,12" />
+        <Setter Property="Margin" Value="0,0,0,0" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="MaxWidth" Value="200" />
         <Setter Property="Template">

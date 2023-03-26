@@ -12,11 +12,10 @@ namespace Attendance.WPF.ViewModels
 {
     public class UsersViewModel : ViewModelBase
     {
-        public UsersViewModel(INavigationService navigateToHome)
+        public UsersViewModel()
         {
-            NavigateHomeCommand = new NavigateCommand(navigateToHome);
+
         }
 
-        public ICommand NavigateHomeCommand { get; set; }
     }
 }

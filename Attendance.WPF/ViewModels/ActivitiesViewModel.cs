@@ -28,7 +28,7 @@ namespace Attendance.WPF.ViewModels
 
         private void ActivityStore_ActivitiesChange()
         {
-            Activities = _activityStore.Activities.Select(a => a.Clone(a)).ToList();
+            Activities = _activityStore.Activities.Select(a => a.Clone()).ToList();
             OnPropertyChanged(nameof(Activities));
         }
 

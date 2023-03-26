@@ -69,6 +69,11 @@
                 <views:ActivityUpsertView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodels:UserHistoryViewModel}">
+                <views:UserHistoryView />
+            </DataTemplate>
+
+
         </Grid.Resources>
 
         <Grid.RowDefinitions>

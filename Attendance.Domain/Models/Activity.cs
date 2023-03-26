@@ -20,7 +20,7 @@ namespace Attendance.Domain.Models
             Id = activity.Id;
             Name = activity.Name;
             Shortcut = activity.Shortcut;
-            Property = activity.Property.Clone(activity.Property);
+            Property = activity.Property.Clone();
         }
 
         public string Name { get; set; }
@@ -36,12 +36,12 @@ namespace Attendance.Domain.Models
         public string ActName2 => Shortcut;
         public string ActName3 => (PositionOfShortCutInName != 0) ? Name.Substring(PositionOfShortCutInName, LenghtOfName - PositionOfShortCutInName) : "";
 
-        public Activity Clone(Activity activity)
+        public Activity Clone()
         {
-            return new Activity(activity)
+            return new Activity(this)
             {
-                Id = activity.Id,
-                Property = Property?.Clone(activity.Property)
+                Id = this.Id,
+                Property = Property?.Clone()
             };
         }
     }

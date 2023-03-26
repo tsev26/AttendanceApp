@@ -23,7 +23,7 @@ namespace Attendance.WPF.ViewModels
             NewKeyValue = _currentUser.SelectedKeyValue?.KeyValue;
         }
 
-        public string Header => (_currentUser.SelectedKeyValue == null) ? "Přidání klíče" : "Úprava klíče";
+        public string Header => (_currentUser.SelectedKeyValue?.KeyValue == null) ? "Přidání klíče" : "Úprava klíče";
 
 
         private string _newKeyValue;

@@ -57,7 +57,7 @@ namespace Attendance.WPF
 
             services.AddTransient<UserSelectActivityViewModel>(); //CreateUserSelectActivityViewModel
             services.AddTransient<UserDailyOverviewViewModel>();
-            services.AddTransient<UsersViewModel>();
+            services.AddTransient<UsersViewModel>(CreateUsersViewModel);
             services.AddTransient<UserKeysViewModel>(CreateUserKeysViewModel);
             services.AddTransient<UserKeyUpsertViewModel>(CreateUserKeyUpsertViewModel);
             services.AddTransient<UserProfileViewModel>(CreateUserProfileViewModel);
@@ -173,6 +173,7 @@ namespace Attendance.WPF
                 CreateUserProfileNavigationService(serviceProvider),
                 CreateGroupNavigationService(serviceProvider),
                 CreateActivitiesNavigationService(serviceProvider),
+                CreateUsersNavigationService(serviceProvider),
                 serviceProvider.GetRequiredService<CurrentUser>()
                 );
         }
@@ -267,6 +268,11 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<NavigationStore>(),
                 serviceProvider.GetRequiredService<MessageStore>(),
                 () => serviceProvider.GetRequiredService<ActivitiesViewModel>());
+        }
+
+        private UsersViewModel CreateUsersViewModel(IServiceProvider serviceProvider)
+        {
+            return new UsersViewModel();
         }
 
     }

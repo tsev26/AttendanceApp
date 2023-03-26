@@ -185,7 +185,7 @@
                         <Button
                             Grid.Column="0"
                             Margin="0,0,5,0"
-                            Command="{Binding NavigateHomeCommand}"
+                            Command="{Binding NavigateUsersCommand}"
                             Content="Podřízení"
                             Focusable="False"
                             FontSize="20"

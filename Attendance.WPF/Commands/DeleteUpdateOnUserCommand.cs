@@ -1,4 +1,5 @@
 ﻿using Attendance.WPF.Stores;
+using Attendance.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +10,18 @@ namespace Attendance.WPF.Commands
 {
     public class DeleteUpdateOnUserCommand : CommandBase
     {
-        private CurrentUser _currentUser;
         private UserStore _userStore;
+        private UserProfileViewModel _userProfileViewModel;
 
-        public DeleteUpdateOnUserCommand(CurrentUser currentUser, UserStore userStore)
+        public DeleteUpdateOnUserCommand(UserStore userStore, UserProfileViewModel userProfileViewModel)
         {
-            _currentUser = currentUser;
             _userStore = userStore;
+            _userProfileViewModel = userProfileViewModel;
         }
 
         public override void Execute(object? parameter)
         {
-            _userStore.DeleteUser(_currentUser.UserUpdates);
+            _userStore.DeleteUser(_userProfileViewModel.UserUpdate);
         }
     }
 }

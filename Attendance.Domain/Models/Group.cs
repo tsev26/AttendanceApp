@@ -36,14 +36,14 @@ namespace Attendance.Domain.Models
             return Name;
         }
 
-        public Group Clone(Group group)
+        public Group Clone()
         {
-            return new Group(group)
+            return new Group(this)
             {
-                Id = group.Id,
-                Obligation = group.Obligation.Clone(group.Obligation),
-                Supervisor = group.Supervisor,
-                Users = group.Users
+                Id = this.Id,
+                Obligation = this.Obligation.Clone(),
+                Supervisor = this.Supervisor,
+                Users = this.Users
             };
         }
     }

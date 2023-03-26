@@ -62,7 +62,7 @@ namespace Attendance.WPF.ViewModels
 
         private void GroupStore_GroupsChange()
         {
-            Groups = _groupStore.Groups.Select(a => a.Clone(a)).ToList();
+            Groups = _groupStore.Groups.Select(a => a.Clone()).ToList();
             OnPropertyChanged(nameof(Groups));
         }
 

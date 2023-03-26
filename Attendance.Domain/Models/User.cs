@@ -117,12 +117,12 @@ namespace Attendance.Domain.Models
         }
 
 
-        public User Clone(User user)
+        public User Clone()
         {
-            return new User(user)
+            return new User(this)
             {
-                Id = user.Id,
-                Obligation = Obligation?.Clone(Obligation)
+                Id = this.Id,
+                Obligation = Obligation?.Clone()
             };
         }
     }
