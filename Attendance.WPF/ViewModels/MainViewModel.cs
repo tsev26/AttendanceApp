@@ -20,7 +20,8 @@ namespace Attendance.WPF.ViewModels
                              ModalNavigationStore modalNavigationStore,
                              ActivityStore activityStore,
                              UserStore userStore,
-                             GroupStore groupStore)
+                             GroupStore groupStore,
+                             CurrentUser currentUser)
         {
             _navigationStore = navigationStore;
             _modalNavigationStore = modalNavigationStore;
@@ -105,17 +106,16 @@ namespace Attendance.WPF.ViewModels
             userStore.AddUser(user1);
 
             User user2 = new User("TEST", "8", "tsevcu@gmail.com", false);
-            user1.Keys.Add(new Key("test"));
+            user2.Keys.Add(new Key("test"));
             userStore.AddUser(user2);
 
             User user3 = new User("Petr", "Ševců", "tsevcu@gmail.com", false);
-            user1.Keys.Add(new Key("etr"));
+            user3.Keys.Add(new Key("etr"));
             userStore.AddUser(user3);
 
             User user4 = new User("Eva", "Ševců", "tsevcu@gmail.com", false);
-            user1.Keys.Add(new Key("eva"));
+            user4.Keys.Add(new Key("eva"));
             userStore.AddUser(user4);
-
 
             group.Users.Add(user1);
             group.Users.Add(user2);
@@ -130,6 +130,18 @@ namespace Attendance.WPF.ViewModels
 
             groupStore.AddGroup(group);
             groupStore.AddGroup(group2);
+
+            currentUser.LoadUser(user1);
+            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 24, 8, 0, 0));
+            currentUser.SetActivity(homeActivity, new DateTime(2023, 3, 24, 15, 0, 0));
+            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 23, 8, 0, 0));
+            currentUser.SetActivity(homeActivity, new DateTime(2023, 3, 23, 15, 0, 0));
+            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 22, 8, 0, 0));
+            currentUser.SetActivity(homeActivity, new DateTime(2023, 3, 22, 15, 0, 0));
+            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 21, 8, 0, 0));
+            currentUser.SetActivity(homeActivity, new DateTime(2023, 3, 21, 15, 0, 0));
+            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 26, 12, 0, 0));
+            currentUser.User = null;
         }
 
         public NavigationBarViewModel NavigationBarViewModel { get; }

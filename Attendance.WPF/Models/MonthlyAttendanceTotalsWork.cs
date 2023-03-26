@@ -10,7 +10,8 @@ namespace Attendance.WPF.Models
     public class MonthlyAttendanceTotalsWork
     {
         public DateOnly Date { get; set; }
+        public string DateName { get; set; }
         public User User { get; set; }
-        public TimeOnly Worked { get; set; }
+        public TimeSpan Worked { get; set; }
     }
 }

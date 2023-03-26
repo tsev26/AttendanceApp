@@ -65,6 +65,7 @@ namespace Attendance.WPF
             services.AddTransient<GroupUpsertViewModel>(CreateGroupUpsertViewModel);
             services.AddTransient<ActivitiesViewModel>(CreateActivitiesViewModel);
             services.AddTransient<ActivityUpsertViewModel>(CreateActivityUpsertViewModel);
+            services.AddTransient<UserHistoryViewModel>(CreateUserHistoryViewModel);
 
             services.AddSingleton<MainViewModel>();
 
@@ -174,6 +175,7 @@ namespace Attendance.WPF
                 CreateGroupNavigationService(serviceProvider),
                 CreateActivitiesNavigationService(serviceProvider),
                 CreateUsersNavigationService(serviceProvider),
+                CreateUserHistoryService(serviceProvider),
                 serviceProvider.GetRequiredService<CurrentUser>()
                 );
         }
@@ -273,6 +275,21 @@ namespace Attendance.WPF
         private UsersViewModel CreateUsersViewModel(IServiceProvider serviceProvider)
         {
             return new UsersViewModel();
+        }
+
+        private INavigationService CreateUserHistoryService(IServiceProvider serviceProvider)
+        {
+            return new NavigationService<UserHistoryViewModel>(
+                 serviceProvider.GetRequiredService<NavigationStore>(),
+                 serviceProvider.GetRequiredService<MessageStore>(),
+                 () => serviceProvider.GetRequiredService<UserHistoryViewModel>());
+        }
+
+        private UserHistoryViewModel CreateUserHistoryViewModel(IServiceProvider serviceProvider)
+        {
+            return new UserHistoryViewModel(
+                serviceProvider.GetRequiredService<CurrentUser>()
+                );
         }
 
     }

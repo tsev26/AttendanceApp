@@ -1,9 +1,12 @@
 ﻿using Attendance.Domain.Models;
 using Attendance.WPF.Model;
+using Attendance.WPF.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Markup;
@@ -69,6 +72,13 @@ namespace Attendance.WPF.Stores
         public void SetActivity(Activity activity)
         {
             AttendanceRecord attendanceRecord = new AttendanceRecord(User, activity, DateTime.Now);
+            _attendanceRecords.Add(attendanceRecord);
+            CountTotalDay(attendanceRecord);
+        }
+
+        public void SetActivity(Activity activity, DateTime dateTime)
+        {
+            AttendanceRecord attendanceRecord = new AttendanceRecord(User, activity, dateTime);
             _attendanceRecords.Add(attendanceRecord);
             CountTotalDay(attendanceRecord);
         }
@@ -190,7 +200,7 @@ namespace Attendance.WPF.Stores
             }
             */
 
-            List<AttendanceTotal> newAttendanceTotalInDay = attendanceRecordWithEndings
+            List<AttendanceTotal> newAttendanceTotalInDay = attendanceRecordWithEndings.Where(a => a.Activity.Property.Count)
                 .GroupBy(d => new { d.User, d.Activity, date })
                 .Select(g => new AttendanceTotal
                 {
@@ -201,7 +211,7 @@ namespace Attendance.WPF.Stores
                 })
                 .ToList();
 
-            _attendanceTotal.RemoveAll(a => a.User == User);
+            _attendanceTotal.RemoveAll(a => a.User == User && a.Date == date);
             _attendanceTotal.AddRange(newAttendanceTotalInDay);
 
         }
@@ -230,6 +240,40 @@ namespace Attendance.WPF.Stores
                 User.Keys.Add(newKeyValue);
             }
             CurrentUserKeysChange?.Invoke();
+        }
+
+        public List<MonthlyAttendanceTotalsWork> MonthlyAttendanceTotalsWorks(int month, int year)
+        {
+
+            IEnumerable<DateOnly> dates = Enumerable.Range(1, DateTime.DaysInMonth(year, month)).Select(day => new DateOnly(year, month, day));
+
+            IEnumerable<MonthlyAttendanceTotalsWork> monthlyAttendanceTotalsWork = _attendanceTotal
+                .Where(a => a.Date.Year == year && a.Date.Month == month && !a.Activity.Property.IsPause && a.Activity.Property.Count)
+                .GroupBy(a => new { a.Date, a.User })
+                .Select(group => new MonthlyAttendanceTotalsWork
+                {
+                    Date = group.Key.Date,
+                    User = group.Key.User,
+                    Worked = TimeSpan.FromTicks(group.Sum(a => a.Duration.Ticks))
+                });
+
+            IEnumerable<User> users = _attendanceTotal.Select(a => a.User).Distinct();
+
+            List<MonthlyAttendanceTotalsWork> results = dates.SelectMany(date => users.Select(user => new { Date = date, User = user }))
+                .GroupJoin(monthlyAttendanceTotalsWork,
+                    x => new { x.Date, x.User },
+                    y => new { y.Date, y.User },
+                    (x, y) => 
+                        new MonthlyAttendanceTotalsWork {
+                            Date = x.Date,
+                            DateName = CultureInfo.GetCultureInfo("cs-CZ").DateTimeFormat.GetDayName(x.Date.DayOfWeek),
+                            User = x.User,
+                            Worked = y.Select(z => z.Worked).FirstOrDefault()
+                        })
+                .Where(x => x.Date <= DateOnly.FromDateTime(DateTime.Now))
+                .ToList();
+
+            return results;
         }
     }
 }
