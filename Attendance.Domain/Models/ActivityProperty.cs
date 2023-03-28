@@ -53,6 +53,8 @@ namespace Attendance.Domain.Models
         public bool HasExpectedReturn { get; set; }
         public string GroupByName { get; set; }
 
+        public bool IsWork => !IsPause;
+
         public ActivityProperty Clone()
         {
             return new ActivityProperty(this)

@@ -132,15 +132,23 @@ namespace Attendance.WPF.ViewModels
             groupStore.AddGroup(group2);
 
             currentUser.LoadUser(user1);
+
+            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 01, 8, 0, 0));
+            currentUser.SetActivity(homeActivity, new DateTime(2023, 3, 03, 15, 0, 0));
+            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 04, 8, 0, 0));
+            currentUser.SetActivity(pauseActivity,new DateTime(2023, 3, 04, 14, 0, 0));
+            currentUser.SetActivity(homeActivity, new DateTime(2023, 3, 04, 15, 0, 0));
+            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 07, 8, 0, 0));
+            currentUser.SetActivity(pauseActivity, new DateTime(2023, 3, 07, 14, 0, 0));
+            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 07, 15, 0, 0));
+            currentUser.SetActivity(pauseActivity, new DateTime(2023, 3, 07, 15, 30, 0));
+            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 07, 15, 45, 0));
+            currentUser.SetActivity(homeActivity, new DateTime(2023, 3, 15, 15, 0, 0));
+
             currentUser.SetActivity(workActivity, new DateTime(2023, 3, 24, 8, 0, 0));
             currentUser.SetActivity(homeActivity, new DateTime(2023, 3, 24, 15, 0, 0));
-            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 23, 8, 0, 0));
-            currentUser.SetActivity(homeActivity, new DateTime(2023, 3, 23, 15, 0, 0));
-            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 22, 8, 0, 0));
-            currentUser.SetActivity(homeActivity, new DateTime(2023, 3, 22, 15, 0, 0));
-            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 21, 8, 0, 0));
-            currentUser.SetActivity(homeActivity, new DateTime(2023, 3, 21, 15, 0, 0));
-            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 26, 12, 0, 0));
+
+            currentUser.SetActivity(workActivity, new DateTime(2023, 3, 26, 16, 0, 0));
             currentUser.User = null;
         }
 

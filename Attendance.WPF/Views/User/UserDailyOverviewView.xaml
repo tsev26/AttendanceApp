@@ -18,11 +18,24 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock
+            <StackPanel
                 Grid.Row="0"
                 HorizontalAlignment="Center"
-                Style="{StaticResource DetailTextBlock}"
-                Text="Denní statistika" />
+                Orientation="Horizontal">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource DetailTextBlock}"
+                    Text="{Binding DateName}" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource DetailTextBlock}"
+                    Text=" " />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    Style="{StaticResource DetailTextBlock}"
+                    Text="{Binding Date, StringFormat=dd.MM.yyyy}" />
+            </StackPanel>
+
 
             <!--  prumer  -->
             <!--

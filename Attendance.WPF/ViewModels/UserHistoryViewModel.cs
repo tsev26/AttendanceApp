@@ -13,18 +13,24 @@ namespace Attendance.WPF.ViewModels
     public class UserHistoryViewModel : ViewModelBase
     {
         private readonly CurrentUser _currentUser;
+		private readonly UserDailyOverviewViewModel _userDailyOverviewViewModel;
 
-        public UserHistoryViewModel(CurrentUser currentUser)
+        public UserHistoryViewModel(CurrentUser currentUser, UserDailyOverviewViewModel userDailyOverviewViewModel)
         {
             _currentUser = currentUser;
+            _userDailyOverviewViewModel = userDailyOverviewViewModel;
+            UserDailyOverviewViewModel = userDailyOverviewViewModel;
 
-			ChangeMonthCommand = new ChangeMonthCommand(this);
+
+            ChangeMonthCommand = new ChangeMonthCommand(this);
 
 			Month = DateTime.Now.Month;
 			Year = DateTime.Now.Year;
         }
 
-		public ICommand ChangeMonthCommand { get; }
+
+		public UserDailyOverviewViewModel UserDailyOverviewViewModel { get; }
+        public ICommand ChangeMonthCommand { get; }
 
 		private int _year;
 		public int Year
@@ -56,11 +62,11 @@ namespace Attendance.WPF.ViewModels
             }
 		}
 
-		public List<MonthlyAttendanceTotalsWork> UserHistory => _currentUser.MonthlyAttendanceTotalsWorks(Month, Year);
+		public List<MonthlyAttendanceTotalsWork> UserHistory => _currentUser.MonthlyAttendanceTotalsWorks(Month, Year, _currentUser.User);
 
 		public bool IsButtonNextMonthVisible => !(Year == DateTime.Now.Year && Month == DateTime.Now.Month);
 
-		private int _selectedIndex;
+		private int _selectedIndex = -1;
 		public int SelectedIndex
         {
 			get
@@ -72,11 +78,16 @@ namespace Attendance.WPF.ViewModels
 				_selectedIndex = value;
 				OnPropertyChanged(nameof(SelectedIndex));
                 OnPropertyChanged(nameof(IsHistorySelected));
+                OnPropertyChanged(nameof(SelectedHistory));
+
+				_userDailyOverviewViewModel.Date = (IsHistorySelected) ? SelectedHistory.Date : DateOnly.FromDateTime(DateTime.Now);
             }
 		}
 
 		public bool IsHistorySelected => SelectedIndex != -1;
 
+		public MonthlyAttendanceTotalsWork SelectedHistory => IsHistorySelected ? UserHistory[SelectedIndex] : null;
 
+		public DateOnly SelectedDate => SelectedHistory.Date;
     }
 }

@@ -105,6 +105,20 @@
 
         </Grid>
 
+        <Border
+            Grid.Column="1"
+            Margin="10"
+            Background="AntiqueWhite"
+            BorderBrush="Black"
+            BorderThickness="1"
+            CornerRadius="5">
+            <local:UserDailyOverviewView
+                Margin="10"
+                DataContext="{Binding UserDailyOverviewViewModel}"
+                Focusable="False" />
+        </Border>
+
+        <!--
         <Grid Grid.Column="1">
             <Border
                 Margin="10,10,10,10"
@@ -157,7 +171,7 @@
 
 
         </Grid>
-
+        -->
 
 
     </Grid>

@@ -288,7 +288,8 @@ namespace Attendance.WPF
         private UserHistoryViewModel CreateUserHistoryViewModel(IServiceProvider serviceProvider)
         {
             return new UserHistoryViewModel(
-                serviceProvider.GetRequiredService<CurrentUser>()
+                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<UserDailyOverviewViewModel>()
                 );
         }
 

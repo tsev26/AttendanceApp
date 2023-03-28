@@ -9,7 +9,7 @@ namespace Attendance.WPF.Commands
 {
     public class ChangeMonthCommand : CommandBase
     {
-        private UserHistoryViewModel _userHistoryViewModel;
+        private readonly UserHistoryViewModel _userHistoryViewModel;
 
         public ChangeMonthCommand(UserHistoryViewModel userHistoryViewModel)
         {
@@ -31,6 +31,7 @@ namespace Attendance.WPF.Commands
                     {
                         _userHistoryViewModel.Month++;
                     }
+                    
                 }
                 else if (shift == "substractMonth")
                 {
@@ -44,6 +45,7 @@ namespace Attendance.WPF.Commands
                         _userHistoryViewModel.Month--;
                     }
                 }
+                _userHistoryViewModel.SelectedIndex = -1;
             }
         }
     }
