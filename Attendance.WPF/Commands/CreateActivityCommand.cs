@@ -30,10 +30,7 @@ namespace Attendance.WPF.Commands
                                                                      _activityUpsertViewModel.Count,
                                                                      _activityUpsertViewModel.IsPause,
                                                                      _activityUpsertViewModel.HasPause,
-                                                                     _activityUpsertViewModel.PauseEvery,
-                                                                     _activityUpsertViewModel.PauseDuration,
-                                                                     _activityUpsertViewModel.HasExpectedStart,
-                                                                     _activityUpsertViewModel.HasExpectedReturn,
+                                                                     _activityUpsertViewModel.MaxInDay,
                                                                      _activityUpsertViewModel.GroupByName);
 
             Activity newActivity = new Activity(_activityUpsertViewModel.ActivityName, _activityUpsertViewModel.ActivityShortcut, activityProperty);

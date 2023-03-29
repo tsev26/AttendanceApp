@@ -12,20 +12,14 @@ namespace Attendance.Domain.Models
                                 bool count, 
                                 bool isPause, 
                                 bool hasPause, 
-                                TimeSpan pauseEvery, 
-                                TimeSpan pauseDuration, 
-                                bool hasExpectedStart, 
-                                bool hasExpectedReturn, 
+                                TimeSpan maxInDay,
                                 string groupByName) : base()
         {
             IsPlan = isPlan;
             Count = count;
             IsPause = isPause;
             HasPause = hasPause;
-            PauseEvery = pauseEvery;
-            PauseDuration = pauseDuration;
-            HasExpectedStart = hasExpectedStart;
-            HasExpectedReturn = hasExpectedReturn;
+            MaxInDay = maxInDay;
             GroupByName = groupByName;
         }
 
@@ -36,25 +30,17 @@ namespace Attendance.Domain.Models
             Count = activityProperty.Count;
             IsPause = activityProperty.IsPause;
             HasPause = activityProperty.HasPause;
-            PauseEvery = activityProperty.PauseEvery;
-            PauseDuration = activityProperty.PauseDuration;
-            HasExpectedStart = activityProperty.HasExpectedStart;
-            HasExpectedReturn= activityProperty.HasExpectedReturn;
-            GroupByName= activityProperty.GroupByName;
+            MaxInDay = activityProperty.MaxInDay;
+            GroupByName = activityProperty.GroupByName;
         }
 
         public bool IsPlan { get; set; }
         public bool Count { get; set; }
         public bool IsPause { get; set; }
         public bool HasPause { get; set; }
-        public TimeSpan PauseEvery { get; set; }
-        public TimeSpan PauseDuration { get; set; }
-        public bool HasExpectedStart { get; set; }
-        public bool HasExpectedReturn { get; set; }
+        public TimeSpan MaxInDay { get; set; }
         public string GroupByName { get; set; }
-
         public bool IsWork => !IsPause;
-
         public ActivityProperty Clone()
         {
             return new ActivityProperty(this)

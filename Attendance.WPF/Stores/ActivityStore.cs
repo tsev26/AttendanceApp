@@ -11,6 +11,7 @@ namespace Attendance.WPF.Stores
     public class ActivityStore
     {
         private List<Activity> _activities;
+        private ActivityGlobalSetting _globalSetting;
 
         public ActivityStore()
         {
@@ -18,6 +19,16 @@ namespace Attendance.WPF.Stores
         }
 
         public event Action ActivitiesChange;
+        public event Action GlobalSettingChange;
+
+        public ActivityGlobalSetting GlobalSetting
+        {
+            get { return _globalSetting; }
+            set
+            {
+                _globalSetting = value;
+            }
+        }
 
         public List<Activity> Activities
         {
@@ -44,5 +55,10 @@ namespace Attendance.WPF.Stores
             ActivitiesChange?.Invoke();
         }
 
+        public void UpdateActivityGlobalSetting(ActivityGlobalSetting activityGlobalSetting)
+        {
+            _globalSetting = activityGlobalSetting;
+            GlobalSettingChange?.Invoke();
+        }
     }
 }

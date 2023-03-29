@@ -21,7 +21,18 @@ namespace Attendance.WPF.Commands
 
         public override void Execute(object? parameter)
         {
-            _activityStore.UpdateActivity(_activitiesViewModel.SelectedActivity);
+            if (parameter is string type)
+            {
+                if (type == "acitivity")
+                {
+                    _activityStore.UpdateActivity(_activitiesViewModel.SelectedActivity);
+                }
+                else if (type == "globalSetting")
+                {
+                    _activityStore.UpdateActivityGlobalSetting(_activitiesViewModel.ActivityGlobalSetting);
+                }
+            }
+            
         }
     }
 }

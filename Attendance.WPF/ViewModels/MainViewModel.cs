@@ -31,22 +31,27 @@ namespace Attendance.WPF.ViewModels
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
             _modalNavigationStore.CurrentViewModelChanged += OnCurrentModelViewModelChanged;
 
-            
 
-            ActivityProperty workActivityProperty = new ActivityProperty(false, true, false, true, TimeSpan.FromHours(6), TimeSpan.FromMinutes(30), false, false, "práce");
+
+            ActivityProperty workActivityProperty = new ActivityProperty(false, true, false, true, new TimeSpan(15, 0, 0), "práce");
             Activity workActivity = new Activity("Práce", "P", workActivityProperty);
+
+
 
             activityStore.AddActivity(workActivity);
 
-            ActivityProperty pauseActivityProperty = new ActivityProperty(false, true, true, false, TimeSpan.FromHours(0), TimeSpan.FromMinutes(0), false, false, "pauza");
+            ActivityProperty pauseActivityProperty = new ActivityProperty(false, true, true, false, new TimeSpan(0,0,0), "pauza");
             Activity pauseActivity = new Activity("Pauza", "A", pauseActivityProperty);
 
             activityStore.AddActivity(pauseActivity);
 
-            ActivityProperty homeActivityProperty = new ActivityProperty(false, false, false, false, TimeSpan.FromHours(0), TimeSpan.FromMinutes(0), false, false, "domov");
+            ActivityProperty homeActivityProperty = new ActivityProperty(false, false, false, false, new TimeSpan(0, 0, 0), "domov");
             Activity homeActivity = new Activity("Domov", "D", homeActivityProperty);
-
+            
             activityStore.AddActivity(homeActivity);
+
+            ActivityGlobalSetting activityGlobalSetting = new ActivityGlobalSetting(new TimeSpan(6, 0, 0), new TimeSpan(0, 30, 0), workActivity, homeActivity, new TimeSpan(8, 0, 0), new TimeSpan(4, 0, 0));
+            activityStore.GlobalSetting = activityGlobalSetting;
 
             /*
             activityStore.AddActivity(pauseActivity);

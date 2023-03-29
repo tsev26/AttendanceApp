@@ -21,9 +21,18 @@ namespace Attendance.WPF.ViewModels
             _activityStore = activityStore;
             NavigateAddActivityCommand = new NavigateCommand(navigationActivityCreateService);
             SaveActivityChangesCommand = new SaveActivityChangesCommand(activityStore, this);
+            ActivityViewShowsCommand = new ActivityViewShowsCommand(this);
+
+            ActivityGlobalSetting = _activityStore.GlobalSetting.Clone();
 
             _activityStore.ActivitiesChange += ActivityStore_ActivitiesChange;
+            _activityStore.GlobalSettingChange += ActivityStore_GlobalSettingChange;
             ActivityStore_ActivitiesChange();
+        }
+
+        private void ActivityStore_GlobalSettingChange()
+        {
+            OnPropertyChanged(nameof(ActivityGlobalSetting));
         }
 
         private void ActivityStore_ActivitiesChange()
@@ -34,8 +43,10 @@ namespace Attendance.WPF.ViewModels
 
         public ICommand NavigateAddActivityCommand { get; }
 		public ICommand SaveActivityChangesCommand { get; }
+        public ICommand ActivityViewShowsCommand { get; }
 
-		private int _selectedActivityIndex = -1;
+
+        private int _selectedActivityIndex = -1;
 		public int SelectedActivityIndex
         {
 			get
@@ -47,6 +58,7 @@ namespace Attendance.WPF.ViewModels
 				_selectedActivityIndex = value;
 				OnPropertyChanged(nameof(SelectedActivityIndex));
                 OnPropertyChanged(nameof(IsActivitySelected));
+                OnPropertyChanged(nameof(IsNoActivitySelected));
                 OnPropertyChanged(nameof(SelectedActivity));
                 OnPropertyChanged(nameof(Name));
                 OnPropertyChanged(nameof(Shortcut));
@@ -54,16 +66,15 @@ namespace Attendance.WPF.ViewModels
                 OnPropertyChanged(nameof(Count));
                 OnPropertyChanged(nameof(IsPause));
                 OnPropertyChanged(nameof(HasPause));
-                OnPropertyChanged(nameof(PauseEvery));
-                OnPropertyChanged(nameof(PauseEvery));
-                OnPropertyChanged(nameof(PauseDuration));
-                OnPropertyChanged(nameof(HasExpectedStart));
-                OnPropertyChanged(nameof(HasExpectedReturn));
                 OnPropertyChanged(nameof(GroupByName));
             }
 		}
 
         public bool IsActivitySelected => SelectedActivityIndex != -1;
+
+        public bool IsNoActivitySelected => !IsActivitySelected;
+
+        public ActivityGlobalSetting ActivityGlobalSetting { get; set; }
 
         public List<Activity> Activities { get; set; }
 
@@ -76,15 +87,12 @@ namespace Attendance.WPF.ViewModels
         public bool Count => (IsActivitySelected) ? Activities[SelectedActivityIndex].Property.Count : false;
         public bool IsPause => (IsActivitySelected) ? Activities[SelectedActivityIndex].Property.IsPause : false;
         public bool HasPause => (IsActivitySelected) ? Activities[SelectedActivityIndex].Property.HasPause : false;
-        public TimeSpan PauseEvery => (IsActivitySelected) ? Activities[SelectedActivityIndex].Property.PauseEvery : TimeSpan.FromMinutes(0);
-        public TimeSpan PauseDuration => (IsActivitySelected) ? Activities[SelectedActivityIndex].Property.PauseDuration : TimeSpan.FromMinutes(0);
-        public bool HasExpectedStart => (IsActivitySelected) ? Activities[SelectedActivityIndex].Property.HasExpectedStart : false;
-        public bool HasExpectedReturn => (IsActivitySelected) ? Activities[SelectedActivityIndex].Property.HasExpectedReturn : false;
         public string GroupByName => (IsActivitySelected) ? Activities[SelectedActivityIndex].Property.GroupByName : "";
 
         public override void Dispose()
         {
             _activityStore.ActivitiesChange -= ActivityStore_ActivitiesChange;
+            _activityStore.GlobalSettingChange -= ActivityStore_GlobalSettingChange;
             base.Dispose();
         }
     }

@@ -107,62 +107,20 @@ namespace Attendance.WPF.ViewModels
             }
         }
 
-        private TimeSpan _pauseEvery;
-        public TimeSpan PauseEvery
+        private TimeSpan _maxInDay;
+        public TimeSpan MaxInDay
         {
             get
             {
-                return _pauseEvery;
+                return _maxInDay;
             }
             set
             {
-                _pauseEvery = value;
-                OnPropertyChanged(nameof(PauseEvery));
+                _maxInDay = value;
+                OnPropertyChanged(nameof(MaxInDay));
             }
         }
 
-        private TimeSpan _pauseDuration;
-        public TimeSpan PauseDuration
-        {
-            get
-            {
-                return _pauseDuration;
-            }
-            set
-            {
-                _pauseDuration = value;
-                OnPropertyChanged(nameof(PauseDuration));
-            }
-        }
-
-
-        private bool _hasExpectedStart;
-        public bool HasExpectedStart
-        {
-            get
-            {
-                return _hasExpectedStart;
-            }
-            set
-            {
-                _hasExpectedStart = value;
-                OnPropertyChanged(nameof(HasExpectedStart));
-            }
-        }
-
-        private bool _hasExpectedReturn;
-        public bool HasExpectedReturn
-        {
-            get
-            {
-                return _hasExpectedReturn;
-            }
-            set
-            {
-                _hasExpectedReturn = value;
-                OnPropertyChanged(nameof(HasExpectedReturn));
-            }
-        }
 
         private bool _isFullDayActivity;
         public bool IsFullDayActivity

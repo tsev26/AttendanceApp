@@ -162,8 +162,7 @@
                 Grid.Column="0"
                 FontSize="22"
                 Style="{StaticResource DetailTextBlock}"
-                Text="Pauza po"
-                Visibility="{Binding HasPause, Converter={StaticResource BoolToVisibilityConverter}}" />
+                Text="Maximálně za den" />
             <TextBox
                 Grid.Row="4"
                 Grid.Column="1"
@@ -173,27 +172,8 @@
                 HorizontalAlignment="Right"
                 VerticalContentAlignment="Center"
                 FontSize="20"
-                Text="{Binding PauseEvery, Mode=TwoWay}"
-                Visibility="{Binding HasPause, Converter={StaticResource BoolToVisibilityConverter}}" />
+                Text="{Binding MaxInDay, Mode=TwoWay}" />
 
-            <TextBlock
-                Grid.Row="5"
-                Grid.Column="0"
-                FontSize="22"
-                Style="{StaticResource DetailTextBlock}"
-                Text="Délka pauzy"
-                Visibility="{Binding HasPause, Converter={StaticResource BoolToVisibilityConverter}}" />
-            <TextBox
-                Grid.Row="5"
-                Grid.Column="1"
-                Width="150"
-                Height="35"
-                Margin="5"
-                HorizontalAlignment="Right"
-                VerticalContentAlignment="Center"
-                FontSize="20"
-                Text="{Binding PauseDuration, Mode=TwoWay}"
-                Visibility="{Binding HasPause, Converter={StaticResource BoolToVisibilityConverter}}" />
 
         </Grid>
 

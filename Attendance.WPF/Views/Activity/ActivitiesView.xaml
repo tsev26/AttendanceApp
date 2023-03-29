@@ -79,9 +79,15 @@
                     HorizontalAlignment="Center"
                     Orientation="Horizontal">
                     <Button
-                        Margin="0,0,0,0"
+                        Margin="5,0,5,0"
                         Command="{Binding NavigateAddActivityCommand}"
                         Content="Vytvořit aktivitu"
+                        Style="{StaticResource MenuButton}" />
+
+                    <Button
+                        Margin="5,0,5,0"
+                        Command="{Binding ActivityViewShowsCommand}"
+                        Content="Globální nastavení"
                         Style="{StaticResource MenuButton}" />
 
                 </StackPanel>
@@ -96,93 +102,35 @@
             BorderBrush="Black"
             BorderThickness="1"
             CornerRadius="5">
+            <Grid>
 
-            <Grid Margin="10" Visibility="{Binding IsActivitySelected, Converter={StaticResource BoolToVisibilityConverter}}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
+                <Grid
+                    Margin="10"
+                    d:Visibility="Hidden"
+                    Visibility="{Binding IsNoActivitySelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource DetailTextBlock}"
+                        Text="Globální nastavení aktivit" />
 
-                <TextBlock
-                    Grid.Row="0"
-                    HorizontalAlignment="Center"
-                    Style="{StaticResource DetailTextBlock}"
-                    Text="Vybraná aktivita" />
+                    <Border
+                        Grid.Row="1"
+                        Margin="10,5,10,10"
+                        Padding="5"
+                        Background="FloralWhite"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="5">
 
-                <Border
-                    Grid.Row="1"
-                    Margin="10,5,10,10"
-                    Padding="5"
-                    Background="FloralWhite"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="5">
-
-                    <Grid Margin="20,10,20,20">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Style="{StaticResource DetailTextBlock}"
-                            Text="Název" />
-                        <TextBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Width="200"
-                            Height="35"
-                            Margin="5"
-                            HorizontalAlignment="Right"
-                            VerticalContentAlignment="Center"
-                            FontSize="20"
-                            Text="{Binding SelectedActivity.Name, Mode=TwoWay}" />
-
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Style="{StaticResource DetailTextBlock}"
-                            Text="Zkratka" />
-                        <TextBox
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Width="200"
-                            Height="35"
-                            Margin="5"
-                            HorizontalAlignment="Right"
-                            VerticalContentAlignment="Center"
-                            FontSize="20"
-                            Text="{Binding SelectedActivity.Shortcut, Mode=TwoWay}" />
-
-                        <TextBlock
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Style="{StaticResource DetailTextBlock}"
-                            Text="Počítat" />
-                        <ToggleButton
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            Width="50"
-                            Height="35"
-                            Margin="5"
-                            HorizontalAlignment="Center"
-                            IsChecked="{Binding SelectedActivity.Property.Count, Mode=TwoWay}" />
-
-                        <Grid
-                            Grid.Row="3"
-                            Grid.ColumnSpan="2"
-                            Visibility="{Binding SelectedActivity.Property.Count, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Grid Margin="20,10,20,20">
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
@@ -199,7 +147,7 @@
                                 Grid.Row="0"
                                 Grid.Column="0"
                                 Style="{StaticResource DetailTextBlock}"
-                                Text="Seskupovat export" />
+                                Text="Pauza každých" />
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="1"
@@ -209,56 +157,71 @@
                                 HorizontalAlignment="Right"
                                 VerticalContentAlignment="Center"
                                 FontSize="20"
-                                Text="{Binding SelectedActivity.Property.GroupByName, Mode=TwoWay}" />
+                                Text="{Binding ActivityGlobalSetting.PauseEvery, Mode=TwoWay, StringFormat={}{0:hh\\:mm}}" />
 
                             <TextBlock
                                 Grid.Row="1"
                                 Grid.Column="0"
                                 Style="{StaticResource DetailTextBlock}"
-                                Text="Pauza" />
-                            <ToggleButton
+                                Text="Pauza délka" />
+                            <TextBox
                                 Grid.Row="1"
                                 Grid.Column="1"
-                                Width="50"
+                                Width="200"
                                 Height="35"
                                 Margin="5"
-                                HorizontalAlignment="Center"
-                                IsChecked="{Binding SelectedActivity.Property.IsPause, Mode=TwoWay}" />
+                                HorizontalAlignment="Right"
+                                VerticalContentAlignment="Center"
+                                FontSize="20"
+                                Text="{Binding ActivityGlobalSetting.PauseDuration, Mode=TwoWay, StringFormat={}{0:hh\\:mm}}" />
 
                             <TextBlock
                                 Grid.Row="2"
                                 Grid.Column="0"
                                 Style="{StaticResource DetailTextBlock}"
-                                Text="Plán" />
-                            <ToggleButton
+                                Text="Hlavní pracovní aktivita" />
+
+                            <ComboBox
                                 Grid.Row="2"
                                 Grid.Column="1"
-                                Width="50"
+                                Width="200"
                                 Height="35"
                                 Margin="5"
-                                HorizontalAlignment="Center"
-                                IsChecked="{Binding SelectedActivity.Property.IsPlan, Mode=TwoWay}" />
+                                HorizontalAlignment="Right"
+                                VerticalContentAlignment="Center"
+                                DisplayMemberPath="Name"
+                                FontSize="20"
+                                ItemsSource="{Binding Activities}"
+                                SelectedItem="{Binding ActivityGlobalSetting.MainWorkActivity, Mode=TwoWay}"
+                                Text="{Binding ActivityGlobalSetting.MainWorkActivity.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+
 
                             <TextBlock
                                 Grid.Row="3"
                                 Grid.Column="0"
                                 Style="{StaticResource DetailTextBlock}"
-                                Text="Povinná pauza" />
-                            <ToggleButton
+                                Text="Hlavní nepracovní aktivita" />
+
+                            <ComboBox
                                 Grid.Row="3"
                                 Grid.Column="1"
-                                Width="50"
+                                Width="200"
                                 Height="35"
                                 Margin="5"
-                                HorizontalAlignment="Center"
-                                IsChecked="{Binding SelectedActivity.Property.HasPause, Mode=TwoWay}" />
+                                HorizontalAlignment="Right"
+                                VerticalContentAlignment="Center"
+                                DisplayMemberPath="Name"
+                                FontSize="20"
+                                ItemsSource="{Binding Activities}"
+                                SelectedItem="{Binding ActivityGlobalSetting.MainNonWorkActivity, Mode=TwoWay}"
+                                Text="{Binding ActivityGlobalSetting.MainNonWorkActivity.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             <TextBlock
                                 Grid.Row="4"
                                 Grid.Column="0"
                                 Style="{StaticResource DetailTextBlock}"
-                                Text="Pauza po"
-                                Visibility="{Binding SelectedActivity.Property.HasPause, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                Text="Délka celodenní aktivity" />
                             <TextBox
                                 Grid.Row="4"
                                 Grid.Column="1"
@@ -268,15 +231,13 @@
                                 HorizontalAlignment="Right"
                                 VerticalContentAlignment="Center"
                                 FontSize="20"
-                                Text="{Binding SelectedActivity.Property.PauseEvery, Mode=TwoWay}"
-                                Visibility="{Binding SelectedActivity.Property.HasPause, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                Text="{Binding ActivityGlobalSetting.LenghtOfAllDayActivity, Mode=TwoWay, StringFormat={}{0:hh\\:mm}}" />
 
                             <TextBlock
                                 Grid.Row="5"
                                 Grid.Column="0"
                                 Style="{StaticResource DetailTextBlock}"
-                                Text="Délka pauzy"
-                                Visibility="{Binding SelectedActivity.Property.HasPause, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                Text="Délka půldenní aktivity" />
                             <TextBox
                                 Grid.Row="5"
                                 Grid.Column="1"
@@ -286,28 +247,217 @@
                                 HorizontalAlignment="Right"
                                 VerticalContentAlignment="Center"
                                 FontSize="20"
-                                Text="{Binding SelectedActivity.Property.PauseDuration, Mode=TwoWay}"
-                                Visibility="{Binding SelectedActivity.Property.HasPause, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                Text="{Binding ActivityGlobalSetting.LenghtOfHalfDayActivity, Mode=TwoWay, StringFormat={}{0:hh\\:mm}}" />
 
+
+                            <Button
+                                Grid.Row="7"
+                                Grid.ColumnSpan="2"
+                                MaxWidth="140"
+                                Margin="20"
+                                Command="{Binding SaveActivityChangesCommand}"
+                                CommandParameter="globalSetting"
+                                Content="Uložit změny"
+                                Style="{StaticResource MenuButton}" />
                         </Grid>
 
 
+                    </Border>
 
-                        <Button
-                            Grid.Row="4"
-                            Grid.ColumnSpan="2"
-                            MaxWidth="140"
-                            Margin="20"
-                            Command="{Binding SaveActivityChangesCommand}"
-                            Content="Uložit změny"
-                            Style="{StaticResource MenuButton}" />
-                    </Grid>
+                </Grid>
+
+                <Grid Margin="10" Visibility="{Binding IsActivitySelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource DetailTextBlock}"
+                        Text="Vybraná aktivita" />
+
+                    <Border
+                        Grid.Row="1"
+                        Margin="10,5,10,10"
+                        Padding="5"
+                        Background="FloralWhite"
+                        BorderBrush="Black"
+                        BorderThickness="1"
+                        CornerRadius="5">
+
+                        <Grid Margin="20,10,20,20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Style="{StaticResource DetailTextBlock}"
+                                Text="Název" />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Width="200"
+                                Height="35"
+                                Margin="5"
+                                HorizontalAlignment="Right"
+                                VerticalContentAlignment="Center"
+                                FontSize="20"
+                                Text="{Binding SelectedActivity.Name, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Style="{StaticResource DetailTextBlock}"
+                                Text="Zkratka" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Width="200"
+                                Height="35"
+                                Margin="5"
+                                HorizontalAlignment="Right"
+                                VerticalContentAlignment="Center"
+                                FontSize="20"
+                                Text="{Binding SelectedActivity.Shortcut, Mode=TwoWay}" />
+
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Style="{StaticResource DetailTextBlock}"
+                                Text="Počítat" />
+                            <ToggleButton
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Width="50"
+                                Height="35"
+                                Margin="5"
+                                HorizontalAlignment="Center"
+                                IsChecked="{Binding SelectedActivity.Property.Count, Mode=TwoWay}" />
+
+                            <Grid
+                                Grid.Row="3"
+                                Grid.ColumnSpan="2"
+                                Visibility="{Binding SelectedActivity.Property.Count, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Seskupovat export" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Width="200"
+                                    Height="35"
+                                    Margin="5"
+                                    HorizontalAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    FontSize="20"
+                                    Text="{Binding SelectedActivity.Property.GroupByName, Mode=TwoWay}" />
+
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Pauza" />
+                                <ToggleButton
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Width="50"
+                                    Height="35"
+                                    Margin="5"
+                                    HorizontalAlignment="Center"
+                                    IsChecked="{Binding SelectedActivity.Property.IsPause, Mode=TwoWay}" />
+
+                                <TextBlock
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Plán" />
+                                <ToggleButton
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    Width="50"
+                                    Height="35"
+                                    Margin="5"
+                                    HorizontalAlignment="Center"
+                                    IsChecked="{Binding SelectedActivity.Property.IsPlan, Mode=TwoWay}" />
+
+                                <TextBlock
+                                    Grid.Row="3"
+                                    Grid.Column="0"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Povinná pauza" />
+                                <ToggleButton
+                                    Grid.Row="3"
+                                    Grid.Column="1"
+                                    Width="50"
+                                    Height="35"
+                                    Margin="5"
+                                    HorizontalAlignment="Center"
+                                    IsChecked="{Binding SelectedActivity.Property.HasPause, Mode=TwoWay}" />
+
+                                <TextBlock
+                                    Grid.Row="4"
+                                    Grid.Column="0"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Maximálně za den" />
+
+                                <TextBox
+                                    Grid.Row="4"
+                                    Grid.Column="1"
+                                    Width="200"
+                                    Height="35"
+                                    Margin="5"
+                                    HorizontalAlignment="Right"
+                                    VerticalContentAlignment="Center"
+                                    FontSize="20"
+                                    Text="{Binding SelectedActivity.Property.MaxInDay, Mode=TwoWay, StringFormat={}{0:hh\\:mm}}" />
+                            </Grid>
 
 
-                </Border>
 
+                            <Button
+                                Grid.Row="4"
+                                Grid.ColumnSpan="2"
+                                MaxWidth="140"
+                                Margin="20"
+                                Command="{Binding SaveActivityChangesCommand}"
+                                CommandParameter="activity"
+                                Content="Uložit změny"
+                                Style="{StaticResource MenuButton}" />
+                        </Grid>
+
+
+                    </Border>
+
+                </Grid>
             </Grid>
-
         </Border>
     </Grid>
 </UserControl>
