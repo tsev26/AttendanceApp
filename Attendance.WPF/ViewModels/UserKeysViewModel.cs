@@ -9,40 +9,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Key = Attendance.Domain.Models.Key;
 
 namespace Attendance.WPF.ViewModels
 {
     public class UserKeysViewModel : ViewModelBase
     {
-        private CurrentUser _currentUser;
+        private readonly CurrentUser _currentUser;
+        private readonly SelectedUserStore _selectedUserStore;
 
-        public UserKeysViewModel(CurrentUser currentUser, INavigationService navigateUpsertKey)
+        public UserKeysViewModel(CurrentUser currentUser, SelectedUserStore selectedUserStore, INavigationService navigateUpsertKey)
         {
             _currentUser = currentUser;
-            NavigateUpsertKey = new KeyCommand(currentUser,this,navigateUpsertKey);
-            _currentUser.CurrentUserKeysChange += CurrentUser_CurrentUserKeysChange;
-            UsersKeys = new ObservableCollection<Attendance.Domain.Models.Key>();
-            LoadUsersKeys();
+            _selectedUserStore = selectedUserStore;
+            _selectedUserStore.SelectedUser = _currentUser.User;
+            NavigateUpsertKey = new KeyCommand(selectedUserStore, this, navigateUpsertKey);
+            _selectedUserStore.SelectedUserChange += SelectedUserChange_CurrentUserKeysChange;
+            SelectedUserChange_CurrentUserKeysChange();
         }
 
         public ICommand NavigateUpsertKey { get; }
 
-        private void CurrentUser_CurrentUserKeysChange()
+        private void SelectedUserChange_CurrentUserKeysChange()
         {
+            UsersKeys = _currentUser.User.Keys.Select(a => a.Clone()).ToList();
+            OnPropertyChanged(nameof(UsersKeys));
 
-            LoadUsersKeys();
             SelectedIndex = -1;
         }
 
-        private void LoadUsersKeys()
-        {
-            UsersKeys.Clear();
-            UsersKeys = new ObservableCollection<Attendance.Domain.Models.Key>(_currentUser.User.Keys);
-            OnPropertyChanged(nameof(UsersKeys));
-        }
-
-        public ObservableCollection<Attendance.Domain.Models.Key> UsersKeys { get; set; }
-
+        public List<Key> UsersKeys { get; set; }
 
         private int _selectedIndex = -1;
         public int SelectedIndex
@@ -54,7 +50,7 @@ namespace Attendance.WPF.ViewModels
                 OnPropertyChanged(nameof(SelectedIndex));
                 OnPropertyChanged(nameof(IsKeySelected));
                 OnPropertyChanged(nameof(SelectedKey));
-                _currentUser.SelectedKeyValue = (SelectedIndex != -1) ? UsersKeys[SelectedIndex] : null;
+                _selectedUserStore.SelectedKeyValue = (SelectedIndex != -1) ? UsersKeys[SelectedIndex] : null;
   
             }
         }
@@ -65,7 +61,7 @@ namespace Attendance.WPF.ViewModels
 
         public override void Dispose()
         {
-            _currentUser.CurrentUserKeysChange -= CurrentUser_CurrentUserKeysChange;
+            _selectedUserStore.SelectedUserChange -= SelectedUserChange_CurrentUserKeysChange;
             base.Dispose();
         }
     }

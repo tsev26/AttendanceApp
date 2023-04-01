@@ -30,7 +30,7 @@ namespace Attendance.WPF.Commands
             {
                 if (value == "addUserToGroup")
                 {
-                    _groupStore.AddUserToGroup(group, user);
+                    //_groupStore.AddUserToGroup(group, user);
                     _userStore.SetGroup(user, group);
                 }
                 else if (value == "setSupervisorToGroup")

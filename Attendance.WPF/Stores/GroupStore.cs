@@ -44,6 +44,7 @@ namespace Attendance.WPF.Stores
             GroupsChange?.Invoke();
         }
 
+        /*
         public void AddUserToGroup(Group group, User user)
         {
             Group? existingGroup = _groups.FirstOrDefault(a => a.Users.Any(c => c == user));
@@ -58,13 +59,16 @@ namespace Attendance.WPF.Stores
             user.Group = group;
             GroupsChange?.Invoke();
         }
+        */
 
+        /*
         public void RemoveUserToGroup(Group group, User user)
         {
             group.Users.Remove(user);
             user.Group = null;
             GroupsChange?.Invoke();
         }
+        */
 
         public void RemoveGroup(Group group)
         {

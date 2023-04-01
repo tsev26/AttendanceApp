@@ -10,18 +10,18 @@ namespace Attendance.WPF.Commands
 {
     public class KeyUpsertCommand : CommandBase
     {
-        private CurrentUser _currentUser;
-        private INavigationService _closeAndReloadModalService;
+        private readonly SelectedUserStore _selectedUserStore;
+        private readonly INavigationService _closeAndReloadModalService;
 
-        public KeyUpsertCommand(CurrentUser currentUser, INavigationService closeAndReloadModalService)
+        public KeyUpsertCommand(SelectedUserStore selectedUserStore, INavigationService closeAndReloadModalService)
         {
-            _currentUser = currentUser;
+            _selectedUserStore = selectedUserStore;
             _closeAndReloadModalService = closeAndReloadModalService;
         }
 
         public override void Execute(object? parameter)
         {
-            _currentUser.UpsertKey(_currentUser.SelectedKeyValue);
+            _selectedUserStore.UpsertKey(_selectedUserStore.SelectedUser, _selectedUserStore.SelectedKeyValue);
             _closeAndReloadModalService.Navigate();
         }
     }

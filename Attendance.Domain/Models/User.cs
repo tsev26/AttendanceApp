@@ -65,6 +65,10 @@ namespace Attendance.Domain.Models
         public List<Key> Keys { get; set; }
         public Obligation? Obligation { get; set; }
 
+        public bool HasObligation => Obligation != null;
+        public Obligation UserObligation => HasObligation ? Obligation : Group.Obligation;
+        public string HasObligationString => HasObligation ? "(nastavení z uživatele)" : "(nastavení ze skupiny)";
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())

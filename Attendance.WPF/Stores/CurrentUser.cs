@@ -40,9 +40,6 @@ namespace Attendance.WPF.Stores
 
         public AttendanceRecord? CurrentAttendanceRecord => AttendanceRecords.LastOrDefault(a => a.Entry <= DateTime.Now);
 
-        //TODO: rewrite SelectedKeyValue to UserKeysViewModel
-        public Key SelectedKeyValue { get; set; }
-
         public void LoadUser(User user)
         {
             User = user;

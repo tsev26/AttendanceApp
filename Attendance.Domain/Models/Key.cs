@@ -15,6 +15,14 @@ namespace Attendance.Domain.Models
 
         public string KeyValue { get; set; }
 
+        public Key Clone()
+        {
+            return new Key(KeyValue)
+            {
+                Id = this.Id
+            };
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())

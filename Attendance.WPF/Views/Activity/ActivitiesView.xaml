@@ -121,7 +121,7 @@
 
                     <Border
                         Grid.Row="1"
-                        Margin="10,5,10,10"
+                        Margin="10"
                         Padding="5"
                         Background="FloralWhite"
                         BorderBrush="Black"
@@ -281,7 +281,7 @@
 
                     <Border
                         Grid.Row="1"
-                        Margin="10,5,10,10"
+                        Margin="10"
                         Padding="5"
                         Background="FloralWhite"
                         BorderBrush="Black"

@@ -12,14 +12,23 @@ namespace Attendance.WPF.Commands
     public class KeyCommand : CommandBase
     {
         private readonly UserKeysViewModel _userKeysViewModel;
-        private readonly CurrentUser _currentUser;
-        private INavigationService _navigateModalUpsertKey;
+        private readonly UsersViewModel _usersViewModel;
+        private readonly SelectedUserStore _selectedUserStoreUser;
+        private readonly INavigationService _navigateModalUpsertKey;
+        
 
-        public KeyCommand(CurrentUser currentUser, UserKeysViewModel userKeysViewModel, INavigationService navigateModalUpsertKey)
+        public KeyCommand(SelectedUserStore selectedUserStore, UserKeysViewModel userKeysViewModel, INavigationService navigateModalUpsertKey)
         {
-            _currentUser = currentUser;
+            _selectedUserStoreUser = selectedUserStore;
             _userKeysViewModel = userKeysViewModel;
             _navigateModalUpsertKey = navigateModalUpsertKey;
+        }
+
+        public KeyCommand(SelectedUserStore selectedUserStore, UsersViewModel usersViewModel, INavigationService navigateUpsertKey)
+        {
+            _selectedUserStoreUser = selectedUserStore;
+            _usersViewModel = usersViewModel;
+            _navigateModalUpsertKey = navigateUpsertKey;
         }
 
         public override void Execute(object? parameter)
@@ -28,21 +37,52 @@ namespace Attendance.WPF.Commands
             {
                 if (keyOperation == "Remove")
                 {
-                    if (_userKeysViewModel.SelectedIndex != -1)
+                    if (_usersViewModel != null)
                     {
-                        _currentUser.RemoveKey(_userKeysViewModel.UsersKeys[_userKeysViewModel.SelectedIndex]);
+                        if (_usersViewModel.SelectedKeyIndex != -1)
+                        {
+                            _selectedUserStoreUser.RemoveKey(_selectedUserStoreUser.SelectedUser, _usersViewModel.SelectedKey);
+                        }
+                        
                     }
+                    else if (_userKeysViewModel != null)
+                    {
+                        if (_userKeysViewModel.SelectedIndex != -1)
+                        {
+                            _selectedUserStoreUser.RemoveKey(_selectedUserStoreUser.SelectedUser, _userKeysViewModel.UsersKeys[_userKeysViewModel.SelectedIndex]);
+                        }
+                    }
+
                 } 
                 else if (keyOperation == "Update")
                 {
-                    if (_userKeysViewModel.SelectedIndex != -1)
+                    if (_usersViewModel != null)
                     {
-                        _navigateModalUpsertKey.Navigate();
+                        if (_usersViewModel.IsKeySelected)
+                        {
+
+                            _navigateModalUpsertKey.Navigate();
+                        }
+                    }
+                    else if (_userKeysViewModel != null)
+                    {
+                        if (_userKeysViewModel.SelectedIndex != -1)
+                        {
+                            _navigateModalUpsertKey.Navigate();
+                        }
                     }
                 }
                 else if (keyOperation == "Add")
                 {
-                    _userKeysViewModel.SelectedIndex = -1;
+                    if (_usersViewModel != null)
+                    {
+                        _usersViewModel.SelectedKeyIndex = -1;
+                    }
+                    else if (_userKeysViewModel != null)
+                    {
+                        _userKeysViewModel.SelectedIndex = -1;
+                    }
+                    
                     _navigateModalUpsertKey.Navigate();
                 }
             }

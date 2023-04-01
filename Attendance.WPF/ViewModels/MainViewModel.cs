@@ -91,7 +91,7 @@ namespace Attendance.WPF.ViewModels
             User admin = new User("admin", "admin", "tsevcu@gmail.com", true);
             admin.Keys.Add(new Key("admin"));
             admin.Keys.Add(new Key("aaa"));
-            //admin.Obligation = obligation;
+            admin.Obligation = obligationVedeni;
             userStore.AddUser(admin);
 
             Group group = new Group("Základní", admin);
@@ -99,7 +99,6 @@ namespace Attendance.WPF.ViewModels
 
             Group group2 = new Group("Vedení", admin);
             group2.Obligation = obligationVedeni;
-            group2.Users.Add(admin);
 
             userStore.SetGroup(admin, group2);
 
@@ -122,10 +121,6 @@ namespace Attendance.WPF.ViewModels
             user4.Keys.Add(new Key("eva"));
             userStore.AddUser(user4);
 
-            group.Users.Add(user1);
-            group.Users.Add(user2);
-            group.Users.Add(user3);
-            group.Users.Add(user4);
 
             userStore.SetGroup(user1, group);
             userStore.SetGroup(user2, group);

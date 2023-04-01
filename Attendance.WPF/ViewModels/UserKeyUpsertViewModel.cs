@@ -12,18 +12,17 @@ namespace Attendance.WPF.ViewModels
 {
     public class UserKeyUpsertViewModel : ViewModelBase
     {
-        private readonly CurrentUser _currentUser;
-
-        public UserKeyUpsertViewModel(CurrentUser currentUser,
+        private readonly SelectedUserStore _selectedUserStore;
+        public UserKeyUpsertViewModel(SelectedUserStore selectedUserStore,
                                       INavigationService closeModalNavigationService)
         {
-            _currentUser = currentUser;
+            _selectedUserStore = selectedUserStore;
             CloseModalCommand = new CloseModalCommand(closeModalNavigationService);
-            KeyUpsertCommand = new KeyUpsertCommand(currentUser, closeModalNavigationService);
-            NewKeyValue = _currentUser.SelectedKeyValue?.KeyValue;
+            KeyUpsertCommand = new KeyUpsertCommand(selectedUserStore, closeModalNavigationService);
+            NewKeyValue = selectedUserStore.SelectedKeyValue?.KeyValue;
         }
 
-        public string Header => (_currentUser.SelectedKeyValue?.KeyValue == null) ? "Přidání klíče" : "Úprava klíče";
+        public string Header => (_selectedUserStore.SelectedKeyValue?.KeyValue == null) ? "Přidání klíče" : "Úprava klíče";
 
 
         private string _newKeyValue;
@@ -36,13 +35,13 @@ namespace Attendance.WPF.ViewModels
             set
             {
                 _newKeyValue = value;
-                if (_currentUser.SelectedKeyValue == null)
+                if (_selectedUserStore.SelectedKeyValue == null)
                 {
-                    _currentUser.SelectedKeyValue = new Domain.Models.Key(NewKeyValue);
+                    _selectedUserStore.SelectedKeyValue = new Domain.Models.Key(NewKeyValue);
                 }
                 else
                 {
-                    _currentUser.SelectedKeyValue.KeyValue = NewKeyValue;
+                    _selectedUserStore.SelectedKeyValue.KeyValue = NewKeyValue;
                 }
                 OnPropertyChanged(nameof(NewKeyValue));
             }
@@ -50,5 +49,11 @@ namespace Attendance.WPF.ViewModels
 
         public ICommand CloseModalCommand { get; }
         public ICommand KeyUpsertCommand { get; }
+
+        public override void Dispose()
+        {
+            _selectedUserStore.SelectedKeyValue = null;
+            base.Dispose();
+        }
     }
 }

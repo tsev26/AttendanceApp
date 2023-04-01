@@ -13,6 +13,7 @@ namespace Attendance.WPF.ViewModels
     public class UserDailyOverviewViewModel : ViewModelBase
     {
         private DispatcherTimer _timer;
+
         public CurrentUser CurrentUser { get; }
 
         public UserDailyOverviewViewModel(CurrentUser currentUser)
@@ -38,6 +39,8 @@ namespace Attendance.WPF.ViewModels
         }
 
         private DateOnly _date;
+        
+
         public DateOnly Date
         {
             get

@@ -1,5 +1,6 @@
 ﻿using Attendance.Domain.Models;
 using Attendance.WPF.Commands;
+using Attendance.WPF.Models;
 using Attendance.WPF.Services;
 using Attendance.WPF.Stores;
 using System;
@@ -19,7 +20,7 @@ namespace Attendance.WPF.ViewModels
         private readonly GroupStore _groupStore;
         private readonly UserStore _userStore;
 
-        public GroupsViewModel(GroupStore groupStore, 
+        public GroupsViewModel(GroupStore groupStore,
                                UserStore userStore,
                                INavigationService navigateAddGroup)
         {
@@ -28,21 +29,23 @@ namespace Attendance.WPF.ViewModels
 
             NavigateCreateGroupCommand = new NavigateCommand(navigateAddGroup);
             DeleteGroupCommand = new DeleteGroupCommand(_groupStore, this);
-            RemoveUserFromGroup = new RemoveUserFromGroupCommand(_groupStore, this);
             SaveGroupChanges = new SaveGroupChangesCommand(_groupStore, this);
             GroupViewShowsCommand = new GroupViewShowsCommand(this);
             SetUserToGroupCommand = new SetUserToGroupCommand(this, _userStore, _groupStore);
 
             _groupStore.GroupsChange += GroupStore_GroupsChange;
-
+            _userStore.UsersChange += UserStore_UsersChange;
             GroupStore_GroupsChange();
         }
 
 
-        public IList<User> UsersToSet => (IsGroupSelected) ? ((GroupViewAddUser) 
-                                        ? _userStore.Users.Except(SelectedGroup.Users).ToList() 
-                                        : _userStore.Users.Where(a => a != SelectedGroup.Supervisor).ToList()) 
+
+        public List<User> UsersToSet => (IsGroupSelected) ? ((GroupViewAddUser)
+                                        ? _userStore.Users.Where(a => a.Group != SelectedGroup).ToList()
+                                        : _userStore.Users.Where(a => a != SelectedGroup.Supervisor).ToList())
                                         : null;
+
+        public List<User> UsersInGroup => (IsGroupSelected) ? _userStore.Users.Where(a => a.Group == SelectedGroup).ToList() : null;
 
         private int _selectedUserToSetIndex = -1;
         public int SelectedUserToSetIndex
@@ -64,6 +67,13 @@ namespace Attendance.WPF.ViewModels
         {
             Groups = _groupStore.Groups.Select(a => a.Clone()).ToList();
             OnPropertyChanged(nameof(Groups));
+            
+        }
+
+        private void UserStore_UsersChange()
+        {
+            OnPropertyChanged(nameof(UsersInGroup));
+            OnPropertyChanged(nameof(UsersToSet));
         }
 
         /*
@@ -80,7 +90,6 @@ namespace Attendance.WPF.ViewModels
         public ICommand SetUserToGroupCommand { get; }
         public ICommand NavigateCreateGroupCommand { get; }
         public ICommand DeleteGroupCommand { get; }
-        public ICommand RemoveUserFromGroup { get; }
         public ICommand SaveGroupChanges { get; }
         public ICommand GroupViewShowsCommand { get; }
 
@@ -100,6 +109,7 @@ namespace Attendance.WPF.ViewModels
                 OnPropertyChanged(nameof(SelectedGroupIndex));
                 OnPropertyChanged(nameof(IsGroupSelected));
                 OnPropertyChanged(nameof(SelectedGroup));
+                OnPropertyChanged(nameof(UsersInGroup));
                 OnPropertyChanged(nameof(AddUserButtonVisibility));
                 OnPropertyChanged(nameof(SettingButtonVisibility));
                 OnPropertyChanged(nameof(UsersToSet));
@@ -139,7 +149,7 @@ namespace Attendance.WPF.ViewModels
             }
         }
 
-        public User SelectedUser => (SelectedUserIndex != 1) ? SelectedGroup.Users[SelectedUserIndex] : null;
+        public User SelectedUser => (SelectedUserIndex != 1) ? UsersInGroup[SelectedUserIndex] : null;
 
         private bool _addUserOrSetSupervisor;
         public bool AddUserOrSetSupervisor

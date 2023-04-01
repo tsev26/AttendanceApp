@@ -7,66 +7,56 @@ using System.Threading.Tasks;
 
 namespace Attendance.WPF.Stores
 {
-    public class UserStore
+    public class SelectedUserStore
     {
-        private List<User> _users;
+        private readonly UserStore _userStore;
 
-        public UserStore()
+        public SelectedUserStore(UserStore userStore)
         {
-            _users = new List<User>();
+            _userStore = userStore;
         }
 
-        public event Action UsersChange;
-
-        public List<User> Users
+        private User _selectedUser;
+        public User SelectedUser
         {
-            get { return _users; }
-            set 
-            { 
-                _users = value;
-            }
-        }
-
-        public void AddUser(User newUser)
-        {
-            if (!_users.Contains(newUser))
+            get
             {
-                _users.Add(newUser);
+                return _selectedUser;
             }
-            UsersChange?.Invoke();
+            set
+            {
+                _selectedUser = value;
+            }
         }
 
-        public void DeleteUser(User deleteUser)
-        {
-            _users.Remove(deleteUser);
-            UsersChange?.Invoke();
-        }
+        public Key SelectedKeyValue { get; set; }
+
+        public event Action SelectedUserChange;
 
         public void SetGroup(User user, Group group)
         {
             user.Group = group;
-            UsersChange?.Invoke();
+            SelectedUserChange?.Invoke();
         }
 
         public void UpdateUser(User user)
         {
-            int index = _users.FindIndex(a => a.Id == user.Id);
+            int index = _userStore.Users.FindIndex(a => a.Id == user.Id);
             if (index != -1)
             {
-                _users[index] = user;
+                _userStore.Users[index] = user;
             }
-            UsersChange?.Invoke();
+            SelectedUserChange?.Invoke();
         }
 
         public void RemoveKey(User user, Key key)
         {
             user.Keys.Remove(key);
-            UsersChange?.Invoke();
+            SelectedUserChange?.Invoke();
         }
 
         public void UpsertKey(User user, Key newKeyValue)
         {
-
             Key? existingKey = user.Keys.FirstOrDefault(a => a.Id == newKeyValue.Id);
             if (existingKey != null)
             {
@@ -77,7 +67,7 @@ namespace Attendance.WPF.Stores
             {
                 user.Keys.Add(newKeyValue);
             }
-            UsersChange?.Invoke();
+            SelectedUserChange?.Invoke();
         }
     }
 }

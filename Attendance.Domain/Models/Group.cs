@@ -14,7 +14,6 @@ namespace Attendance.Domain.Models
         {
             Name = name;
             Supervisor = superVisor;
-            Users = new List<User>();
             Obligation = new Obligation();
         }
 
@@ -22,13 +21,11 @@ namespace Attendance.Domain.Models
         {
             Name = group.Name;
             Supervisor = group.Supervisor;
-            Users = group.Users;
             Obligation = new Obligation();
         }
 
         public string Name { get; set; }
         public User Supervisor { get; set; }
-        public List<User> Users { get; set; }
         public Obligation Obligation { get; set; }
 
         public override string ToString()
@@ -43,8 +40,39 @@ namespace Attendance.Domain.Models
                 Id = this.Id,
                 Obligation = this.Obligation.Clone(),
                 Supervisor = this.Supervisor,
-                Users = this.Users
             };
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Group other = (Group)obj;
+            return Id == other.Id &&
+                   Name == other.Name;
+        }
+
+        public static bool operator ==(Group a, Group b)
+        {
+            if (ReferenceEquals(a, b))
+            {
+                return true;
+            }
+
+            if (a is null || b is null)
+            {
+                return false;
+            }
+
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Group a, Group b)
+        {
+            return !(a == b);
         }
     }
 }

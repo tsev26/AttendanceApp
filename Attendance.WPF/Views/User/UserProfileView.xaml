@@ -122,7 +122,7 @@
                             HorizontalAlignment="Center"
                             FontSize="14"
                             Style="{StaticResource DetailTextBlock}"
-                            Text="{Binding ObligationFrom}" />
+                            Text="{Binding UserUpdate.HasObligationString}" />
 
                         <TextBlock
                             Grid.Row="5"
