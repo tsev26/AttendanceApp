@@ -65,6 +65,13 @@ namespace Attendance.WPF.Stores
             CountTotalDay(attendanceRecord);
         }
 
+        public void SetActivity(Activity activity, DateTime dateTime, AttendanceRecordDetail attendanceRecordDetail)
+        {
+            AttendanceRecord attendanceRecord = new AttendanceRecord(User, activity, dateTime, attendanceRecordDetail);
+            _attendanceRecords.Add(attendanceRecord);
+            CountTotalDay(attendanceRecord);
+        }
+
         /*
         public string MonthAverage()
         {

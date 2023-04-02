@@ -33,22 +33,30 @@ namespace Attendance.WPF.ViewModels
 
 
 
-            ActivityProperty workActivityProperty = new ActivityProperty(false, true, false, true, new TimeSpan(15, 0, 0), "práce");
+            ActivityProperty workActivityProperty = new ActivityProperty(false, true, false, true, false, new TimeSpan(15, 0, 0), "práce");
             Activity workActivity = new Activity("Práce", "P", workActivityProperty);
-
-
 
             activityStore.AddActivity(workActivity);
 
-            ActivityProperty pauseActivityProperty = new ActivityProperty(false, true, true, false, new TimeSpan(0,0,0), "pauza");
+            ActivityProperty pauseActivityProperty = new ActivityProperty(false, true, true, false, false, new TimeSpan(0,0,0), "pauza");
             Activity pauseActivity = new Activity("Pauza", "A", pauseActivityProperty);
 
             activityStore.AddActivity(pauseActivity);
 
-            ActivityProperty homeActivityProperty = new ActivityProperty(false, false, false, false, new TimeSpan(0, 0, 0), "domov");
+            ActivityProperty homeActivityProperty = new ActivityProperty(false, false, false, false, false, new TimeSpan(0, 0, 0), "domov");
             Activity homeActivity = new Activity("Domov", "D", homeActivityProperty);
             
             activityStore.AddActivity(homeActivity);
+
+            ActivityProperty btActivityProperty = new ActivityProperty(true, true, false, true, true, new TimeSpan(10, 0, 0), "práce");
+            Activity btActivity = new Activity("Služební cesta", "S", btActivityProperty);
+
+            activityStore.AddActivity(btActivity);
+
+            ActivityProperty vacationActivityProperty = new ActivityProperty(true, true, false, true, false, new TimeSpan(10, 0, 0), "dovolená");
+            Activity vacationActivity = new Activity("Dovolená", "O", vacationActivityProperty);
+
+            activityStore.AddActivity(vacationActivity);
 
             ActivityGlobalSetting activityGlobalSetting = new ActivityGlobalSetting(new TimeSpan(6, 0, 0), new TimeSpan(0, 30, 0), workActivity, homeActivity, new TimeSpan(8, 0, 0), new TimeSpan(4, 0, 0));
             activityStore.GlobalSetting = activityGlobalSetting;

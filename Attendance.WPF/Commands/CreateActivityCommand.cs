@@ -30,6 +30,7 @@ namespace Attendance.WPF.Commands
                                                                      _activityUpsertViewModel.Count,
                                                                      _activityUpsertViewModel.IsPause,
                                                                      _activityUpsertViewModel.HasPause,
+                                                                     _activityUpsertViewModel.HasTime,
                                                                      _activityUpsertViewModel.MaxInDay,
                                                                      _activityUpsertViewModel.GroupByName);
 

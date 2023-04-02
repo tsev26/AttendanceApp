@@ -23,7 +23,7 @@ namespace Attendance.WPF.Commands
         {
             if (parameter is string type)
             {
-                if (type == "acitivity")
+                if (type == "activity")
                 {
                     _activityStore.UpdateActivity(_activitiesViewModel.SelectedActivity);
                 }

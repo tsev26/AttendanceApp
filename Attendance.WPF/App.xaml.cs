@@ -56,7 +56,7 @@ namespace Attendance.WPF
             services.AddSingleton<NavigationBarViewModel>(CreateNavigationBarViewModel);
             services.AddTransient<UserMenuViewModel>(CreateUserMenuViewModel);
 
-            services.AddTransient<UserSelectActivityViewModel>(); //CreateUserSelectActivityViewModel
+            services.AddTransient<UserSelectActivityViewModel>(CreateUserSelectActivityViewModel);
             services.AddTransient<UserDailyOverviewViewModel>();
             services.AddTransient<UsersViewModel>(CreateUsersViewModel);
             services.AddTransient<UserKeysViewModel>(CreateUserKeysViewModel);
@@ -68,6 +68,7 @@ namespace Attendance.WPF
             services.AddTransient<ActivityUpsertViewModel>(CreateActivityUpsertViewModel);
             services.AddTransient<UserHistoryViewModel>(CreateUserHistoryViewModel);
             services.AddTransient<UserUpsertViewModel>(CreateUserUpsertViewModel);
+            services.AddTransient<UserSelectActivitySpecialViewModel>(CreateUserSelectActivitySpecialViewModel);
 
             services.AddSingleton<MainViewModel>();
 
@@ -119,10 +120,12 @@ namespace Attendance.WPF
 
         private UserSelectActivityViewModel CreateUserSelectActivityViewModel(IServiceProvider serviceProvider)
         {
-            return UserSelectActivityViewModel.LoadViewModel(
+            return new UserSelectActivityViewModel(
                 serviceProvider.GetRequiredService<ActivityStore>(),
                 serviceProvider.GetRequiredService<CurrentUser>(),
-                CreateHomeNavigationService(serviceProvider)
+                serviceProvider.GetRequiredService<SelectedUserStore>(),
+                CreateHomeNavigationService(serviceProvider),
+                CreateUserSelectActivitySpecialNavigationService(serviceProvider)
                 );
         }
 
@@ -326,6 +329,23 @@ namespace Attendance.WPF
                 );
         }
 
+        private INavigationService CreateUserSelectActivitySpecialNavigationService(IServiceProvider serviceProvider)
+        {
+            return new ModalNavigationService<UserSelectActivitySpecialViewModel>(
+                serviceProvider.GetRequiredService<ModalNavigationStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
+                () => serviceProvider.GetRequiredService<UserSelectActivitySpecialViewModel>());
+        }
 
+        private UserSelectActivitySpecialViewModel CreateUserSelectActivitySpecialViewModel(IServiceProvider serviceProvider)
+        {
+            return new UserSelectActivitySpecialViewModel(
+                    serviceProvider.GetRequiredService<CurrentUser>(),
+                    serviceProvider.GetRequiredService<SelectedUserStore>(),
+                    serviceProvider.GetRequiredService<ActivityStore>(),
+                    CreateHomeNavigationService(serviceProvider),
+                    serviceProvider.GetRequiredService<CloseModalNavigationService>()
+                );
+        }
     }
 }

@@ -17,16 +17,14 @@ namespace Attendance.WPF.ViewModels
 
         public List<Activity> Activities => _activityStore.Activities;
 
-        public UserSelectActivityViewModel(ActivityStore activityStore, CurrentUser currentUser, INavigationService navigateToHome)
+        public UserSelectActivityViewModel(ActivityStore activityStore, 
+                                           CurrentUser currentUser, 
+                                           SelectedUserStore selectedUserStore, 
+                                           INavigationService navigateToHome, 
+                                           INavigationService navigateSpecialActivity)
         {
             _activityStore = activityStore;
-            UserSetActivityCommand = new UserSetActivityCommand(navigateToHome, currentUser);
-        }
-
-        public static UserSelectActivityViewModel LoadViewModel(ActivityStore activityStore, CurrentUser currentUser, INavigationService navigateToHome)
-        {
-            //activityStore.LoadActivities();
-            return new UserSelectActivityViewModel(activityStore, currentUser, navigateToHome);
+            UserSetActivityCommand = new UserSetActivityCommand(currentUser, selectedUserStore, navigateToHome, navigateSpecialActivity);
         }
 
 

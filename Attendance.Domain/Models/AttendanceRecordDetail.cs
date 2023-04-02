@@ -8,15 +8,17 @@ namespace Attendance.Domain.Models
 {
     public class AttendanceRecordDetail : DomainObject
     {
-        public AttendanceRecordDetail(AttendanceRecord attendanceRecord, DateTime expectedReturn, string description) : base()
+        public AttendanceRecordDetail(DateTime expectedStart, DateTime expectedEnd, string description) : base()
         {
-            AttendanceRecord = attendanceRecord;
-            ExpectedReturn = expectedReturn;
+            ExpectedStart = expectedStart;
+            ExpectedEnd = expectedEnd;
             Description = description;
         }
 
-        public AttendanceRecord AttendanceRecord { get; set; }
-        public DateTime ExpectedReturn { get; set; }
+        public AttendanceRecordDetail() : base() { }
+
+        public DateTime ExpectedStart { get; set; }
+        public DateTime ExpectedEnd { get; set; }
         public string Description { get; set; }
 
     }

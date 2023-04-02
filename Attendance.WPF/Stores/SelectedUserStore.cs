@@ -29,6 +29,8 @@ namespace Attendance.WPF.Stores
             }
         }
 
+        public Activity SelectedActivity { get; set; }
+
         public Key SelectedKeyValue { get; set; }
 
         public event Action SelectedUserChange;

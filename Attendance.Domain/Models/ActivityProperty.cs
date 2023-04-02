@@ -8,10 +8,11 @@ namespace Attendance.Domain.Models
 {
     public class ActivityProperty : DomainObject
     {
-        public ActivityProperty(bool isPlan, 
+        public ActivityProperty(bool isPlan,
                                 bool count, 
                                 bool isPause, 
                                 bool hasPause, 
+                                bool hasTime,
                                 TimeSpan maxInDay,
                                 string groupByName) : base()
         {
@@ -19,6 +20,7 @@ namespace Attendance.Domain.Models
             Count = count;
             IsPause = isPause;
             HasPause = hasPause;
+            HasTime = hasTime;
             MaxInDay = maxInDay;
             GroupByName = groupByName;
         }
@@ -30,6 +32,7 @@ namespace Attendance.Domain.Models
             Count = activityProperty.Count;
             IsPause = activityProperty.IsPause;
             HasPause = activityProperty.HasPause;
+            HasTime = activityProperty.HasTime;
             MaxInDay = activityProperty.MaxInDay;
             GroupByName = activityProperty.GroupByName;
         }
@@ -38,6 +41,7 @@ namespace Attendance.Domain.Models
         public bool Count { get; set; }
         public bool IsPause { get; set; }
         public bool HasPause { get; set; }
+        public bool HasTime { get; set; }
         public TimeSpan MaxInDay { get; set; }
         public string GroupByName { get; set; }
         public bool IsWork => !IsPause;

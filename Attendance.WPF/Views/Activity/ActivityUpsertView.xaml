@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="clr-namespace:Attendance.WPF.ViewModels"
     d:DataContext="{d:DesignInstance viewmodels:ActivityUpsertViewModel}"
-    d:DesignHeight="450"
+    d:DesignHeight="650"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid Margin="50" Background="White">
@@ -174,7 +174,22 @@
                 FontSize="20"
                 Text="{Binding MaxInDay, Mode=TwoWay}" />
 
-
+            <TextBlock
+                Grid.Row="5"
+                Grid.Column="0"
+                FontSize="22"
+                Style="{StaticResource DetailTextBlock}"
+                Text="Zadává se čas"
+                Visibility="{Binding IsPlan, Converter={StaticResource BoolToVisibilityConverter}}" />
+            <ToggleButton
+                Grid.Row="3"
+                Grid.Column="1"
+                Width="50"
+                Height="35"
+                Margin="5"
+                HorizontalAlignment="Center"
+                IsChecked="{Binding HasTime, Mode=TwoWay}"
+                Visibility="{Binding IsPlan, Converter={StaticResource BoolToVisibilityConverter}}" />
         </Grid>
 
         <Button

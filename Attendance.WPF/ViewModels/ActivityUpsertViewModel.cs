@@ -107,6 +107,20 @@ namespace Attendance.WPF.ViewModels
             }
         }
 
+        private bool _hasTime;
+        public bool HasTime
+        {
+            get
+            {
+                return _hasTime;
+            }
+            set
+            {
+                _hasTime = value;
+                OnPropertyChanged(nameof(HasTime));
+            }
+        }
+
         private TimeSpan _maxInDay;
         public TimeSpan MaxInDay
         {
