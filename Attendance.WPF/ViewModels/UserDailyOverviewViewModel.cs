@@ -20,6 +20,13 @@ namespace Attendance.WPF.ViewModels
         {
             CurrentUser = currentUser;
             Date = DateOnly.FromDateTime(DateTime.Now);
+
+            CurrentUser.CurrentAttendanceChange += CurrentUser_CurrentAttendanceChange;
+        }
+
+        private void CurrentUser_CurrentAttendanceChange()
+        {
+            OnPropertyChanged(nameof(AttendanceRecordsInDay));
         }
 
         private void StartClock()
@@ -88,6 +95,7 @@ namespace Attendance.WPF.ViewModels
 
         public override void Dispose()
         {
+            CurrentUser.CurrentAttendanceChange -= CurrentUser_CurrentAttendanceChange;
             StopClock();
             base.Dispose();
         }

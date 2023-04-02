@@ -10,16 +10,15 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid
-        Margin="50"
-        Background="White"
-        Grid.IsSharedSizeScope="True">
+    <Grid Margin="50" Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto" SharedSizeGroup="Name" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -47,269 +46,276 @@
             Text="{Binding SelectedActivity.Name}" />
 
         <!--  HasTime  -->
-        <Grid
+        <TextBlock
             Grid.Row="2"
-            Grid.ColumnSpan="2"
+            Grid.Column="0"
             d:Visibility="Hidden"
+            FontSize="24"
+            Style="{StaticResource DetailTextBlock}"
+            Text="Začátek"
+            Visibility="{Binding SelectedActivity.Property.HasTime, Converter={StaticResource bool2VisibilityConverter}}" />
+        <StackPanel
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="10,0,0,2"
+            d:Visibility="Hidden"
+            Orientation="Horizontal"
             Visibility="{Binding SelectedActivity.Property.HasTime, Converter={StaticResource bool2VisibilityConverter}}">
+            <DatePicker
+                Width="190"
+                FontSize="22"
+                SelectedDate="{Binding StartActivity, Mode=TwoWay, StringFormat=dd.MM.yyyy}"
+                Style="{StaticResource DatePickerStyle}" />
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" SharedSizeGroup="Name" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="0"
-                FontSize="24"
-                Style="{StaticResource DetailTextBlock}"
-                Text="Začátek" />
-            <StackPanel
-                Grid.Row="0"
-                Grid.Column="1"
-                Margin="10,0,0,2"
-                Orientation="Horizontal">
-                <DatePicker
-                    Width="190"
-                    FontSize="22"
-                    SelectedDate="{Binding StartActivity, Mode=TwoWay, StringFormat=dd.MM.yyyy}"
-                    Style="{StaticResource DatePickerStyle}" />
-
-                <StackPanel Orientation="Horizontal">
-                    <ComboBox
-                        Width="50"
-                        Margin="5,0"
-                        FontSize="20.5"
-                        ItemsSource="{Binding Hours}"
-                        SelectedValue="{Binding StartHour, Mode=TwoWay, StringFormat=dd.MM.yyyy}">
-                        <ComboBox.ItemStringFormat>{0:00}</ComboBox.ItemStringFormat>
-                    </ComboBox>
-                    <ComboBox
-                        Width="50"
-                        FontSize="20.5"
-                        ItemsSource="{Binding Minutes}"
-                        SelectedValue="{Binding StartMinute, Mode=TwoWay}">
-                        <ComboBox.ItemStringFormat>{0:00}</ComboBox.ItemStringFormat>
-                    </ComboBox>
-                </StackPanel>
-
+            <StackPanel Orientation="Horizontal">
+                <ComboBox
+                    Width="50"
+                    Margin="5,0"
+                    FontSize="20.5"
+                    ItemsSource="{Binding StartHours}"
+                    SelectedValue="{Binding StartHour, Mode=TwoWay, StringFormat=dd.MM.yyyy}">
+                    <ComboBox.ItemStringFormat>{0:00}</ComboBox.ItemStringFormat>
+                </ComboBox>
+                <ComboBox
+                    Width="50"
+                    FontSize="20.5"
+                    ItemsSource="{Binding StartMinutes}"
+                    SelectedValue="{Binding StartMinute, Mode=TwoWay}">
+                    <ComboBox.ItemStringFormat>{0:00}</ComboBox.ItemStringFormat>
+                </ComboBox>
             </StackPanel>
 
+        </StackPanel>
 
-            <TextBlock
-                Grid.Row="3"
-                Grid.Column="0"
-                FontSize="24"
-                Style="{StaticResource DetailTextBlock}"
-                Text="Konec" />
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0"
+            d:Visibility="Hidden"
+            FontSize="24"
+            Style="{StaticResource DetailTextBlock}"
+            Text="Konec"
+            Visibility="{Binding SelectedActivity.Property.HasTime, Converter={StaticResource bool2VisibilityConverter}}" />
+        <StackPanel
+            Grid.Row="3"
+            Grid.Column="1"
+            Margin="10,0,0,2"
+            d:Visibility="Hidden"
+            Orientation="Horizontal"
+            Visibility="{Binding SelectedActivity.Property.HasTime, Converter={StaticResource bool2VisibilityConverter}}">
+            <DatePicker
+                Width="190"
+                FontSize="22"
+                SelectedDate="{Binding EndActivity, Mode=TwoWay}"
+                Style="{StaticResource DatePickerStyle}" />
 
-            <StackPanel
-                Grid.Row="3"
-                Grid.Column="1"
-                Margin="10,0,0,2"
-                Orientation="Horizontal">
-                <DatePicker
-                    Width="190"
-                    FontSize="22"
-                    SelectedDate="{Binding EndActivity, Mode=TwoWay}"
-                    Style="{StaticResource DatePickerStyle}" />
-
-                <StackPanel Orientation="Horizontal">
-                    <ComboBox
-                        Width="50"
-                        Margin="5,0"
-                        FontSize="20.5"
-                        ItemsSource="{Binding Hours}"
-                        SelectedValue="{Binding EndHour, Mode=TwoWay}">
-                        <ComboBox.ItemStringFormat>{0:00}</ComboBox.ItemStringFormat>
-                    </ComboBox>
-                    <ComboBox
-                        Width="50"
-                        FontSize="20.5"
-                        ItemsSource="{Binding Minutes}"
-                        SelectedValue="{Binding EndMinute, Mode=TwoWay}">
-                        <ComboBox.ItemStringFormat>{0:00}</ComboBox.ItemStringFormat>
-                    </ComboBox>
-                </StackPanel>
-
+            <StackPanel Orientation="Horizontal">
+                <ComboBox
+                    Width="50"
+                    Margin="5,0"
+                    FontSize="20.5"
+                    ItemsSource="{Binding EndHours}"
+                    SelectedValue="{Binding EndHour, Mode=TwoWay}">
+                    <ComboBox.ItemStringFormat>{0:00}</ComboBox.ItemStringFormat>
+                </ComboBox>
+                <ComboBox
+                    Width="50"
+                    FontSize="20.5"
+                    ItemsSource="{Binding EndMinutes}"
+                    SelectedValue="{Binding EndMinute, Mode=TwoWay}">
+                    <ComboBox.ItemStringFormat>{0:00}</ComboBox.ItemStringFormat>
+                </ComboBox>
             </StackPanel>
-        </Grid>
+
+        </StackPanel>
+        <!--  EndHasTime  -->
+
 
         <!--  HasNoTime  -->
-        <Grid
+        <TextBlock
             Grid.Row="2"
-            Grid.ColumnSpan="2"
-            Visibility="{Binding HasNoTime, Converter={StaticResource bool2VisibilityConverter}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" SharedSizeGroup="Name" />
-                <ColumnDefinition Width="auto" />
-            </Grid.ColumnDefinitions>
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-            </Grid.RowDefinitions>
-
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="0"
-                FontSize="24"
-                Style="{StaticResource DetailTextBlock}"
-                Text="Celodenní" />
-
-            <ToggleButton
-                Grid.Row="0"
-                Grid.Column="1"
-                Width="50"
-                Height="35"
-                Margin="0,0,0,2"
-                HorizontalAlignment="Center"
-                IsChecked="{Binding IsFullDayPlan, Mode=TwoWay}" />
-
-            <!--  FullDay  -->
-            <Grid
-                Grid.Row="1"
-                Grid.ColumnSpan="2"
-                d:Visibility="Hidden"
-                Visibility="{Binding IsFullDayPlan, Converter={StaticResource bool2VisibilityConverter}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" SharedSizeGroup="Name" />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    FontSize="24"
-                    Style="{StaticResource DetailTextBlock}"
-                    Text="Začátek" />
-
-                <DatePicker
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="190"
-                    Margin="10,0,0,2"
-                    FontSize="22"
-                    SelectedDate="{Binding StartActivity, Mode=TwoWay, StringFormat=dd.MM.yyyy}"
-                    Style="{StaticResource DatePickerStyle}" />
-
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    FontSize="24"
-                    Style="{StaticResource DetailTextBlock}"
-                    Text="Konec" />
-
-                <DatePicker
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Width="190"
-                    Margin="10,0,0,2"
-                    FontSize="22"
-                    SelectedDate="{Binding EndActivity, Mode=TwoWay}"
-                    Style="{StaticResource DatePickerStyle}" />
-            </Grid>
-
-            <!--  HalfDay  -->
-            <Grid
-                Grid.Row="1"
-                Grid.ColumnSpan="2"
-                Visibility="{Binding IsHalfDayPlan, Converter={StaticResource bool2VisibilityConverter}}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto" SharedSizeGroup="Name" />
-                    <ColumnDefinition Width="auto" />
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
-
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    FontSize="24"
-                    Style="{StaticResource DetailTextBlock}"
-                    Text="Datum" />
-
-                <DatePicker
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Width="190"
-                    Margin="10,0,0,2"
-                    FontSize="22"
-                    SelectedDate="{Binding StartActivity, Mode=TwoWay, StringFormat=dd.MM.yyyy}"
-                    Style="{StaticResource DatePickerStyle}" />
-
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    FontSize="24"
-                    Style="{StaticResource DetailTextBlock}"
-                    Text="Půlden na začátku" />
-
-                <ToggleButton
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Width="50"
-                    Height="35"
-                    Margin="0,0,0,2"
-                    HorizontalAlignment="Center"
-                    IsChecked="{Binding IsHalfDayStart, Mode=TwoWay}" />
-
-                <TextBlock
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    FontSize="24"
-                    Style="{StaticResource DetailTextBlock}"
-                    Text="Půlden na konci" />
-
-                <ToggleButton
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    Width="50"
-                    Height="35"
-                    Margin="0,0,0,2"
-                    HorizontalAlignment="Center"
-                    IsChecked="{Binding IsHalfDayEnd, Mode=TwoWay}" />
-            </Grid>
+            Grid.Column="0"
+            FontSize="24"
+            Style="{StaticResource DetailTextBlock}"
+            Text="Celodenní"
+            Visibility="{Binding HasNoTime, Converter={StaticResource bool2VisibilityConverter}}" />
+        <ToggleButton
+            Grid.Row="2"
+            Grid.Column="1"
+            Width="50"
+            Height="35"
+            Margin="0,0,0,2"
+            HorizontalAlignment="Center"
+            IsChecked="{Binding IsFullDayPlan, Mode=TwoWay}"
+            Visibility="{Binding HasNoTime, Converter={StaticResource bool2VisibilityConverter}}" />
 
 
-        </Grid>
+        <!--  FullDay  -->
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0"
+            FontSize="24"
+            Style="{StaticResource DetailTextBlock}"
+            Text="Začátek">
+            <TextBlock.Visibility>
+                <MultiBinding Converter="{StaticResource TwoBoolsToVisibilityConverter}">
+                    <Binding Path="IsFullDayPlan" />
+                    <Binding Path="HasNoTime" />
+                </MultiBinding>
+            </TextBlock.Visibility>
+        </TextBlock>
+        <DatePicker
+            Grid.Row="3"
+            Grid.Column="1"
+            Width="190"
+            Margin="10,0,0,2"
+            FontSize="22"
+            SelectedDate="{Binding StartActivity, Mode=TwoWay, StringFormat=dd.MM.yyyy}"
+            Style="{StaticResource DatePickerStyle}">
+            <DatePicker.Visibility>
+                <MultiBinding Converter="{StaticResource TwoBoolsToVisibilityConverter}">
+                    <Binding Path="IsFullDayPlan" />
+                    <Binding Path="HasNoTime" />
+                </MultiBinding>
+            </DatePicker.Visibility>
+        </DatePicker>
 
         <TextBlock
             Grid.Row="4"
             Grid.Column="0"
             FontSize="24"
             Style="{StaticResource DetailTextBlock}"
-            Text="Popis" />
-        <TextBox
+            Text="Konec">
+            <TextBlock.Visibility>
+                <MultiBinding Converter="{StaticResource TwoBoolsToVisibilityConverter}">
+                    <Binding Path="IsFullDayPlan" />
+                    <Binding Path="HasNoTime" />
+                </MultiBinding>
+            </TextBlock.Visibility>
+        </TextBlock>
+        <DatePicker
             Grid.Row="4"
             Grid.Column="1"
+            Width="190"
+            Margin="10,0,0,2"
+            FontSize="22"
+            SelectedDate="{Binding EndActivity, Mode=TwoWay}"
+            Style="{StaticResource DatePickerStyle}">
+            <DatePicker.Visibility>
+                <MultiBinding Converter="{StaticResource TwoBoolsToVisibilityConverter}">
+                    <Binding Path="IsFullDayPlan" />
+                    <Binding Path="HasNoTime" />
+                </MultiBinding>
+            </DatePicker.Visibility>
+        </DatePicker>
+        <!--  EndFullDay  -->
+
+        <!--  HalfDay  -->
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0"
+            FontSize="24"
+            Style="{StaticResource DetailTextBlock}"
+            Text="Datum">
+            <TextBlock.Visibility>
+                <MultiBinding Converter="{StaticResource TwoBoolsToVisibilityConverter}">
+                    <Binding Path="IsHalfDayPlan" />
+                    <Binding Path="HasNoTime" />
+                </MultiBinding>
+            </TextBlock.Visibility>
+        </TextBlock>
+        <DatePicker
+            Grid.Row="3"
+            Grid.Column="1"
+            Width="190"
+            Margin="10,0,0,2"
+            FontSize="22"
+            SelectedDate="{Binding StartActivity, Mode=TwoWay, StringFormat=dd.MM.yyyy}"
+            Style="{StaticResource DatePickerStyle}">
+            <DatePicker.Visibility>
+                <MultiBinding Converter="{StaticResource TwoBoolsToVisibilityConverter}">
+                    <Binding Path="IsHalfDayPlan" />
+                    <Binding Path="HasNoTime" />
+                </MultiBinding>
+            </DatePicker.Visibility>
+        </DatePicker>
+
+        <TextBlock
+            Grid.Row="4"
+            Grid.Column="0"
+            FontSize="24"
+            Style="{StaticResource DetailTextBlock}"
+            Text="Půlden na začátku">
+            <TextBlock.Visibility>
+                <MultiBinding Converter="{StaticResource TwoBoolsToVisibilityConverter}">
+                    <Binding Path="IsHalfDayPlan" />
+                    <Binding Path="HasNoTime" />
+                </MultiBinding>
+            </TextBlock.Visibility>
+        </TextBlock>
+        <ToggleButton
+            Grid.Row="4"
+            Grid.Column="1"
+            Width="50"
+            Height="35"
+            Margin="0,0,0,2"
+            HorizontalAlignment="Center"
+            IsChecked="{Binding IsHalfDayStart, Mode=TwoWay}">
+            <ToggleButton.Visibility>
+                <MultiBinding Converter="{StaticResource TwoBoolsToVisibilityConverter}">
+                    <Binding Path="IsHalfDayPlan" />
+                    <Binding Path="HasNoTime" />
+                </MultiBinding>
+            </ToggleButton.Visibility>
+        </ToggleButton>
+
+        <TextBlock
+            Grid.Row="5"
+            Grid.Column="0"
+            FontSize="24"
+            Style="{StaticResource DetailTextBlock}"
+            Text="Půlden na konci">
+            <TextBlock.Visibility>
+                <MultiBinding Converter="{StaticResource TwoBoolsToVisibilityConverter}">
+                    <Binding Path="IsHalfDayPlan" />
+                    <Binding Path="HasNoTime" />
+                </MultiBinding>
+            </TextBlock.Visibility>
+        </TextBlock>
+        <ToggleButton
+            Grid.Row="5"
+            Grid.Column="1"
+            Width="50"
+            Height="35"
+            Margin="0,0,0,2"
+            HorizontalAlignment="Center"
+            IsChecked="{Binding IsHalfDayEnd, Mode=TwoWay}">
+            <ToggleButton.Visibility>
+                <MultiBinding Converter="{StaticResource TwoBoolsToVisibilityConverter}">
+                    <Binding Path="IsHalfDayPlan" />
+                    <Binding Path="HasNoTime" />
+                </MultiBinding>
+            </ToggleButton.Visibility>
+        </ToggleButton>
+        <!--  EndHalfDay  -->
+        <!--  EndHasNoTime  -->
+
+        <TextBlock
+            Grid.Row="6"
+            Grid.Column="0"
+            FontSize="24"
+            Style="{StaticResource DetailTextBlock}"
+            Text="Popis" />
+        <TextBox
+            Grid.Row="6"
+            Grid.Column="1"
+            Width="300"
             Margin="10,0,0,2"
             FontSize="22"
             Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
             TextWrapping="Wrap" />
 
         <Button
-            Grid.Row="5"
+            Grid.Row="7"
             Grid.ColumnSpan="2"
             Margin="20"
             Command="{Binding UserSetActivityCommand}"
@@ -318,7 +324,7 @@
             Style="{StaticResource MenuButton}" />
 
         <Button
-            Grid.Row="6"
+            Grid.Row="8"
             Grid.ColumnSpan="2"
             Width="100"
             Height="30"

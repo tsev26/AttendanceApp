@@ -31,8 +31,14 @@ namespace Attendance.WPF.ViewModels
         public ICommand CloseModalCommand { get; }
         public ICommand UserSetActivityCommand { get; }
 
-        public List<int> Hours => Enumerable.Range(6, 17).ToList();
-        public List<int> Minutes => new List<int> { 0, 15, 30, 45 };
+
+        public List<int> StartHours => (StartActivity.Date == DateTime.Now.Date) ? Enumerable.Range(DateTime.Now.Hour, 22 - DateTime.Now.Hour).ToList() : Enumerable.Range(6, 17).ToList();
+
+        public List<int> EndHours => (EndActivity.Date == DateTime.Now.Date) ? Enumerable.Range(DateTime.Now.Hour, 22-DateTime.Now.Hour).ToList() : Enumerable.Range(6, 17).ToList();
+
+        public List<int> StartMinutes => (StartActivity.Date == DateTime.Now.Date) ? Enumerable.Range(DateTime.Now.Minute, 59-DateTime.Now.Minute).Select(n => ((int)(n / 15.0)) * 15).Distinct().ToList() : Enumerable.Range(0, 59).Select(n => ((int)(n / 15.0)) * 15).Distinct().ToList();
+        public List<int> EndMinutes => (StartActivity.Date == DateTime.Now.Date && StartHour == EndHour) ? Enumerable.Range(DateTime.Now.Minute, 59-DateTime.Now.Minute).Select(n => ((int)(n / 15.0)) * 15).Distinct().ToList() : Enumerable.Range(0, 59).Select(n => ((int)(n / 15.0)) * 15).Distinct().ToList();
+
 
         public int DescriptionWidth => SelectedActivity.Property.HasTime ? 300 : 295;
         public Activity SelectedActivity => _selectedUserStore.SelectedActivity;
@@ -94,7 +100,7 @@ namespace Attendance.WPF.ViewModels
             }
         }
 
-        private DateTime _startActivity = DateTime.Now.Date;
+        private DateTime _startActivity = DateTime.Now.Date.AddDays(1);
         public DateTime StartActivity
         {
             get
@@ -104,16 +110,24 @@ namespace Attendance.WPF.ViewModels
             set
             {
                 _startActivity = value;
+                if (_startActivity < DateTime.Now.Date)
+                {
+                    _startActivity = DateTime.Now.Date;
+                }
                 OnPropertyChanged(nameof(StartActivity));
                 if (StartActivity > EndActivity)
                 {
                     EndActivity = StartActivity;
                     OnPropertyChanged(nameof(EndActivity));
                 }
+                OnPropertyChanged(nameof(StartMinutes));
+                OnPropertyChanged(nameof(StartHours));
+                StartHour = StartHours[0];
+                StartMinute = StartMinutes[0];
             }
         }
 
-        private DateTime _endActivity = DateTime.Now.Date;
+        private DateTime _endActivity = DateTime.Now.Date.AddDays(1);
         public DateTime EndActivity
         {
             get
@@ -123,12 +137,20 @@ namespace Attendance.WPF.ViewModels
             set
             {
                 _endActivity = value;
+                if (_endActivity < DateTime.Now.Date)
+                {
+                    _endActivity = DateTime.Now.Date;
+                }
                 OnPropertyChanged(nameof(EndActivity));
                 if (EndActivity < StartActivity)
                 {
                     StartActivity = EndActivity;
                     OnPropertyChanged(nameof(StartActivity));
                 }
+                OnPropertyChanged(nameof(EndHours));
+                OnPropertyChanged(nameof(EndMinute));
+                EndHour = EndHours[0];
+                EndMinute = EndMinutes[0];
             }
         }
 
@@ -159,6 +181,12 @@ namespace Attendance.WPF.ViewModels
             {
                 _startHour = value;
                 OnPropertyChanged(nameof(StartHour));
+                if (StartHour > EndHour && StartActivity.Date == EndActivity.Date)
+                {
+                    EndHour = StartHour;
+                    OnPropertyChanged(nameof(EndHour));
+                }
+                OnPropertyChanged(nameof(StartMinutes));
             }
         }
 
@@ -173,6 +201,11 @@ namespace Attendance.WPF.ViewModels
             {
                 _startMinute = value;
                 OnPropertyChanged(nameof(StartMinute));
+                if (StartMinute > EndMinute && StartActivity.Date == EndActivity.Date && StartHour == EndHour)
+                {
+                    EndMinute = StartMinute;
+                    OnPropertyChanged(nameof(EndMinute));
+                }
             }
         }
 
@@ -187,6 +220,12 @@ namespace Attendance.WPF.ViewModels
             {
                 _endHour = value;
                 OnPropertyChanged(nameof(EndHour));
+                if (EndHour < StartHour && StartActivity.Date == EndActivity.Date)
+                {
+                    StartHour = EndHour;
+                    OnPropertyChanged(nameof(StartHour));
+                }
+                OnPropertyChanged(nameof(EndMinutes));
             }
         }
 
@@ -201,6 +240,11 @@ namespace Attendance.WPF.ViewModels
             {
                 _endMinute = value;
                 OnPropertyChanged(nameof(EndMinute));
+                if (EndMinute < StartMinute && StartActivity.Date == EndActivity.Date && StartHour == EndHour)
+                {
+                    StartMinute = EndMinute;
+                    OnPropertyChanged(nameof(StartMinute));
+                }
             }
         }
     }

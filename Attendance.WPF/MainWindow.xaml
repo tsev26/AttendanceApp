@@ -81,6 +81,11 @@
                 <views:UserSelectActivitySpecialView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodels:UserHasCurrentlyPlanViewModel}">
+                <views:UserHasCurrentlyPlanView />
+            </DataTemplate>
+
+
         </Grid.Resources>
 
         <Grid.RowDefinitions>

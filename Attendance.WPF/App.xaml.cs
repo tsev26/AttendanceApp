@@ -69,6 +69,7 @@ namespace Attendance.WPF
             services.AddTransient<UserHistoryViewModel>(CreateUserHistoryViewModel);
             services.AddTransient<UserUpsertViewModel>(CreateUserUpsertViewModel);
             services.AddTransient<UserSelectActivitySpecialViewModel>(CreateUserSelectActivitySpecialViewModel);
+            services.AddTransient<UserHasCurrentlyPlanViewModel>(CreateUserHasCurrentlyPlanViewModel);
 
             services.AddSingleton<MainViewModel>();
 
@@ -213,7 +214,8 @@ namespace Attendance.WPF
             return new UserMenuViewModel(
                 serviceProvider.GetRequiredService<UserSelectActivityViewModel>(),
                 serviceProvider.GetRequiredService<UserDailyOverviewViewModel>(),
-                serviceProvider.GetRequiredService<CurrentUser>()
+                serviceProvider.GetRequiredService<CurrentUser>(),
+                CreateUserHasCurrentlyPlanNavigationService(serviceProvider)
                 );
         }
 
@@ -346,6 +348,24 @@ namespace Attendance.WPF
                     CreateHomeNavigationService(serviceProvider),
                     serviceProvider.GetRequiredService<CloseModalNavigationService>()
                 );
+        }
+
+        private UserHasCurrentlyPlanViewModel CreateUserHasCurrentlyPlanViewModel(IServiceProvider serviceProvider)
+        {
+            return new UserHasCurrentlyPlanViewModel(
+                    serviceProvider.GetRequiredService<CurrentUser>(),
+                    serviceProvider.GetRequiredService<ActivityStore>(),
+                    CreateHomeNavigationService(serviceProvider),
+                    serviceProvider.GetRequiredService<CloseModalNavigationService>()
+                );
+        }
+
+        private INavigationService CreateUserHasCurrentlyPlanNavigationService(IServiceProvider serviceProvider)
+        {
+            return new ModalNavigationService<UserHasCurrentlyPlanViewModel>(
+                serviceProvider.GetRequiredService<ModalNavigationStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
+                () => serviceProvider.GetRequiredService<UserHasCurrentlyPlanViewModel>());
         }
     }
 }

@@ -9,6 +9,8 @@
         FalseValue="Hidden"
         TrueValue="Visible" />
 
+    <converters:TwoBoolsToVisibilityConverter x:Key="TwoBoolsToVisibilityConverter" />
+
     <BooleanToVisibilityConverter x:Key="bool2VisibilityConverter" />
 
     <converters:TimeOnlyConverter x:Key="TimeOnlyConverter" />

@@ -20,6 +20,18 @@ namespace Attendance.WPF.Commands
         private readonly SelectedUserStore _selectedUserStore;
         private readonly ActivityStore _activityStore;
         private readonly UserSelectActivitySpecialViewModel _userSelectActivitySpecialViewModel;
+
+        public UserSetActivityCommand(CurrentUser currentUser, 
+                                      ActivityStore activityStore, 
+                                      INavigationService navigateHomeService, 
+                                      INavigationService closeModalNavigationService)
+        {
+            _currentUser = currentUser;
+            _activityStore = activityStore;
+            _navigateHomeService = navigateHomeService;
+            _closeModalNavigation = closeModalNavigationService;
+        }
+
         public UserSetActivityCommand(CurrentUser currentUser, 
                                       SelectedUserStore selectedUserStore, 
                                       INavigationService navigateHomeService, 
@@ -62,46 +74,73 @@ namespace Attendance.WPF.Commands
             }
             else if (parameter is string value)
             {
-                if (value == "plan")
+                AttendanceRecord attendanceRecord = _currentUser.CurrentAttendanceRecord;
+                switch (value)
                 {
-                    Activity afterEnd = _activityStore.GlobalSetting.MainNonWorkActivity;
-                    Activity selectedPlan = _userSelectActivitySpecialViewModel.SelectedActivity;
-                    DateTime expectedStart;
-                    DateTime expectedEnd;
-                    if (selectedPlan.Property.HasTime)
-                    {
-                        expectedStart = _userSelectActivitySpecialViewModel.StartActivity.AddHours(_userSelectActivitySpecialViewModel.StartHour).AddMinutes(_userSelectActivitySpecialViewModel.StartMinute);
-                        expectedEnd = _userSelectActivitySpecialViewModel.EndActivity.AddHours(_userSelectActivitySpecialViewModel.EndHour).AddMinutes(_userSelectActivitySpecialViewModel.EndMinute);
-                    }
-                    else
-                    {
-                        if (_userSelectActivitySpecialViewModel.IsFullDayPlan)
+                    case "plan":
                         {
-                            expectedStart = _userSelectActivitySpecialViewModel.StartActivity.AddHours(6);
-                            expectedEnd = _userSelectActivitySpecialViewModel.EndActivity.AddHours(22);
-                        }
-                        else
-                        {
-                            if (_userSelectActivitySpecialViewModel.IsHalfDayStart)
+                            Activity afterEnd = _activityStore.GlobalSetting.MainNonWorkActivity;
+                            Activity selectedPlan = _userSelectActivitySpecialViewModel.SelectedActivity;
+                            DateTime expectedStart;
+                            DateTime expectedEnd;
+                            if (selectedPlan.Property.HasTime)
                             {
-                                expectedStart = _userSelectActivitySpecialViewModel.StartActivity.AddHours(6);
-                                expectedEnd = _userSelectActivitySpecialViewModel.EndActivity.AddHours(14);
+                                expectedStart = _userSelectActivitySpecialViewModel.StartActivity.AddHours(_userSelectActivitySpecialViewModel.StartHour).AddMinutes(_userSelectActivitySpecialViewModel.StartMinute);
+                                expectedEnd = _userSelectActivitySpecialViewModel.EndActivity.AddHours(_userSelectActivitySpecialViewModel.EndHour).AddMinutes(_userSelectActivitySpecialViewModel.EndMinute);
                             }
                             else
                             {
-                                expectedStart = _userSelectActivitySpecialViewModel.StartActivity.AddHours(14);
-                                expectedEnd = _userSelectActivitySpecialViewModel.EndActivity.AddHours(22);
+                                if (_userSelectActivitySpecialViewModel.IsFullDayPlan)
+                                {
+                                    expectedStart = _userSelectActivitySpecialViewModel.StartActivity.AddHours(6);
+                                    expectedEnd = _userSelectActivitySpecialViewModel.EndActivity.AddHours(22);
+                                }
+                                else
+                                {
+                                    if (_userSelectActivitySpecialViewModel.IsHalfDayStart)
+                                    {
+                                        expectedStart = _userSelectActivitySpecialViewModel.StartActivity.AddHours(6);
+                                        expectedEnd = _userSelectActivitySpecialViewModel.EndActivity.AddHours(14);
+                                    }
+                                    else
+                                    {
+                                        expectedStart = _userSelectActivitySpecialViewModel.StartActivity.AddHours(14);
+                                        expectedEnd = _userSelectActivitySpecialViewModel.EndActivity.AddHours(22);
+                                    }
+                                }
+
                             }
+                            if (expectedStart < DateTime.Now)
+                            {
+                                expectedStart = DateTime.Now;
+                            }
+
+                            AttendanceRecordDetail attendanceRecordDetail = new AttendanceRecordDetail(expectedStart, expectedEnd, _userSelectActivitySpecialViewModel.Description);
+
+                            _currentUser.SetActivity(selectedPlan, expectedStart, attendanceRecordDetail);
+                            _currentUser.SetActivity(afterEnd, expectedEnd);
+                            _navigateHomeService.Navigate();
+                            _closeModalNavigation.Navigate();
+                            break;
                         }
-                        
-                    }
 
-                    AttendanceRecordDetail attendanceRecordDetail = new AttendanceRecordDetail(expectedStart, expectedEnd, _userSelectActivitySpecialViewModel.Description);
-
-                    _currentUser.SetActivity(selectedPlan, expectedStart, attendanceRecordDetail);
-                    _currentUser.SetActivity(afterEnd, expectedEnd);
-                    _navigateHomeService.Navigate();
-                    _closeModalNavigation.Navigate();
+                    case "MoveStart":
+                        attendanceRecord.Entry = DateTime.Now;
+                        _navigateHomeService.Navigate();
+                        _closeModalNavigation.Navigate();
+                        break;
+                    case "Remove":
+                        _currentUser.RemoveAttendanceRecord(attendanceRecord);
+                        _closeModalNavigation.Navigate();
+                        break;
+                    case "MoveEnd":
+                        AttendanceRecord endOfPlan = _currentUser.AttendanceRecords.FirstOrDefault(a => a.Entry == attendanceRecord.AttendanceRecordDetail.ExpectedEnd);
+                        _currentUser.RemoveAttendanceRecord(endOfPlan);
+                        attendanceRecord.AttendanceRecordDetail.ExpectedEnd = DateTime.Now;
+                        Activity mainActivity = _activityStore.GlobalSetting.MainWorkActivity;
+                        _currentUser.SetActivity(mainActivity);
+                        _closeModalNavigation.Navigate();
+                        break;
                 }
             }
         }

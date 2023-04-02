@@ -1,4 +1,5 @@
-﻿using Attendance.WPF.Stores;
+﻿using Attendance.WPF.Services;
+using Attendance.WPF.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,18 @@ namespace Attendance.WPF.ViewModels
 
         public UserMenuViewModel(UserSelectActivityViewModel userSelectActivityViewModel,
                                  UserDailyOverviewViewModel userDailyOverviewViewModel,
-                                 CurrentUser currentUser)
+                                 CurrentUser currentUser,
+                                 INavigationService navigateUserHasCurretlyPlanService)
         {
             UserDailyOverviewViewModel = userDailyOverviewViewModel;
             UserSelectActivityViewModel = userSelectActivityViewModel;
 
             _currentUser = currentUser;
+
+            if (_currentUser.CurrentAttendanceRecord?.Activity.Property.IsPlan ?? false)
+            {
+                navigateUserHasCurretlyPlanService.Navigate();
+            }
         }
 
         public UserDailyOverviewViewModel UserDailyOverviewViewModel { get; }

@@ -22,6 +22,7 @@ namespace Attendance.WPF.Stores
         private List<AttendanceTotal> _attendanceTotal = new List<AttendanceTotal>();
 
         public event Action CurrentUserChange;
+        public event Action CurrentAttendanceChange;
         public event Action CurrentUserKeysChange;
 
         private User? _user;
@@ -56,6 +57,19 @@ namespace Attendance.WPF.Stores
             AttendanceRecord attendanceRecord = new AttendanceRecord(User, activity, DateTime.Now);
             _attendanceRecords.Add(attendanceRecord);
             CountTotalDay(attendanceRecord);
+            CurrentAttendanceChange?.Invoke();
+        }
+
+        public void RemoveAttendanceRecord(AttendanceRecord attendanceRecord)
+        {
+            _attendanceRecords.Remove(attendanceRecord);
+            if (attendanceRecord.AttendanceRecordDetail != null)
+            {
+                AttendanceRecord endOfPlan = _attendanceRecords.FirstOrDefault(a => a.User == User && a.Entry == attendanceRecord.AttendanceRecordDetail.ExpectedEnd);
+                _attendanceRecords.Remove(endOfPlan);
+            }
+            CountTotalDay(attendanceRecord);
+            CurrentAttendanceChange?.Invoke();
         }
 
         public void SetActivity(Activity activity, DateTime dateTime)
@@ -63,6 +77,7 @@ namespace Attendance.WPF.Stores
             AttendanceRecord attendanceRecord = new AttendanceRecord(User, activity, dateTime);
             _attendanceRecords.Add(attendanceRecord);
             CountTotalDay(attendanceRecord);
+            CurrentAttendanceChange?.Invoke();
         }
 
         public void SetActivity(Activity activity, DateTime dateTime, AttendanceRecordDetail attendanceRecordDetail)
@@ -70,6 +85,7 @@ namespace Attendance.WPF.Stores
             AttendanceRecord attendanceRecord = new AttendanceRecord(User, activity, dateTime, attendanceRecordDetail);
             _attendanceRecords.Add(attendanceRecord);
             CountTotalDay(attendanceRecord);
+            CurrentAttendanceChange?.Invoke();
         }
 
         /*
