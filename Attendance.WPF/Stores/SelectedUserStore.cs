@@ -33,6 +33,8 @@ namespace Attendance.WPF.Stores
 
         public Key SelectedKeyValue { get; set; }
 
+        public AttendanceRecord AttendanceRecord { get; set; }
+
         public event Action SelectedUserChange;
 
         public void SetGroup(User user, Group group)

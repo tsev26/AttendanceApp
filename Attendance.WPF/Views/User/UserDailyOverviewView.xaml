@@ -305,50 +305,80 @@
                     BorderBrush="Black"
                     BorderThickness="1"
                     CornerRadius="5">
-                    <StackPanel>
-                        <Grid Margin="0,5,0,0" HorizontalAlignment="Center">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" SharedSizeGroup="Activity2" />
-                                <ColumnDefinition Width="*" SharedSizeGroup="DateOne" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock
-                                Grid.Column="0"
-                                Margin="0,0,35,0"
-                                HorizontalAlignment="Left"
-                                FontSize="20"
-                                FontWeight="Bold"
-                                Text="Aktivita" />
-                            <TextBlock
-                                Grid.Column="1"
-                                HorizontalAlignment="Left"
-                                FontSize="20"
-                                FontWeight="Bold"
-                                Text="Příchod" />
-                        </Grid>
+                    <Grid Margin="0,5,0,0" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            x:Name="colActivity"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Width="100"
+                            HorizontalAlignment="Right"
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Text="Aktivita" />
+                        <TextBlock
+                            x:Name="colEntry"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Width="80"
+                            HorizontalAlignment="Left"
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Text="Příchod" />
 
-                        <ItemsControl
+                        <ListView
                             x:Name="listAttendaces"
-                            Width="Auto"
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
                             HorizontalAlignment="Center"
                             FontSize="20"
-                            ItemsSource="{Binding AttendanceRecordsInDay, UpdateSourceTrigger=PropertyChanged}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition SharedSizeGroup="Activity2" />
-                                            <ColumnDefinition SharedSizeGroup="DateOne" />
-                                        </Grid.ColumnDefinitions>
+                            ItemContainerStyle="{StaticResource ListViewItemRecords}"
+                            ItemsSource="{Binding AttendanceRecordsInDay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedIndex="{Binding SelectedAttendanceRecordIndex}"
+                            Style="{StaticResource ListRecords}">
+                            <ListView.Resources>
+                                <Style TargetType="{x:Type GridViewColumnHeader}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </Style>
+                            </ListView.Resources>
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridViewColumn Width="{Binding ActualWidth, ElementName=colActivity}" DisplayMemberBinding="{Binding Activity.Name}" />
+                                    <GridViewColumn Width="{Binding ActualWidth, ElementName=colEntry}" DisplayMemberBinding="{Binding Entry, StringFormat=HH:mm}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
 
-                                        <TextBlock Grid.Column="0" Text="{Binding Activity.Name}" />
-                                        <TextBlock Grid.Column="1" Text="{Binding Entry, StringFormat=HH:mm}" />
-
-                                    </Grid>
-
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
+                        <StackPanel
+                            Grid.Row="2"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Center"
+                            Orientation="Horizontal">
+                            <Button
+                                Margin="2"
+                                Command="{Binding NavigateFixAttendace}"
+                                CommandParameter="updateRecord"
+                                Content="Upravit"
+                                FontSize="17"
+                                Style="{StaticResource ViewButton}"
+                                Visibility="{Binding IsSelectedAttendanceRecord, Converter={StaticResource bool2VisibilityConverter}}" />
+                            <Button
+                                Margin="2"
+                                Command="{Binding NavigateFixAttendace}"
+                                CommandParameter="addRecord"
+                                Content="Přidat"
+                                FontSize="17"
+                                Style="{StaticResource ViewButton}" />
+                        </StackPanel>
+                    </Grid>
                 </Border>
             </Grid>
 

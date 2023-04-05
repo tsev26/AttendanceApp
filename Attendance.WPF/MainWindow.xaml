@@ -85,6 +85,10 @@
                 <views:UserHasCurrentlyPlanView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodels:UserFixAttendanceRecordViewModel}">
+                <views:UserFixAttendanceRecordView />
+            </DataTemplate>
+
 
         </Grid.Resources>
 

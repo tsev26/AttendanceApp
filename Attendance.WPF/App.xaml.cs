@@ -57,7 +57,7 @@ namespace Attendance.WPF
             services.AddTransient<UserMenuViewModel>(CreateUserMenuViewModel);
 
             services.AddTransient<UserSelectActivityViewModel>(CreateUserSelectActivityViewModel);
-            services.AddTransient<UserDailyOverviewViewModel>();
+            services.AddTransient<UserDailyOverviewViewModel>(CreateUserDailyOverviewViewModel);
             services.AddTransient<UsersViewModel>(CreateUsersViewModel);
             services.AddTransient<UserKeysViewModel>(CreateUserKeysViewModel);
             services.AddTransient<UserKeyUpsertViewModel>(CreateUserKeyUpsertViewModel);
@@ -70,6 +70,7 @@ namespace Attendance.WPF
             services.AddTransient<UserUpsertViewModel>(CreateUserUpsertViewModel);
             services.AddTransient<UserSelectActivitySpecialViewModel>(CreateUserSelectActivitySpecialViewModel);
             services.AddTransient<UserHasCurrentlyPlanViewModel>(CreateUserHasCurrentlyPlanViewModel);
+            services.AddTransient<UserFixAttendanceRecordViewModel>(CreateUserFixAttendanceRecordViewModel);
 
             services.AddSingleton<MainViewModel>();
 
@@ -366,6 +367,32 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<ModalNavigationStore>(),
                 serviceProvider.GetRequiredService<MessageStore>(),
                 () => serviceProvider.GetRequiredService<UserHasCurrentlyPlanViewModel>());
+        }
+
+        private UserDailyOverviewViewModel CreateUserDailyOverviewViewModel(IServiceProvider serviceProvider)
+        {
+            return new UserDailyOverviewViewModel(
+                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<SelectedUserStore>(),
+                CreateFixAttendanceNavigationService(serviceProvider)
+                );
+        }
+
+        private INavigationService CreateFixAttendanceNavigationService(IServiceProvider serviceProvider)
+        {
+            return new ModalNavigationService<UserFixAttendanceRecordViewModel>(
+                serviceProvider.GetRequiredService<ModalNavigationStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
+                () => serviceProvider.GetRequiredService<UserFixAttendanceRecordViewModel>());
+        }
+
+        private UserFixAttendanceRecordViewModel CreateUserFixAttendanceRecordViewModel(IServiceProvider serviceProvider)
+        {
+            return new UserFixAttendanceRecordViewModel(
+                serviceProvider.GetRequiredService<SelectedUserStore>(),
+                serviceProvider.GetRequiredService<ActivityStore>(),
+                serviceProvider.GetRequiredService<CloseModalNavigationService>()
+                );
         }
     }
 }

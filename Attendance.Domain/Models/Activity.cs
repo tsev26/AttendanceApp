@@ -44,5 +44,10 @@ namespace Attendance.Domain.Models
                 Property = Property?.Clone()
             };
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

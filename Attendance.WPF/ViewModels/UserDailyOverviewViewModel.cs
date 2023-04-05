@@ -1,4 +1,6 @@
 ﻿using Attendance.Domain.Models;
+using Attendance.WPF.Commands;
+using Attendance.WPF.Services;
 using Attendance.WPF.Stores;
 using System;
 using System.Collections.Generic;
@@ -6,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace Attendance.WPF.ViewModels
@@ -13,16 +16,20 @@ namespace Attendance.WPF.ViewModels
     public class UserDailyOverviewViewModel : ViewModelBase
     {
         private DispatcherTimer _timer;
+        private readonly SelectedUserStore _selectedUserStore;
 
         public CurrentUser CurrentUser { get; }
 
-        public UserDailyOverviewViewModel(CurrentUser currentUser)
+        public UserDailyOverviewViewModel(CurrentUser currentUser, SelectedUserStore selectedUserStore, INavigationService navigateFixAttendance)
         {
             CurrentUser = currentUser;
+            _selectedUserStore = selectedUserStore;
             Date = DateOnly.FromDateTime(DateTime.Now);
-
+            NavigateFixAttendace = new NavigateFixAttendaceCommand(selectedUserStore, navigateFixAttendance, this);
             CurrentUser.CurrentAttendanceChange += CurrentUser_CurrentAttendanceChange;
         }
+
+        public ICommand NavigateFixAttendace { get; }
 
         private void CurrentUser_CurrentAttendanceChange()
         {
@@ -92,6 +99,26 @@ namespace Attendance.WPF.ViewModels
 
         public List<AttendanceTotal> ActivitiesTotalInDay => CurrentUser.ActivitiesTotalInDay(Date);
 
+
+        private int _selectedAttendanceRecordIndex = -1;
+        public int SelectedAttendanceRecordIndex
+        {
+            get
+            {
+                return _selectedAttendanceRecordIndex;
+            }
+            set
+            {
+                _selectedAttendanceRecordIndex = value;
+                OnPropertyChanged(nameof(SelectedAttendanceRecordIndex));
+                OnPropertyChanged(nameof(IsSelectedAttendanceRecord));
+                OnPropertyChanged(nameof(SelectedAttendanceRecord));
+            }
+        }
+
+        public bool IsSelectedAttendanceRecord => SelectedAttendanceRecordIndex != -1;
+
+        public AttendanceRecord SelectedAttendanceRecord => IsSelectedAttendanceRecord ? AttendanceRecordsInDay[SelectedAttendanceRecordIndex] : null;
 
         public override void Dispose()
         {
