@@ -22,6 +22,7 @@ namespace Attendance.WPF.ViewModels
                                       INavigationService navigationActivitiesService,
                                       INavigationService navigateUsersService,
                                       INavigationService navigateHistoryService,
+                                      INavigationService navigateFixesService,
                                       CurrentUser currentUser)
         {
             NavigateHomeCommand = new NavigateCommand(navigateHomeService);
@@ -32,6 +33,7 @@ namespace Attendance.WPF.ViewModels
             NavigateActivitiesCommand = new NavigateCommand(navigationActivitiesService);
             NavigateUsersCommand = new NavigateCommand(navigateUsersService);
             NavigateHistoryCommnad = new NavigateCommand(navigateHistoryService);
+            NavigateFixesCommnad = new NavigateCommand(navigateFixesService);
             _currentUser = currentUser;
             _currentUser.CurrentUserChange += CurrentUser_CurrentUserChange;
         }
@@ -47,7 +49,7 @@ namespace Attendance.WPF.ViewModels
 
         public string CurrentName => _currentUser.User?.LastName + " " + _currentUser.User?.FirstName;
 
-        public string CurrentActivity => _currentUser.CurrentAttendanceRecord?.Activity.Name;
+        public string CurrentActivity => _currentUser.AttendanceRecordStore.CurrentAttendanceRecord?.Activity.Name;
 
         public bool UserLogOn => _currentUser.User != null;
 
@@ -63,7 +65,7 @@ namespace Attendance.WPF.ViewModels
         public ICommand NavigateActivitiesCommand { get; }
         public ICommand NavigateUsersCommand { get; }
         public ICommand NavigateHistoryCommnad { get; }
-
+        public ICommand NavigateFixesCommnad { get; }
         public override void Dispose()
         {
             _currentUser.CurrentUserChange -= CurrentUser_CurrentUserChange;

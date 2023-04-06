@@ -16,15 +16,18 @@ namespace Attendance.WPF.ViewModels
         private readonly SelectedUserStore _selectedUserStore;
         private readonly ActivityStore _activityStore;
 
-        public UserFixAttendanceRecordViewModel(SelectedUserStore selectedUserStore, ActivityStore activityStore,  INavigationService closeModalNavigationService)
+        public UserFixAttendanceRecordViewModel(SelectedUserStore selectedUserStore, 
+                                                ActivityStore activityStore,  
+                                                INavigationService closeModalNavigationService, 
+                                                INavigationService navigateFixesAttendance)
         {
             _selectedUserStore = selectedUserStore;
             _activityStore = activityStore;
             CloseModalCommand = new CloseModalCommand(closeModalNavigationService);
-            SaveChangeCommand = new SaveAttendanceRecordChangesCommand(selectedUserStore, closeModalNavigationService);
+            SaveChangeCommand = new SaveAttendanceRecordChangesCommand(selectedUserStore, this, closeModalNavigationService, navigateFixesAttendance);
             Header = selectedUserStore.AttendanceRecord == null ? "Přidání záznamu" : "Úprava záznamu";
             Activity = selectedUserStore.AttendanceRecord?.Activity;
-            Date = selectedUserStore.AttendanceRecord?.Entry ?? DateTime.Now;
+            Date = selectedUserStore.AttendanceRecord?.Entry ?? DateTime.Now.Date;
             Hour = selectedUserStore.AttendanceRecord?.Entry.Hour ?? DateTime.Now.Hour;
             Minute = selectedUserStore.AttendanceRecord?.Entry.Minute ?? DateTime.Now.Minute;
         }
@@ -48,13 +51,19 @@ namespace Attendance.WPF.ViewModels
             set
             {
                 _date = value;
+                if (_date.Date > DateTime.Now.Date)
+                {
+                    _date = DateTime.Now.Date;
+                }
                 OnPropertyChanged(nameof(Date));
+                Hours = (Date.Date == DateTime.Now.Date) ? Enumerable.Range(0, DateTime.Now.Hour + 1).ToList() : Enumerable.Range(0, 24).ToList();
                 OnPropertyChanged(nameof(Hours));
+                Minutes = (Date.Date == DateTime.Now.Date && Hour == DateTime.Now.Hour) ? Enumerable.Range(0, DateTime.Now.Minute + 1).ToList() : Enumerable.Range(0, 60).ToList();
                 OnPropertyChanged(nameof(Minutes));
             }
         }
 
-        public List<int> Hours => (Date == DateTime.Now.Date) ? Enumerable.Range(DateTime.Now.Hour, 23 - DateTime.Now.Hour).ToList() : Enumerable.Range(0, 23).ToList();
+        public List<int> Hours { get; set; }
 
         private int _hour;
         public int Hour
@@ -67,12 +76,12 @@ namespace Attendance.WPF.ViewModels
             {
                 _hour = value;
                 OnPropertyChanged(nameof(Hour));
-                OnPropertyChanged(nameof(Hours));
+                Minutes = (Date.Date == DateTime.Now.Date && Hour == DateTime.Now.Hour) ? Enumerable.Range(0, DateTime.Now.Minute + 1).ToList() : Enumerable.Range(0, 60).ToList();
                 OnPropertyChanged(nameof(Minutes));
             }
         }
 
-        public List<int> Minutes => (Date == DateTime.Now.Date && Hour == DateTime.Now.Hour) ? Enumerable.Range(DateTime.Now.Minute, 59 - DateTime.Now.Minute).ToList() : Enumerable.Range(0, 59).ToList();
+        public List<int> Minutes {get; set; }
 
         private int _minute;
         public int Minute
@@ -88,6 +97,11 @@ namespace Attendance.WPF.ViewModels
             }
         }
 
+        public override void Dispose()
+        {
+            _selectedUserStore.AttendanceRecord = null;
+            base.Dispose();
+        }
 
     }
 }

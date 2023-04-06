@@ -37,6 +37,7 @@ namespace Attendance.WPF
             services.AddSingleton<ModalNavigationStore>();
             services.AddSingleton<MessageStore>();
 
+            services.AddSingleton<AttendanceRecordStore>();
             services.AddSingleton<UserStore>();
             services.AddSingleton<ActivityStore>();
             services.AddSingleton<CurrentUser>();
@@ -71,6 +72,7 @@ namespace Attendance.WPF
             services.AddTransient<UserSelectActivitySpecialViewModel>(CreateUserSelectActivitySpecialViewModel);
             services.AddTransient<UserHasCurrentlyPlanViewModel>(CreateUserHasCurrentlyPlanViewModel);
             services.AddTransient<UserFixAttendanceRecordViewModel>(CreateUserFixAttendanceRecordViewModel);
+            services.AddTransient<UserFixesAttendanceRecordViewModel>(CreateUserFixesAttendanceRecordViewModel);
 
             services.AddSingleton<MainViewModel>();
 
@@ -99,7 +101,8 @@ namespace Attendance.WPF
         private SelectedUserStore CreateSelectedUserStore(IServiceProvider serviceProvider)
         {
             return new SelectedUserStore(
-                serviceProvider.GetRequiredService<UserStore>()
+                serviceProvider.GetRequiredService<UserStore>(),
+                serviceProvider.GetRequiredService<AttendanceRecordStore>()
                 );
         }
         private HomeViewModel CreateHomeViewModel(IServiceProvider serviceProvider)
@@ -190,6 +193,7 @@ namespace Attendance.WPF
                 CreateActivitiesNavigationService(serviceProvider),
                 CreateUsersNavigationService(serviceProvider),
                 CreateUserHistoryService(serviceProvider),
+                CreateUserFixesNavigationService(serviceProvider),
                 serviceProvider.GetRequiredService<CurrentUser>()
                 );
         }
@@ -374,7 +378,8 @@ namespace Attendance.WPF
             return new UserDailyOverviewViewModel(
                 serviceProvider.GetRequiredService<CurrentUser>(),
                 serviceProvider.GetRequiredService<SelectedUserStore>(),
-                CreateFixAttendanceNavigationService(serviceProvider)
+                CreateFixAttendanceNavigationService(serviceProvider),
+                CreateUserFixesNavigationService(serviceProvider)
                 );
         }
 
@@ -391,8 +396,26 @@ namespace Attendance.WPF
             return new UserFixAttendanceRecordViewModel(
                 serviceProvider.GetRequiredService<SelectedUserStore>(),
                 serviceProvider.GetRequiredService<ActivityStore>(),
-                serviceProvider.GetRequiredService<CloseModalNavigationService>()
+                serviceProvider.GetRequiredService<CloseModalNavigationService>(),
+                CreateUserFixesNavigationService(serviceProvider)
                 );
+        }
+
+        private UserFixesAttendanceRecordViewModel CreateUserFixesAttendanceRecordViewModel(IServiceProvider serviceProvider)
+        {
+            return new UserFixesAttendanceRecordViewModel(
+                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<SelectedUserStore>(),
+                CreateFixAttendanceNavigationService(serviceProvider)
+                );
+        }
+
+        private INavigationService CreateUserFixesNavigationService(IServiceProvider serviceProvider)
+        {
+            return new NavigationService<UserFixesAttendanceRecordViewModel>(
+                 serviceProvider.GetRequiredService<NavigationStore>(),
+                 serviceProvider.GetRequiredService<MessageStore>(),
+                 () => serviceProvider.GetRequiredService<UserFixesAttendanceRecordViewModel>());
         }
     }
 }

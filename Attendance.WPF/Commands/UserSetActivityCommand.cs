@@ -67,14 +67,14 @@ namespace Attendance.WPF.Commands
                 }
                 else
                 {
-                    _currentUser.SetActivity(activity);
+                    _currentUser.AttendanceRecordStore.AddAttendanceRecord(activity);
                     _navigateHomeService.Navigate();
                 }
                 
             }
             else if (parameter is string value)
             {
-                AttendanceRecord attendanceRecord = _currentUser.CurrentAttendanceRecord;
+                AttendanceRecord attendanceRecord = _currentUser.AttendanceRecordStore.CurrentAttendanceRecord;
                 switch (value)
                 {
                     case "plan":
@@ -117,8 +117,8 @@ namespace Attendance.WPF.Commands
 
                             AttendanceRecordDetail attendanceRecordDetail = new AttendanceRecordDetail(expectedStart, expectedEnd, _userSelectActivitySpecialViewModel.Description);
 
-                            _currentUser.SetActivity(selectedPlan, expectedStart, attendanceRecordDetail);
-                            _currentUser.SetActivity(afterEnd, expectedEnd);
+                            _currentUser.AttendanceRecordStore.AddAttendanceRecord(selectedPlan, expectedStart, attendanceRecordDetail);
+                            _currentUser.AttendanceRecordStore.AddAttendanceRecord(afterEnd, expectedEnd);
                             _navigateHomeService.Navigate();
                             _closeModalNavigation.Navigate();
                             break;
@@ -130,15 +130,15 @@ namespace Attendance.WPF.Commands
                         _closeModalNavigation.Navigate();
                         break;
                     case "Remove":
-                        _currentUser.RemoveAttendanceRecord(attendanceRecord);
+                        _currentUser.AttendanceRecordStore.RemoveAttendanceRecord(attendanceRecord);
                         _closeModalNavigation.Navigate();
                         break;
                     case "MoveEnd":
-                        AttendanceRecord endOfPlan = _currentUser.AttendanceRecords.FirstOrDefault(a => a.Entry == attendanceRecord.AttendanceRecordDetail.ExpectedEnd);
-                        _currentUser.RemoveAttendanceRecord(endOfPlan);
+                        AttendanceRecord endOfPlan = _currentUser.AttendanceRecordStore.AttendanceRecords.FirstOrDefault(a => a.Entry == attendanceRecord.AttendanceRecordDetail.ExpectedEnd);
+                        _currentUser.AttendanceRecordStore.RemoveAttendanceRecord(endOfPlan);
                         attendanceRecord.AttendanceRecordDetail.ExpectedEnd = DateTime.Now;
                         Activity mainActivity = _activityStore.GlobalSetting.MainWorkActivity;
-                        _currentUser.SetActivity(mainActivity);
+                        _currentUser.AttendanceRecordStore.AddAttendanceRecord(mainActivity);
                         _closeModalNavigation.Navigate();
                         break;
                 }

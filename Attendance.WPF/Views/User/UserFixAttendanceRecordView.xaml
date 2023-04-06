@@ -84,14 +84,14 @@
             <ComboBox
                 Width="50"
                 FontSize="20.5"
-                ItemsSource="{Binding Hours}"
+                ItemsSource="{Binding Hours, UpdateSourceTrigger=PropertyChanged}"
                 SelectedValue="{Binding Hour, Mode=TwoWay}">
                 <ComboBox.ItemStringFormat>{0:00}</ComboBox.ItemStringFormat>
             </ComboBox>
             <ComboBox
                 Width="50"
                 FontSize="20.5"
-                ItemsSource="{Binding Minutes}"
+                ItemsSource="{Binding Minutes, UpdateSourceTrigger=PropertyChanged}"
                 SelectedValue="{Binding Minute, Mode=TwoWay}">
                 <ComboBox.ItemStringFormat>{0:00}</ComboBox.ItemStringFormat>
             </ComboBox>

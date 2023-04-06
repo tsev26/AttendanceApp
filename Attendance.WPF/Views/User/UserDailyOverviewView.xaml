@@ -320,7 +320,7 @@
                             Grid.Row="0"
                             Grid.Column="0"
                             Width="100"
-                            HorizontalAlignment="Right"
+                            HorizontalAlignment="Center"
                             FontSize="20"
                             FontWeight="Bold"
                             Text="Aktivita" />
@@ -328,8 +328,8 @@
                             x:Name="colEntry"
                             Grid.Row="0"
                             Grid.Column="1"
-                            Width="80"
-                            HorizontalAlignment="Left"
+                            Width="120"
+                            HorizontalAlignment="Center"
                             FontSize="20"
                             FontWeight="Bold"
                             Text="Příchod" />
@@ -351,8 +351,20 @@
                             </ListView.Resources>
                             <ListView.View>
                                 <GridView AllowsColumnReorder="False">
-                                    <GridViewColumn Width="{Binding ActualWidth, ElementName=colActivity}" DisplayMemberBinding="{Binding Activity.Name}" />
-                                    <GridViewColumn Width="{Binding ActualWidth, ElementName=colEntry}" DisplayMemberBinding="{Binding Entry, StringFormat=HH:mm}" />
+                                    <GridViewColumn Width="{Binding ActualWidth, ElementName=colActivity}" Header="Name">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock HorizontalAlignment="Right" Text="{Binding Activity.Name}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="{Binding ActualWidth, ElementName=colEntry}" Header="Date">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock HorizontalAlignment="Right" Text="{Binding DateTime}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
                                 </GridView>
                             </ListView.View>
                         </ListView>
@@ -364,7 +376,7 @@
                             Orientation="Horizontal">
                             <Button
                                 Margin="2"
-                                Command="{Binding NavigateFixAttendace}"
+                                Command="{Binding NavigateFixAttendaceCommand}"
                                 CommandParameter="updateRecord"
                                 Content="Upravit"
                                 FontSize="17"
@@ -372,11 +384,19 @@
                                 Visibility="{Binding IsSelectedAttendanceRecord, Converter={StaticResource bool2VisibilityConverter}}" />
                             <Button
                                 Margin="2"
-                                Command="{Binding NavigateFixAttendace}"
+                                Command="{Binding NavigateFixAttendaceCommand}"
                                 CommandParameter="addRecord"
                                 Content="Přidat"
                                 FontSize="17"
                                 Style="{StaticResource ViewButton}" />
+                            <Button
+                                Margin="2"
+                                Command="{Binding NavigateFixAttendaceCommand}"
+                                CommandParameter="removeRecord"
+                                Content="Odebrat"
+                                FontSize="17"
+                                Style="{StaticResource ViewButton}"
+                                Visibility="{Binding IsSelectedAttendanceRecord, Converter={StaticResource bool2VisibilityConverter}}" />
                         </StackPanel>
                     </Grid>
                 </Border>

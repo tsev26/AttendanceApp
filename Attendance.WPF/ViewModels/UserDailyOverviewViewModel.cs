@@ -1,5 +1,6 @@
 ﻿using Attendance.Domain.Models;
 using Attendance.WPF.Commands;
+using Attendance.WPF.Models;
 using Attendance.WPF.Services;
 using Attendance.WPF.Stores;
 using System;
@@ -20,16 +21,21 @@ namespace Attendance.WPF.ViewModels
 
         public CurrentUser CurrentUser { get; }
 
-        public UserDailyOverviewViewModel(CurrentUser currentUser, SelectedUserStore selectedUserStore, INavigationService navigateFixAttendance)
+        public UserDailyOverviewViewModel(CurrentUser currentUser, 
+                                          SelectedUserStore selectedUserStore, 
+                                          INavigationService navigateFixAttendance,
+                                          INavigationService navigateFixesAttendance
+                                          )
         {
             CurrentUser = currentUser;
             _selectedUserStore = selectedUserStore;
+            _selectedUserStore.AttendanceRecord = null;
             Date = DateOnly.FromDateTime(DateTime.Now);
-            NavigateFixAttendace = new NavigateFixAttendaceCommand(selectedUserStore, navigateFixAttendance, this);
-            CurrentUser.CurrentAttendanceChange += CurrentUser_CurrentAttendanceChange;
+            NavigateFixAttendaceCommand = new NavigateFixAttendaceCommand(selectedUserStore, this, navigateFixAttendance, navigateFixesAttendance);
+            CurrentUser.AttendanceRecordStore.CurrentAttendanceChange += CurrentUser_CurrentAttendanceChange;
         }
 
-        public ICommand NavigateFixAttendace { get; }
+        public ICommand NavigateFixAttendaceCommand { get; }
 
         private void CurrentUser_CurrentAttendanceChange()
         {
@@ -89,15 +95,15 @@ namespace Attendance.WPF.ViewModels
             OnPropertyChanged(nameof(ActivitiesTotalInDay));
         }
 
-        public string WorkedInDayTotal => CurrentUser.WorkedInDayTotal(Date);
+        public string WorkedInDayTotal => CurrentUser.AttendanceRecordStore.WorkedInDayTotal(Date);
 
-        public string WorkedInDay => CurrentUser.WorkedInDay(Date);
+        public string WorkedInDay => CurrentUser.AttendanceRecordStore.WorkedInDay(Date);
 
-        public string PauseInDay => CurrentUser.PauseInDay(Date);
+        public string PauseInDay => CurrentUser.AttendanceRecordStore.PauseInDay(Date);
 
-        public List<AttendanceRecord> AttendanceRecordsInDay => CurrentUser.RecordsInDay(Date);
+        public List<AttendanceRecordItem> AttendanceRecordsInDay => CurrentUser.AttendanceRecordStore.RecordsInDay(Date);
 
-        public List<AttendanceTotal> ActivitiesTotalInDay => CurrentUser.ActivitiesTotalInDay(Date);
+        public List<AttendanceTotal> ActivitiesTotalInDay => CurrentUser.AttendanceRecordStore.ActivitiesTotalInDay(Date);
 
 
         private int _selectedAttendanceRecordIndex = -1;
@@ -118,7 +124,7 @@ namespace Attendance.WPF.ViewModels
 
         public bool IsSelectedAttendanceRecord => SelectedAttendanceRecordIndex != -1;
 
-        public AttendanceRecord SelectedAttendanceRecord => IsSelectedAttendanceRecord ? AttendanceRecordsInDay[SelectedAttendanceRecordIndex] : null;
+        public AttendanceRecordItem SelectedAttendanceRecord => IsSelectedAttendanceRecord ? AttendanceRecordsInDay[SelectedAttendanceRecordIndex] : null;
 
         public override void Dispose()
         {

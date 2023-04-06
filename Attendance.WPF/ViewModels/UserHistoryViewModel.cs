@@ -62,7 +62,7 @@ namespace Attendance.WPF.ViewModels
             }
 		}
 
-		public List<MonthlyAttendanceTotalsWork> UserHistory => _currentUser.MonthlyAttendanceTotalsWorks(Month, Year, _currentUser.User);
+		public List<MonthlyAttendanceTotalsWork> UserHistory => _currentUser.AttendanceRecordStore.MonthlyAttendanceTotalsWorks(Month, Year, _currentUser.User);
 
 		public bool IsButtonNextMonthVisible => !(Year == DateTime.Now.Year && Month == DateTime.Now.Month);
 

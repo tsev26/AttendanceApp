@@ -22,7 +22,7 @@ namespace Attendance.WPF.ViewModels
 
             _currentUser = currentUser;
 
-            if (_currentUser.CurrentAttendanceRecord?.Activity.Property.IsPlan ?? false)
+            if (_currentUser.AttendanceRecordStore.CurrentAttendanceRecord?.Activity.Property.IsPlan ?? false)
             {
                 navigateUserHasCurretlyPlanService.Navigate();
             }

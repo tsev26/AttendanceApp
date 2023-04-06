@@ -89,6 +89,11 @@
                 <views:UserFixAttendanceRecordView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodels:UserFixesAttendanceRecordViewModel}">
+                <views:UserFixesAttendanceRecordView />
+            </DataTemplate>
+
+
 
         </Grid.Resources>
 

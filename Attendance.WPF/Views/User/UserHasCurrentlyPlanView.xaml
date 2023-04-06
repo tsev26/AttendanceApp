@@ -77,7 +77,7 @@
                 Margin="5"
                 Command="{Binding UserSetActivityCommand}"
                 CommandParameter="Remove"
-                Content="Zrušit"
+                Content="Zrušit plán"
                 Style="{StaticResource MenuButton}" />
 
             <Button

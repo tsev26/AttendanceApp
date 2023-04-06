@@ -10,11 +10,14 @@ namespace Attendance.WPF.Stores
     public class SelectedUserStore
     {
         private readonly UserStore _userStore;
-
-        public SelectedUserStore(UserStore userStore)
+        private readonly AttendanceRecordStore _attendanceRecordStore;
+        public SelectedUserStore(UserStore userStore, AttendanceRecordStore attendanceRecordStore)
         {
             _userStore = userStore;
+            _attendanceRecordStore = attendanceRecordStore;
         }
+
+        public AttendanceRecordStore AttendanceRecordStore => _attendanceRecordStore;
 
         private User _selectedUser;
         public User SelectedUser
