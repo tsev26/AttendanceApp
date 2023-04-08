@@ -15,9 +15,9 @@ namespace Attendance.WPF.Commands
         private GroupStore _groupStore;
         private GroupUpsertViewModel _groupUpsertViewModel;
         private CloseModalNavigationService _closeModalNavigationService;
-        private CurrentUser _currentUser;
+        private CurrentUserStore _currentUser;
 
-        public CreateGroupCommand(GroupStore groupStore, CurrentUser currentUser, GroupUpsertViewModel groupUpsertViewModel, CloseModalNavigationService closeModalNavigationService)
+        public CreateGroupCommand(GroupStore groupStore, CurrentUserStore currentUser, GroupUpsertViewModel groupUpsertViewModel, CloseModalNavigationService closeModalNavigationService)
         {
             _groupStore = groupStore;
             _groupUpsertViewModel = groupUpsertViewModel;

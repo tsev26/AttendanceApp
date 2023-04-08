@@ -12,41 +12,54 @@ namespace Attendance.WPF.Commands
 {
     public class NavigateFixAttendaceCommand : CommandBase
     {
-        private readonly SelectedUserStore _selectedUserStore;
+        private readonly SelectedDataStore _selectedUserStore;
         private readonly INavigationService _navigateFixAttendance;
         private readonly INavigationService _navigateFixesAttendance;
         private readonly UserDailyOverviewViewModel _userDailyOverviewViewModel;
         private readonly UserFixesAttendanceRecordViewModel _userFixesAttendanceRecordViewModel;
+        private readonly AttendanceRecordStore _attendanceRecordStore;
 
-        public NavigateFixAttendaceCommand(SelectedUserStore selectedUserStore, UserDailyOverviewViewModel userDailyOverviewViewModel, INavigationService navigateFixAttendance, INavigationService navigateFixesAttendance)
+        public NavigateFixAttendaceCommand(SelectedDataStore selectedUserStore, 
+                                           UserDailyOverviewViewModel userDailyOverviewViewModel,
+                                           AttendanceRecordStore attendanceRecordStore,
+                                           INavigationService navigateFixAttendance, 
+                                           INavigationService navigateFixesAttendance)
         {
             _selectedUserStore = selectedUserStore;
             _navigateFixAttendance = navigateFixAttendance;
             _navigateFixesAttendance = navigateFixesAttendance;
             _userDailyOverviewViewModel = userDailyOverviewViewModel;
+            _attendanceRecordStore = attendanceRecordStore;
         }
 
-        public NavigateFixAttendaceCommand(SelectedUserStore selectedUserStore, UserFixesAttendanceRecordViewModel userFixesAttendanceRecordViewModel, INavigationService navigateFixAttendance)
+        public NavigateFixAttendaceCommand(SelectedDataStore selectedUserStore, 
+                                           UserFixesAttendanceRecordViewModel userFixesAttendanceRecordViewModel,
+                                           AttendanceRecordStore attendanceRecordStore,
+                                           INavigationService navigateFixAttendance)
         {
             _selectedUserStore = selectedUserStore;
             _navigateFixAttendance = navigateFixAttendance;
             _userFixesAttendanceRecordViewModel = userFixesAttendanceRecordViewModel;
+            _attendanceRecordStore = attendanceRecordStore;
         }
 
         public override void Execute(object? parameter)
         {
             AttendanceRecord? attendanceRecord = null;
+            User user = null;
             bool isSelected = false;
             if (_userDailyOverviewViewModel != null)
             {
-                attendanceRecord = _userDailyOverviewViewModel.CurrentUser.AttendanceRecordStore.AttendanceRecords.FirstOrDefault(a => a == _userDailyOverviewViewModel.SelectedAttendanceRecord?.AttendanceRecord);
-                _selectedUserStore.SelectedUser = _userDailyOverviewViewModel.CurrentUser.User;
+                user = _userDailyOverviewViewModel.CurrentUser.User;
+                attendanceRecord = _attendanceRecordStore.AttendanceRecords(user).FirstOrDefault(a => a == _userDailyOverviewViewModel.SelectedAttendanceRecord?.AttendanceRecord);
+                _selectedUserStore.SelectedUser = user;
                 isSelected = _userDailyOverviewViewModel.IsSelectedAttendanceRecord;
             }
             else if (_userFixesAttendanceRecordViewModel != null)
             {
-                attendanceRecord = _userFixesAttendanceRecordViewModel.CurrentUser.AttendanceRecordStore.AttendanceRecords.FirstOrDefault(a => a == _userFixesAttendanceRecordViewModel.SelectedAttendanceRecord);
-                _selectedUserStore.SelectedUser = _userFixesAttendanceRecordViewModel.CurrentUser.User;
+                user = _userFixesAttendanceRecordViewModel.CurrentUser.User;
+                attendanceRecord = _attendanceRecordStore.AttendanceRecords(user).FirstOrDefault(a => a == _userFixesAttendanceRecordViewModel.SelectedAttendanceRecord);
+                _selectedUserStore.SelectedUser = user;
                 isSelected = _userFixesAttendanceRecordViewModel.IsSelectedAttendanceRecord;
             }
 
@@ -55,7 +68,7 @@ namespace Attendance.WPF.Commands
             {
                 if (value == "removeRecord" && isSelected && attendanceRecord != null)
                 {
-                    _selectedUserStore.AttendanceRecordStore.AddAttendanceRecordFixDelete(attendanceRecord);
+                    _attendanceRecordStore.AddAttendanceRecordFixDelete(user,attendanceRecord);
                     _navigateFixesAttendance.Navigate();
                 }
                 else if (value == "updateRecord" && isSelected && attendanceRecord != null)

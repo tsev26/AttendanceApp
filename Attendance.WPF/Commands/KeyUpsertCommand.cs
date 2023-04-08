@@ -10,10 +10,10 @@ namespace Attendance.WPF.Commands
 {
     public class KeyUpsertCommand : CommandBase
     {
-        private readonly SelectedUserStore _selectedUserStore;
+        private readonly SelectedDataStore _selectedUserStore;
         private readonly INavigationService _closeAndReloadModalService;
 
-        public KeyUpsertCommand(SelectedUserStore selectedUserStore, INavigationService closeAndReloadModalService)
+        public KeyUpsertCommand(SelectedDataStore selectedUserStore, INavigationService closeAndReloadModalService)
         {
             _selectedUserStore = selectedUserStore;
             _closeAndReloadModalService = closeAndReloadModalService;

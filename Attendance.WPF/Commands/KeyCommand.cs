@@ -13,18 +13,18 @@ namespace Attendance.WPF.Commands
     {
         private readonly UserKeysViewModel _userKeysViewModel;
         private readonly UsersViewModel _usersViewModel;
-        private readonly SelectedUserStore _selectedUserStoreUser;
+        private readonly SelectedDataStore _selectedUserStoreUser;
         private readonly INavigationService _navigateModalUpsertKey;
         
 
-        public KeyCommand(SelectedUserStore selectedUserStore, UserKeysViewModel userKeysViewModel, INavigationService navigateModalUpsertKey)
+        public KeyCommand(SelectedDataStore selectedUserStore, UserKeysViewModel userKeysViewModel, INavigationService navigateModalUpsertKey)
         {
             _selectedUserStoreUser = selectedUserStore;
             _userKeysViewModel = userKeysViewModel;
             _navigateModalUpsertKey = navigateModalUpsertKey;
         }
 
-        public KeyCommand(SelectedUserStore selectedUserStore, UsersViewModel usersViewModel, INavigationService navigateUpsertKey)
+        public KeyCommand(SelectedDataStore selectedUserStore, UsersViewModel usersViewModel, INavigationService navigateUpsertKey)
         {
             _selectedUserStoreUser = selectedUserStore;
             _usersViewModel = usersViewModel;

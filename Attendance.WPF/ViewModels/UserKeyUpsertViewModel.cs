@@ -12,8 +12,8 @@ namespace Attendance.WPF.ViewModels
 {
     public class UserKeyUpsertViewModel : ViewModelBase
     {
-        private readonly SelectedUserStore _selectedUserStore;
-        public UserKeyUpsertViewModel(SelectedUserStore selectedUserStore,
+        private readonly SelectedDataStore _selectedUserStore;
+        public UserKeyUpsertViewModel(SelectedDataStore selectedUserStore,
                                       INavigationService closeModalNavigationService)
         {
             _selectedUserStore = selectedUserStore;

@@ -12,7 +12,8 @@ namespace Attendance.WPF.ViewModels
 {
     public class NavigationBarViewModel : ViewModelBase
     {
-        private readonly CurrentUser _currentUser;
+        private readonly CurrentUserStore _currentUser;
+        private readonly AttendanceRecordStore _attendanceRecordStore;
 
         public NavigationBarViewModel(INavigationService navigateHomeService, 
                                       INavigationService navigateUsersKeysService,
@@ -24,7 +25,8 @@ namespace Attendance.WPF.ViewModels
                                       INavigationService navigateHistoryService,
                                       INavigationService navigateFixesService,
                                       INavigationService navigateRequestService,
-                                      CurrentUser currentUser)
+                                      CurrentUserStore currentUser,
+                                      AttendanceRecordStore attendanceRecordStore)
         {
             NavigateHomeCommand = new NavigateCommand(navigateHomeService);
             NavigateUsersKeysCommand = new NavigateCommand(navigateUsersKeysService);
@@ -37,6 +39,8 @@ namespace Attendance.WPF.ViewModels
             NavigateFixesCommnad = new NavigateCommand(navigateFixesService);
             NavigateRequestsCommand = new NavigateCommand(navigateRequestService);
             _currentUser = currentUser;
+            _attendanceRecordStore = attendanceRecordStore;
+
             _currentUser.CurrentUserChange += CurrentUser_CurrentUserChange;
         }
 
@@ -52,9 +56,9 @@ namespace Attendance.WPF.ViewModels
 
         public string CurrentName => _currentUser.User?.LastName + " " + _currentUser.User?.FirstName;
 
-        public string CurrentActivity => _currentUser.AttendanceRecordStore.CurrentAttendanceRecord?.Activity.Name;
+        public string CurrentActivity => _attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User)?.Activity.Name;
 
-        public bool IsCurrentActivitySet => _currentUser.AttendanceRecordStore.CurrentAttendanceRecord?.Activity != null;
+        public bool IsCurrentActivitySet => _attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User)?.Activity != null;
 
         public bool UserLogOn => _currentUser.User != null;
 

@@ -22,29 +22,15 @@
             Grid.Row="1"
             Margin="5,0,5,5"
             Background="White"
-            BorderBrush="Black"
-            BorderThickness="1"
-            CornerRadius="5">
+            Style="{StaticResource BorderBackground}">
 
-            <Border
-                Margin="5,10"
-                Padding="5"
-                Background="AntiqueWhite"
-                BorderBrush="Black"
-                BorderThickness="1"
-                CornerRadius="5">
+            <Border Margin="5,10" Style="{StaticResource BorderBackground}">
                 <StackPanel
                     Margin="0,-100,0,0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
 
-                    <Border
-                        Margin="5,10"
-                        Padding="5"
-                        Background="FloralWhite"
-                        BorderBrush="Black"
-                        BorderThickness="1"
-                        CornerRadius="5">
+                    <Border Style="{StaticResource BorderBasic}">
                         <StackPanel Margin="70">
                             <TextBlock
                                 Grid.Row="0"

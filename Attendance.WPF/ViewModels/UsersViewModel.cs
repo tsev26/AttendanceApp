@@ -17,8 +17,8 @@ namespace Attendance.WPF.ViewModels
     {
         private readonly UserStore _userStore;
         private readonly GroupStore _groupStore;
-        private readonly SelectedUserStore _selectedUserStore;
-        public UsersViewModel(UserStore userStore, CurrentUser currentUser, GroupStore groupStore, SelectedUserStore selectedUserStore, INavigationService navigateUserUpsert, INavigationService navigateUpsertKey)
+        private readonly SelectedDataStore _selectedUserStore;
+        public UsersViewModel(UserStore userStore, CurrentUserStore currentUser, GroupStore groupStore, SelectedDataStore selectedUserStore, INavigationService navigateUserUpsert, INavigationService navigateUpsertKey)
         {
             _userStore = userStore;
             CurrentUser = currentUser;
@@ -59,7 +59,7 @@ namespace Attendance.WPF.ViewModels
         public ICommand UsersViewShowsCommand { get; }
         public ICommand NavigateUpsertKey { get; }
 
-        public CurrentUser CurrentUser { get; }
+        public CurrentUserStore CurrentUser { get; }
         public List<Group> Groups => _groupStore.Groups;
 
         private void LoadUsers()

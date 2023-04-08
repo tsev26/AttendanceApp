@@ -13,19 +13,21 @@ namespace Attendance.WPF.ViewModels
 {
     public class UserFixesAttendanceRecordViewModel : ViewModelBase
     {
-        private readonly CurrentUser _currentUser;
+        private readonly CurrentUserStore _currentUser;
+		private readonly AttendanceRecordStore _attendanceRecordStore;
 
-        public UserFixesAttendanceRecordViewModel(CurrentUser currentUser, SelectedUserStore selectedUserStore, INavigationService navigateFixAttendance)
+        public UserFixesAttendanceRecordViewModel(CurrentUserStore currentUser, SelectedDataStore selectedUserStore, AttendanceRecordStore attendanceRecordStore, INavigationService navigateFixAttendance)
         {
             _currentUser = currentUser;
+			_attendanceRecordStore = attendanceRecordStore;
 
-			NavigateFixAttendaceCommand = new NavigateFixAttendaceCommand(selectedUserStore, this, navigateFixAttendance);
-			DeleteAttendanceRecordFixCommand = new DeleteAttendanceRecordFixCommand(currentUser, this);
+            NavigateFixAttendaceCommand = new NavigateFixAttendaceCommand(selectedUserStore, this, _attendanceRecordStore, navigateFixAttendance);
+			DeleteAttendanceRecordFixCommand = new DeleteAttendanceRecordFixCommand(currentUser, _attendanceRecordStore, this);
 
-            _currentUser.AttendanceRecordStore.CurrentAttendanceRecordFixChange += AttendanceRecordStore_CurrentAttendanceRecordFixChange;
+            _attendanceRecordStore.CurrentAttendanceRecordFixChange += AttendanceRecordStore_CurrentAttendanceRecordFixChange;
         }
 
-		public CurrentUser CurrentUser => _currentUser;
+		public CurrentUserStore CurrentUser => _currentUser;
 
 		public ICommand NavigateFixAttendaceCommand { get; }
 		public ICommand DeleteAttendanceRecordFixCommand { get; }
@@ -37,9 +39,9 @@ namespace Attendance.WPF.ViewModels
             OnPropertyChanged(nameof(AttendanceRecords));
         }
 
-		public List<AttendanceRecordFix> AttendanceRecordFixes => _currentUser.AttendanceRecordStore.AttendanceRecordFixes;
+		public List<AttendanceRecordFix> AttendanceRecordFixes => _attendanceRecordStore.AttendanceRecordFixes(_currentUser.User).OrderBy(a => a.Approved).ToList();
 
-        public List<AttendanceRecord> AttendanceRecords => _currentUser.AttendanceRecordStore.AttendanceRecords.OrderByDescending(a => a.Entry).ToList();
+        public List<AttendanceRecord> AttendanceRecords => _attendanceRecordStore.AttendanceRecords(_currentUser.User).OrderByDescending(a => a.Entry).ToList();
 
 		private int _selectedAttendanceRecordFixIndex = -1;
 		public int SelectedAttendanceRecordFixIndex
@@ -83,7 +85,7 @@ namespace Attendance.WPF.ViewModels
 
 		public override void Dispose()
 		{
-            _currentUser.AttendanceRecordStore.CurrentAttendanceRecordFixChange -= AttendanceRecordStore_CurrentAttendanceRecordFixChange;
+            _attendanceRecordStore.CurrentAttendanceRecordFixChange -= AttendanceRecordStore_CurrentAttendanceRecordFixChange;
             base.Dispose();
 		}
 	}

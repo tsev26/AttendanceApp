@@ -17,22 +17,25 @@ namespace Attendance.WPF.ViewModels
     public class UserDailyOverviewViewModel : ViewModelBase
     {
         private DispatcherTimer _timer;
-        private readonly SelectedUserStore _selectedUserStore;
+        private readonly SelectedDataStore _selectedDataStore;
+        private readonly AttendanceRecordStore _attendanceRecordStore;
 
-        public CurrentUser CurrentUser { get; }
+        public CurrentUserStore CurrentUser { get; }
 
-        public UserDailyOverviewViewModel(CurrentUser currentUser, 
-                                          SelectedUserStore selectedUserStore, 
+        public UserDailyOverviewViewModel(CurrentUserStore currentUser, 
+                                          SelectedDataStore selectedDataStore, 
+                                          AttendanceRecordStore attendanceRecordStore,
                                           INavigationService navigateFixAttendance,
                                           INavigationService navigateFixesAttendance
                                           )
         {
             CurrentUser = currentUser;
-            _selectedUserStore = selectedUserStore;
-            _selectedUserStore.AttendanceRecord = null;
+            _selectedDataStore = selectedDataStore;
+            _attendanceRecordStore = attendanceRecordStore;
+            _selectedDataStore.AttendanceRecord = null;
             Date = DateOnly.FromDateTime(DateTime.Now);
-            NavigateFixAttendaceCommand = new NavigateFixAttendaceCommand(selectedUserStore, this, navigateFixAttendance, navigateFixesAttendance);
-            CurrentUser.AttendanceRecordStore.CurrentAttendanceChange += CurrentUser_CurrentAttendanceChange;
+            NavigateFixAttendaceCommand = new NavigateFixAttendaceCommand(selectedDataStore, this, attendanceRecordStore, navigateFixAttendance, navigateFixesAttendance);
+            _attendanceRecordStore.CurrentAttendanceChange += CurrentUser_CurrentAttendanceChange;
         }
 
         public ICommand NavigateFixAttendaceCommand { get; }
@@ -95,15 +98,15 @@ namespace Attendance.WPF.ViewModels
             OnPropertyChanged(nameof(ActivitiesTotalInDay));
         }
 
-        public string WorkedInDayTotal => CurrentUser.AttendanceRecordStore.WorkedInDayTotal(Date);
+        public string WorkedInDayTotal => _attendanceRecordStore.WorkedInDayTotal(CurrentUser.User, Date);
 
-        public string WorkedInDay => CurrentUser.AttendanceRecordStore.WorkedInDay(Date);
+        public string WorkedInDay => _attendanceRecordStore.WorkedInDay(CurrentUser.User, Date);
 
-        public string PauseInDay => CurrentUser.AttendanceRecordStore.PauseInDay(Date);
+        public string PauseInDay => _attendanceRecordStore.PauseInDay(CurrentUser.User, Date);
 
-        public List<AttendanceRecordItem> AttendanceRecordsInDay => CurrentUser.AttendanceRecordStore.RecordsInDay(Date);
+        public List<AttendanceRecordItem> AttendanceRecordsInDay => _attendanceRecordStore.RecordsInDay(CurrentUser.User, Date);
 
-        public List<AttendanceTotal> ActivitiesTotalInDay => CurrentUser.AttendanceRecordStore.ActivitiesTotalInDay(Date);
+        public List<AttendanceTotal> ActivitiesTotalInDay => _attendanceRecordStore.ActivitiesTotalInDay(CurrentUser.User, Date);
 
 
         private int _selectedAttendanceRecordIndex = -1;
@@ -128,7 +131,7 @@ namespace Attendance.WPF.ViewModels
 
         public override void Dispose()
         {
-            CurrentUser.CurrentAttendanceChange -= CurrentUser_CurrentAttendanceChange;
+            _attendanceRecordStore.CurrentAttendanceChange -= CurrentUser_CurrentAttendanceChange;
             StopClock();
             base.Dispose();
         }

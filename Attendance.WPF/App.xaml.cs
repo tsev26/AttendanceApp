@@ -40,9 +40,9 @@ namespace Attendance.WPF
             services.AddSingleton<AttendanceRecordStore>();
             services.AddSingleton<UserStore>();
             services.AddSingleton<ActivityStore>();
-            services.AddSingleton<CurrentUser>();
+            services.AddSingleton<CurrentUserStore>();
             services.AddSingleton<GroupStore>();
-            services.AddSingleton<SelectedUserStore>(CreateSelectedUserStore);
+            services.AddSingleton<SelectedDataStore>(CreateSelectedUserStore);
 
 
             //Navigation
@@ -99,9 +99,9 @@ namespace Attendance.WPF
             base.OnStartup(e);
         }
 
-        private SelectedUserStore CreateSelectedUserStore(IServiceProvider serviceProvider)
+        private SelectedDataStore CreateSelectedUserStore(IServiceProvider serviceProvider)
         {
-            return new SelectedUserStore(
+            return new SelectedDataStore(
                 serviceProvider.GetRequiredService<UserStore>(),
                 serviceProvider.GetRequiredService<AttendanceRecordStore>()
                 );
@@ -111,15 +111,15 @@ namespace Attendance.WPF
             return new HomeViewModel(
                 serviceProvider.GetRequiredService<UserStore>(),
                 CreateUserMenuNavigationService(serviceProvider),
-                serviceProvider.GetRequiredService<CurrentUser>()
+                serviceProvider.GetRequiredService<CurrentUserStore>()
                 );
         }
 
         private UserKeysViewModel CreateUserKeysViewModel(IServiceProvider serviceProvider)
         {
             return new UserKeysViewModel(
-                serviceProvider.GetRequiredService<CurrentUser>(),
-                serviceProvider.GetRequiredService<SelectedUserStore>(),
+                serviceProvider.GetRequiredService<CurrentUserStore>(),
+                serviceProvider.GetRequiredService<SelectedDataStore>(),
                 CreateUserKeyUpsertNavigationService(serviceProvider)
                 );
         }
@@ -128,8 +128,9 @@ namespace Attendance.WPF
         {
             return new UserSelectActivityViewModel(
                 serviceProvider.GetRequiredService<ActivityStore>(),
-                serviceProvider.GetRequiredService<CurrentUser>(),
-                serviceProvider.GetRequiredService<SelectedUserStore>(),
+                serviceProvider.GetRequiredService<CurrentUserStore>(),
+                serviceProvider.GetRequiredService<SelectedDataStore>(),
+                serviceProvider.GetRequiredService<AttendanceRecordStore>(),
                 CreateHomeNavigationService(serviceProvider),
                 CreateUserSelectActivitySpecialNavigationService(serviceProvider)
                 );
@@ -138,7 +139,7 @@ namespace Attendance.WPF
         private UserKeyUpsertViewModel CreateUserKeyUpsertViewModel(IServiceProvider serviceProvider)
         {
             return new UserKeyUpsertViewModel(
-                serviceProvider.GetRequiredService<SelectedUserStore>(),
+                serviceProvider.GetRequiredService<SelectedDataStore>(),
                 serviceProvider.GetRequiredService<CloseModalNavigationService>()
                 );
         }
@@ -196,7 +197,8 @@ namespace Attendance.WPF
                 CreateUserHistoryService(serviceProvider),
                 CreateUserFixesNavigationService(serviceProvider),
                 CreateUsersRequestsService(serviceProvider),
-                serviceProvider.GetRequiredService<CurrentUser>()
+                serviceProvider.GetRequiredService<CurrentUserStore>(),
+                serviceProvider.GetRequiredService<AttendanceRecordStore>()
                 );
         }
 
@@ -221,7 +223,8 @@ namespace Attendance.WPF
             return new UserMenuViewModel(
                 serviceProvider.GetRequiredService<UserSelectActivityViewModel>(),
                 serviceProvider.GetRequiredService<UserDailyOverviewViewModel>(),
-                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<CurrentUserStore>(),
+                serviceProvider.GetRequiredService<AttendanceRecordStore>(),
                 CreateUserHasCurrentlyPlanNavigationService(serviceProvider)
                 );
         }
@@ -229,7 +232,7 @@ namespace Attendance.WPF
         private UserProfileViewModel CreateUserProfileViewModel(IServiceProvider serviceProvider)
         {
             return new UserProfileViewModel(
-                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<CurrentUserStore>(),
                 serviceProvider.GetRequiredService<UserStore>()
                 );
         }
@@ -256,7 +259,7 @@ namespace Attendance.WPF
         {
             return new GroupUpsertViewModel(
                 serviceProvider.GetRequiredService<GroupStore>(),
-                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<CurrentUserStore>(),
                 serviceProvider.GetRequiredService<CloseModalNavigationService>()
                 );
         }
@@ -297,9 +300,9 @@ namespace Attendance.WPF
         {
             return new UsersViewModel(
                 serviceProvider.GetRequiredService<UserStore>(),
-                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<CurrentUserStore>(),
                 serviceProvider.GetRequiredService<GroupStore>(),
-                serviceProvider.GetRequiredService<SelectedUserStore>(),
+                serviceProvider.GetRequiredService<SelectedDataStore>(),
                 CreateUserUpsertNavigationService(serviceProvider),
                 CreateUserKeyUpsertNavigationService(serviceProvider)
                 );
@@ -316,7 +319,8 @@ namespace Attendance.WPF
         private UserHistoryViewModel CreateUserHistoryViewModel(IServiceProvider serviceProvider)
         {
             return new UserHistoryViewModel(
-                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<CurrentUserStore>(),
+                serviceProvider.GetRequiredService<AttendanceRecordStore>(),
                 serviceProvider.GetRequiredService<UserDailyOverviewViewModel>()
                 );
         }
@@ -349,9 +353,10 @@ namespace Attendance.WPF
         private UserSelectActivitySpecialViewModel CreateUserSelectActivitySpecialViewModel(IServiceProvider serviceProvider)
         {
             return new UserSelectActivitySpecialViewModel(
-                    serviceProvider.GetRequiredService<CurrentUser>(),
-                    serviceProvider.GetRequiredService<SelectedUserStore>(),
+                    serviceProvider.GetRequiredService<CurrentUserStore>(),
+                    serviceProvider.GetRequiredService<SelectedDataStore>(),
                     serviceProvider.GetRequiredService<ActivityStore>(),
+                    serviceProvider.GetRequiredService<AttendanceRecordStore>(),
                     CreateHomeNavigationService(serviceProvider),
                     serviceProvider.GetRequiredService<CloseModalNavigationService>()
                 );
@@ -360,8 +365,9 @@ namespace Attendance.WPF
         private UserHasCurrentlyPlanViewModel CreateUserHasCurrentlyPlanViewModel(IServiceProvider serviceProvider)
         {
             return new UserHasCurrentlyPlanViewModel(
-                    serviceProvider.GetRequiredService<CurrentUser>(),
+                    serviceProvider.GetRequiredService<CurrentUserStore>(),
                     serviceProvider.GetRequiredService<ActivityStore>(),
+                    serviceProvider.GetRequiredService<AttendanceRecordStore>(),
                     CreateHomeNavigationService(serviceProvider),
                     serviceProvider.GetRequiredService<CloseModalNavigationService>()
                 );
@@ -378,8 +384,9 @@ namespace Attendance.WPF
         private UserDailyOverviewViewModel CreateUserDailyOverviewViewModel(IServiceProvider serviceProvider)
         {
             return new UserDailyOverviewViewModel(
-                serviceProvider.GetRequiredService<CurrentUser>(),
-                serviceProvider.GetRequiredService<SelectedUserStore>(),
+                serviceProvider.GetRequiredService<CurrentUserStore>(),
+                serviceProvider.GetRequiredService<SelectedDataStore>(),
+                serviceProvider.GetRequiredService<AttendanceRecordStore>(),
                 CreateFixAttendanceNavigationService(serviceProvider),
                 CreateUserFixesNavigationService(serviceProvider)
                 );
@@ -396,8 +403,9 @@ namespace Attendance.WPF
         private UserFixAttendanceRecordViewModel CreateUserFixAttendanceRecordViewModel(IServiceProvider serviceProvider)
         {
             return new UserFixAttendanceRecordViewModel(
-                serviceProvider.GetRequiredService<SelectedUserStore>(),
+                serviceProvider.GetRequiredService<SelectedDataStore>(),
                 serviceProvider.GetRequiredService<ActivityStore>(),
+                serviceProvider.GetRequiredService<AttendanceRecordStore>(),
                 serviceProvider.GetRequiredService<CloseModalNavigationService>(),
                 CreateUserFixesNavigationService(serviceProvider)
                 );
@@ -406,8 +414,9 @@ namespace Attendance.WPF
         private UserFixesAttendanceRecordViewModel CreateUserFixesAttendanceRecordViewModel(IServiceProvider serviceProvider)
         {
             return new UserFixesAttendanceRecordViewModel(
-                serviceProvider.GetRequiredService<CurrentUser>(),
-                serviceProvider.GetRequiredService<SelectedUserStore>(),
+                serviceProvider.GetRequiredService<CurrentUserStore>(),
+                serviceProvider.GetRequiredService<SelectedDataStore>(),
+                serviceProvider.GetRequiredService<AttendanceRecordStore>(),
                 CreateFixAttendanceNavigationService(serviceProvider)
                 );
         }
@@ -423,7 +432,7 @@ namespace Attendance.WPF
         private UsersRequestsViewModel CreateUsersRequestsViewModel(IServiceProvider serviceProvider)
         {
             return new UsersRequestsViewModel(
-                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<CurrentUserStore>(),
                 serviceProvider.GetRequiredService<AttendanceRecordStore>(),
                 serviceProvider.GetRequiredService<UserStore>()
                 );

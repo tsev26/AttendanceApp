@@ -50,9 +50,10 @@ namespace Attendance.WPF.Stores
 
         public void UpdateUser(User user)
         {
-            int index = _users.FindIndex(a => a.Id == user.Id);
+            int index = _users.FindIndex(a => a.UserId == user.UserId);
             if (index != -1)
             {
+                user.ToApprove = false;
                 _users[index] = user;
             }
             UsersChange?.Invoke();

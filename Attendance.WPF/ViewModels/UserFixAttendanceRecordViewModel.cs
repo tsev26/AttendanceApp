@@ -13,18 +13,19 @@ namespace Attendance.WPF.ViewModels
 {
     public class UserFixAttendanceRecordViewModel : ViewModelBase
     {
-        private readonly SelectedUserStore _selectedUserStore;
+        private readonly SelectedDataStore _selectedUserStore;
         private readonly ActivityStore _activityStore;
 
-        public UserFixAttendanceRecordViewModel(SelectedUserStore selectedUserStore, 
+        public UserFixAttendanceRecordViewModel(SelectedDataStore selectedUserStore, 
                                                 ActivityStore activityStore,  
+                                                AttendanceRecordStore attendanceRecordStore,
                                                 INavigationService closeModalNavigationService, 
                                                 INavigationService navigateFixesAttendance)
         {
             _selectedUserStore = selectedUserStore;
             _activityStore = activityStore;
             CloseModalCommand = new CloseModalCommand(closeModalNavigationService);
-            SaveChangeCommand = new SaveAttendanceRecordChangesCommand(selectedUserStore, this, closeModalNavigationService, navigateFixesAttendance);
+            SaveChangeCommand = new SaveAttendanceRecordChangesCommand(selectedUserStore, attendanceRecordStore, this, closeModalNavigationService, navigateFixesAttendance);
             Header = selectedUserStore.AttendanceRecord == null ? "Přidání záznamu" : "Úprava záznamu";
             Activity = selectedUserStore.AttendanceRecord?.Activity;
             Date = selectedUserStore.AttendanceRecord?.Entry ?? DateTime.Now.Date;

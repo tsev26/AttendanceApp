@@ -15,10 +15,10 @@ namespace Attendance.WPF.ViewModels
 {
     public class UserKeysViewModel : ViewModelBase
     {
-        private readonly CurrentUser _currentUser;
-        private readonly SelectedUserStore _selectedUserStore;
+        private readonly CurrentUserStore _currentUser;
+        private readonly SelectedDataStore _selectedUserStore;
 
-        public UserKeysViewModel(CurrentUser currentUser, SelectedUserStore selectedUserStore, INavigationService navigateUpsertKey)
+        public UserKeysViewModel(CurrentUserStore currentUser, SelectedDataStore selectedUserStore, INavigationService navigateUpsertKey)
         {
             _currentUser = currentUser;
             _selectedUserStore = selectedUserStore;

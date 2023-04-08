@@ -21,7 +21,8 @@ namespace Attendance.WPF.ViewModels
                              ActivityStore activityStore,
                              UserStore userStore,
                              GroupStore groupStore,
-                             CurrentUser currentUser)
+                             CurrentUserStore currentUser,
+                             AttendanceRecordStore attendanceRecordStore)
         {
             _navigationStore = navigationStore;
             _modalNavigationStore = modalNavigationStore;
@@ -141,22 +142,22 @@ namespace Attendance.WPF.ViewModels
 
             currentUser.LoadUser(user1);
 
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(workActivity, new DateTime(2023, 3, 01, 8, 0, 0));
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(homeActivity, new DateTime(2023, 3, 03, 15, 0, 0));
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(workActivity, new DateTime(2023, 3, 04, 8, 0, 0));
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(pauseActivity,new DateTime(2023, 3, 04, 14, 0, 0));
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(homeActivity, new DateTime(2023, 3, 04, 15, 0, 0));
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(workActivity, new DateTime(2023, 3, 07, 8, 0, 0));
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(pauseActivity, new DateTime(2023, 3, 07, 14, 0, 0));
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(workActivity, new DateTime(2023, 3, 07, 15, 0, 0));
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(pauseActivity, new DateTime(2023, 3, 07, 15, 30, 0));
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(workActivity, new DateTime(2023, 3, 07, 15, 45, 0));
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(homeActivity, new DateTime(2023, 3, 15, 15, 0, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1,workActivity, new DateTime(2023, 3, 01, 8, 0, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, homeActivity, new DateTime(2023, 3, 03, 15, 0, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, workActivity, new DateTime(2023, 3, 04, 8, 0, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, pauseActivity,new DateTime(2023, 3, 04, 14, 0, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, homeActivity, new DateTime(2023, 3, 04, 15, 0, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, workActivity, new DateTime(2023, 3, 07, 8, 0, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, pauseActivity, new DateTime(2023, 3, 07, 14, 0, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, workActivity, new DateTime(2023, 3, 07, 15, 0, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, pauseActivity, new DateTime(2023, 3, 07, 15, 30, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, workActivity, new DateTime(2023, 3, 07, 15, 45, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, homeActivity, new DateTime(2023, 3, 15, 15, 0, 0));
 
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(workActivity, new DateTime(2023, 3, 24, 8, 0, 0));
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(homeActivity, new DateTime(2023, 3, 24, 15, 0, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, workActivity, new DateTime(2023, 3, 24, 8, 0, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, homeActivity, new DateTime(2023, 3, 24, 15, 0, 0));
 
-            currentUser.AttendanceRecordStore.AddAttendanceRecord(workActivity, new DateTime(2023, 3, 26, 16, 0, 0));
+            attendanceRecordStore.AddAttendanceRecord(user1, workActivity, new DateTime(2023, 3, 26, 16, 0, 0));
             currentUser.User = null;
         }
 

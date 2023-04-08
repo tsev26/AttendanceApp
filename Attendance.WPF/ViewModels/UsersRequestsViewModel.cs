@@ -1,4 +1,5 @@
 ﻿using Attendance.Domain.Models;
+using Attendance.WPF.Commands;
 using Attendance.WPF.Stores;
 using System;
 using System.Collections.Generic;
@@ -11,15 +12,31 @@ namespace Attendance.WPF.ViewModels
 {
     public class UsersRequestsViewModel : ViewModelBase
     {
-        private readonly CurrentUser _currentUser;
+        private readonly CurrentUserStore _currentUser;
         private readonly AttendanceRecordStore _attendanceRecordStore;
         private readonly UserStore _userStore;
 
-        public UsersRequestsViewModel(CurrentUser currentUser, AttendanceRecordStore attendanceRecordStore, UserStore userStore)
+        public UsersRequestsViewModel(CurrentUserStore currentUser, AttendanceRecordStore attendanceRecordStore, UserStore userStore)
         {
             _currentUser = currentUser;
             _attendanceRecordStore = attendanceRecordStore;
             _userStore = userStore;
+
+            ProfileDecisionCommand = new ProfileDecisionCommand(userStore, this);
+            FixDecisionCommand = new FixDecisionCommand(attendanceRecordStore, this);
+
+            _userStore.UsersChange += UserStore_UsersChange;
+            _attendanceRecordStore.CurrentAttendanceRecordFixChange += AttendanceRecordStore_CurrentAttendanceRecordFixChange;
+        }
+
+        private void AttendanceRecordStore_CurrentAttendanceRecordFixChange()
+        {
+            OnPropertyChanged(nameof(PendingRequestFixes));
+        }
+
+        private void UserStore_UsersChange()
+        {
+            OnPropertyChanged(nameof(PendingProfileUpdates));
         }
 
         public ICommand FixDecisionCommand { get; }
@@ -82,5 +99,12 @@ namespace Attendance.WPF.ViewModels
         public bool IsSelectedPendingProfileUpdate => SelectedPendingProfileUpdateIndex != -1;
         public User SelectedPendingProfileUpdate => IsSelectedPendingProfileUpdate ? PendingProfileUpdates[SelectedPendingProfileUpdateIndex] : null;
         public User SelectedPendingProfileNow => IsSelectedPendingProfileUpdate ? _userStore.GetUserByUserId(SelectedPendingProfileUpdate.UserId) : null;
+
+
+        public override void Dispose()
+        {
+            _userStore.UsersChange -= UserStore_UsersChange;
+            base.Dispose();
+        }
     }
 }

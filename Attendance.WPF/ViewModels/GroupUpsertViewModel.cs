@@ -13,7 +13,7 @@ namespace Attendance.WPF.ViewModels
     public class GroupUpsertViewModel : ViewModelBase
     {
 
-        public GroupUpsertViewModel(GroupStore groupStore, CurrentUser currentUser, CloseModalNavigationService closeModalNavigationService)
+        public GroupUpsertViewModel(GroupStore groupStore, CurrentUserStore currentUser, CloseModalNavigationService closeModalNavigationService)
         {
             CloseModalCommand = new CloseModalCommand(closeModalNavigationService);
             CreateGroupCommand = new CreateGroupCommand(groupStore, currentUser, this, closeModalNavigationService);

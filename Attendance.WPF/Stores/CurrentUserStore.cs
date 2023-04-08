@@ -16,15 +16,8 @@ using static Attendance.WPF.Functions.TimeFunction;
 
 namespace Attendance.WPF.Stores
 {
-    public class CurrentUser
+    public class CurrentUserStore
     {
-        public CurrentUser(AttendanceRecordStore attendanceRecordStore)
-        {
-            AttendanceRecordStore = attendanceRecordStore;
-        }
-
-        public AttendanceRecordStore AttendanceRecordStore { get; }
-
         public event Action CurrentUserChange;
         public event Action CurrentAttendanceChange;
         public event Action CurrentUserKeysChange;
@@ -45,7 +38,6 @@ namespace Attendance.WPF.Stores
 
         public void LoadUser(User user)
         {
-            AttendanceRecordStore.User = user;
             User = user;
         }
 

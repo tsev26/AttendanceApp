@@ -12,12 +12,14 @@ namespace Attendance.WPF.ViewModels
 {
     public class UserHistoryViewModel : ViewModelBase
     {
-        private readonly CurrentUser _currentUser;
+        private readonly CurrentUserStore _currentUser;
 		private readonly UserDailyOverviewViewModel _userDailyOverviewViewModel;
-
-        public UserHistoryViewModel(CurrentUser currentUser, UserDailyOverviewViewModel userDailyOverviewViewModel)
+		private readonly AttendanceRecordStore _attendanceRecordStore;
+        public UserHistoryViewModel(CurrentUserStore currentUser, AttendanceRecordStore attendanceRecordStore, UserDailyOverviewViewModel userDailyOverviewViewModel)
         {
             _currentUser = currentUser;
+            _attendanceRecordStore = attendanceRecordStore;
+
             _userDailyOverviewViewModel = userDailyOverviewViewModel;
             UserDailyOverviewViewModel = userDailyOverviewViewModel;
 
@@ -62,7 +64,7 @@ namespace Attendance.WPF.ViewModels
             }
 		}
 
-		public List<MonthlyAttendanceTotalsWork> UserHistory => _currentUser.AttendanceRecordStore.MonthlyAttendanceTotalsWorks(Month, Year, _currentUser.User);
+		public List<MonthlyAttendanceTotalsWork> UserHistory => _attendanceRecordStore.MonthlyAttendanceTotalsWorks(_currentUser.User, Month, Year);
 
 		public bool IsButtonNextMonthVisible => !(Year == DateTime.Now.Year && Month == DateTime.Now.Month);
 

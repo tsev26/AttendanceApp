@@ -11,17 +11,20 @@ namespace Attendance.WPF.Commands
 {
     public class SaveAttendanceRecordChangesCommand : CommandBase
     {
-        private readonly SelectedUserStore _selectedUserStore;
+        private readonly SelectedDataStore _selectedUserStore;
+        private readonly AttendanceRecordStore _attendanceRecordStore;
         private readonly UserFixAttendanceRecordViewModel _userFixAttendanceRecordViewModel;
         private readonly INavigationService _closeModalNavigationService;
         private readonly INavigationService _navigateFixesAttendance;
 
-        public SaveAttendanceRecordChangesCommand(SelectedUserStore selectedUserStore, 
+        public SaveAttendanceRecordChangesCommand(SelectedDataStore selectedUserStore, 
+                                                  AttendanceRecordStore attendanceRecordStore,
                                                   UserFixAttendanceRecordViewModel userFixAttendanceRecordViewModel, 
                                                   INavigationService closeModalNavigationService,
                                                   INavigationService navigateFixesAttendance)
         {
             _selectedUserStore = selectedUserStore;
+            _attendanceRecordStore = attendanceRecordStore;
             _userFixAttendanceRecordViewModel = userFixAttendanceRecordViewModel;
             _closeModalNavigationService = closeModalNavigationService;
             _navigateFixesAttendance = navigateFixesAttendance;
@@ -33,13 +36,13 @@ namespace Attendance.WPF.Commands
             if (_selectedUserStore.AttendanceRecord == null)
             {
                 DateTime newEntry = new DateTime(_userFixAttendanceRecordViewModel.Date.Year, _userFixAttendanceRecordViewModel.Date.Month, _userFixAttendanceRecordViewModel.Date.Day, _userFixAttendanceRecordViewModel.Hour, _userFixAttendanceRecordViewModel.Minute, 0);
-                _selectedUserStore.AttendanceRecordStore.AddAttendanceRecordFixInsert(_userFixAttendanceRecordViewModel.Activity, newEntry);
+                _attendanceRecordStore.AddAttendanceRecordFixInsert(_selectedUserStore.SelectedUser,_userFixAttendanceRecordViewModel.Activity, newEntry);
             }
             //edit entry
             else
             {
                 DateTime newEntry = new DateTime(_userFixAttendanceRecordViewModel.Date.Year, _userFixAttendanceRecordViewModel.Date.Month, _userFixAttendanceRecordViewModel.Date.Day, _userFixAttendanceRecordViewModel.Hour, _userFixAttendanceRecordViewModel.Minute, 0);
-                _selectedUserStore.AttendanceRecordStore.AddAttendanceRecordFixUpdate(_selectedUserStore.AttendanceRecord,_userFixAttendanceRecordViewModel.Activity, newEntry);
+                _attendanceRecordStore.AddAttendanceRecordFixUpdate(_selectedUserStore.SelectedUser, _selectedUserStore.AttendanceRecord, _userFixAttendanceRecordViewModel.Activity, newEntry);
             }
 
             _closeModalNavigationService.Navigate();

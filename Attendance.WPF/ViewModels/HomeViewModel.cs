@@ -15,10 +15,10 @@ namespace Attendance.WPF.ViewModels
     {
 		private UserStore _userStore;
 		private INavigationService _navigateToUserMenu;
-		private CurrentUser _currentUser;
+		private CurrentUserStore _currentUser;
         public HomeViewModel(UserStore userStore,
                              INavigationService navigateToUserMenu,
-							 CurrentUser currentUser)
+							 CurrentUserStore currentUser)
         {
             _userStore = userStore;
 			_currentUser = currentUser;

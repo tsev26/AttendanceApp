@@ -17,7 +17,7 @@ namespace Attendance.Domain.Models
         }
 
 
-        public AttendanceRecord(AttendanceRecord attendanceRecord)
+        public AttendanceRecord(AttendanceRecord attendanceRecord) : base()
         {
             User = attendanceRecord.User;
             Activity = attendanceRecord.Activity;

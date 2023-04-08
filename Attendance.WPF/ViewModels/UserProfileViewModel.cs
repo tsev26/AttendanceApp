@@ -14,7 +14,7 @@ namespace Attendance.WPF.ViewModels
     public class UserProfileViewModel : ViewModelBase
     {
         private readonly UserStore _userStore;
-        public UserProfileViewModel(CurrentUser currentUser, UserStore userStore)
+        public UserProfileViewModel(CurrentUserStore currentUser, UserStore userStore)
         {
             CurrentUser = currentUser;
             _userStore = userStore;
@@ -87,7 +87,7 @@ namespace Attendance.WPF.ViewModels
 
         public User UserUpdate { get; set; }
 
-        public CurrentUser CurrentUser { get; set; }
+        public CurrentUserStore CurrentUser { get; set; }
 
         public ObservableCollection<User> UserUpdates { get; set; }
 

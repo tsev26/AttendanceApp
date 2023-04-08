@@ -16,41 +16,51 @@ namespace Attendance.WPF.Commands
         private readonly INavigationService _navigateHomeService;
         private readonly INavigationService _navigateSpecialActivityService;
         private readonly INavigationService _closeModalNavigation;
-        private readonly CurrentUser _currentUser;
-        private readonly SelectedUserStore _selectedUserStore;
+        private readonly CurrentUserStore _currentUser;
+        private readonly SelectedDataStore _selectedUserStore;
         private readonly ActivityStore _activityStore;
+        private readonly AttendanceRecordStore _attendanceRecordStore;
         private readonly UserSelectActivitySpecialViewModel _userSelectActivitySpecialViewModel;
 
-        public UserSetActivityCommand(CurrentUser currentUser, 
-                                      ActivityStore activityStore, 
+        public UserSetActivityCommand(CurrentUserStore currentUser,
+                                      ActivityStore activityStore,
+                                      AttendanceRecordStore attendanceRecordStore,
                                       INavigationService navigateHomeService, 
                                       INavigationService closeModalNavigationService)
         {
             _currentUser = currentUser;
             _activityStore = activityStore;
+            _attendanceRecordStore = attendanceRecordStore;
+
             _navigateHomeService = navigateHomeService;
             _closeModalNavigation = closeModalNavigationService;
         }
 
-        public UserSetActivityCommand(CurrentUser currentUser, 
-                                      SelectedUserStore selectedUserStore, 
+        public UserSetActivityCommand(CurrentUserStore currentUser, 
+                                      SelectedDataStore selectedUserStore,
+                                      AttendanceRecordStore attendanceRecordStore,
                                       INavigationService navigateHomeService, 
                                       INavigationService navigateSpecialActivityService = null)
         {
             _currentUser = currentUser;
             _selectedUserStore = selectedUserStore;
+            _attendanceRecordStore = attendanceRecordStore;
+
             _navigateHomeService = navigateHomeService;
             _navigateSpecialActivityService = navigateSpecialActivityService;
         }
 
-        public UserSetActivityCommand(CurrentUser currentUser, 
-                                      ActivityStore activityStore, 
+        public UserSetActivityCommand(CurrentUserStore currentUser, 
+                                      ActivityStore activityStore,
+                                      AttendanceRecordStore attendanceRecordStore,
                                       UserSelectActivitySpecialViewModel userSelectActivitySpecialViewModel, 
                                       INavigationService navigateHomeService, 
                                       INavigationService closeModalNavigation)
         {
             _currentUser = currentUser;
             _activityStore = activityStore;
+            _attendanceRecordStore = attendanceRecordStore;
+
             _navigateHomeService = navigateHomeService;
             _closeModalNavigation = closeModalNavigation;
             _userSelectActivitySpecialViewModel = userSelectActivitySpecialViewModel;
@@ -67,14 +77,14 @@ namespace Attendance.WPF.Commands
                 }
                 else
                 {
-                    _currentUser.AttendanceRecordStore.AddAttendanceRecord(activity);
+                    _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, activity);
                     _navigateHomeService.Navigate();
                 }
                 
             }
             else if (parameter is string value)
             {
-                AttendanceRecord attendanceRecord = _currentUser.AttendanceRecordStore.CurrentAttendanceRecord;
+                AttendanceRecord attendanceRecord = _attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User);
                 switch (value)
                 {
                     case "plan":
@@ -117,8 +127,8 @@ namespace Attendance.WPF.Commands
 
                             AttendanceRecordDetail attendanceRecordDetail = new AttendanceRecordDetail(expectedStart, expectedEnd, _userSelectActivitySpecialViewModel.Description);
 
-                            _currentUser.AttendanceRecordStore.AddAttendanceRecord(selectedPlan, expectedStart, attendanceRecordDetail);
-                            _currentUser.AttendanceRecordStore.AddAttendanceRecord(afterEnd, expectedEnd);
+                            _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, selectedPlan, expectedStart, attendanceRecordDetail);
+                            _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, afterEnd, expectedEnd);
                             _navigateHomeService.Navigate();
                             _closeModalNavigation.Navigate();
                             break;
@@ -130,15 +140,15 @@ namespace Attendance.WPF.Commands
                         _closeModalNavigation.Navigate();
                         break;
                     case "Remove":
-                        _currentUser.AttendanceRecordStore.RemoveAttendanceRecord(attendanceRecord);
+                        _attendanceRecordStore.RemoveAttendanceRecord(attendanceRecord);
                         _closeModalNavigation.Navigate();
                         break;
                     case "MoveEnd":
-                        AttendanceRecord endOfPlan = _currentUser.AttendanceRecordStore.AttendanceRecords.FirstOrDefault(a => a.Entry == attendanceRecord.AttendanceRecordDetail.ExpectedEnd);
-                        _currentUser.AttendanceRecordStore.RemoveAttendanceRecord(endOfPlan);
+                        AttendanceRecord endOfPlan = _attendanceRecordStore.AttendanceRecords(_currentUser.User).FirstOrDefault(a => a.Entry == attendanceRecord.AttendanceRecordDetail.ExpectedEnd);
+                        _attendanceRecordStore.RemoveAttendanceRecord(endOfPlan);
                         attendanceRecord.AttendanceRecordDetail.ExpectedEnd = DateTime.Now;
                         Activity mainActivity = _activityStore.GlobalSetting.MainWorkActivity;
-                        _currentUser.AttendanceRecordStore.AddAttendanceRecord(mainActivity);
+                        _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, mainActivity);
                         _closeModalNavigation.Navigate();
                         break;
                 }

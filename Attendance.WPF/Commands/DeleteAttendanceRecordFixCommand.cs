@@ -11,18 +11,22 @@ namespace Attendance.WPF.Commands
 {
     public class DeleteAttendanceRecordFixCommand : CommandBase
     {
-        private readonly CurrentUser _currentUser;
+        private readonly CurrentUserStore _currentUser;
+        private readonly AttendanceRecordStore _attendanceRecordStore;
         private readonly UserFixesAttendanceRecordViewModel _userFixesAttendanceRecordViewModel;
 
-        public DeleteAttendanceRecordFixCommand(CurrentUser currentUser, UserFixesAttendanceRecordViewModel userFixesAttendanceRecordViewModel)
+        public DeleteAttendanceRecordFixCommand(CurrentUserStore currentUser, 
+                                                AttendanceRecordStore attendanceRecordStore, 
+                                                UserFixesAttendanceRecordViewModel userFixesAttendanceRecordViewModel)
         {
             _currentUser = currentUser;
+            _attendanceRecordStore = attendanceRecordStore;
             _userFixesAttendanceRecordViewModel = userFixesAttendanceRecordViewModel;
         }
 
         public override void Execute(object? parameter)
         {
-            _currentUser.AttendanceRecordStore.RemoveAttendanceRecordFix(_userFixesAttendanceRecordViewModel.SelectedAttendanceRecordFix);
+            _attendanceRecordStore.RemoveAttendanceRecordFix(_userFixesAttendanceRecordViewModel.SelectedAttendanceRecordFix);
         }
     }
 }

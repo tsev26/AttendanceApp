@@ -13,18 +13,21 @@ namespace Attendance.WPF.ViewModels
 {
     public class UserHasCurrentlyPlanViewModel : ViewModelBase
     {
-        private readonly CurrentUser _currentUser;
-
-        public UserHasCurrentlyPlanViewModel(CurrentUser currentUser, 
+        private readonly CurrentUserStore _currentUser;
+        private readonly AttendanceRecordStore _attendanceRecordStore;
+        public UserHasCurrentlyPlanViewModel(CurrentUserStore currentUser, 
                                              ActivityStore activityStore,
+                                             AttendanceRecordStore attendanceRecordStore,
                                              INavigationService navigateHomeService,
                                              INavigationService closeModalNavigationService)
         {
             _currentUser = currentUser;
-            UserSetActivityCommand = new UserSetActivityCommand(currentUser, activityStore, navigateHomeService, closeModalNavigationService);
+            _attendanceRecordStore = attendanceRecordStore;
+
+            UserSetActivityCommand = new UserSetActivityCommand(currentUser, activityStore, attendanceRecordStore, navigateHomeService, closeModalNavigationService);
         }
 
-        public AttendanceRecord CurrentAttendanceRecord => _currentUser.AttendanceRecordStore.CurrentAttendanceRecord;
+        public AttendanceRecord CurrentAttendanceRecord => _attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User);
         public ICommand UserSetActivityCommand { get; }
     }
 }

@@ -10,19 +10,21 @@ namespace Attendance.WPF.ViewModels
 {
     public class UserMenuViewModel : ViewModelBase
     {
-        private readonly CurrentUser _currentUser;
-
+        private readonly CurrentUserStore _currentUser;
+        private readonly AttendanceRecordStore _attendanceRecordStore;
         public UserMenuViewModel(UserSelectActivityViewModel userSelectActivityViewModel,
                                  UserDailyOverviewViewModel userDailyOverviewViewModel,
-                                 CurrentUser currentUser,
+                                 CurrentUserStore currentUser,
+                                 AttendanceRecordStore attendanceRecordStore,
                                  INavigationService navigateUserHasCurretlyPlanService)
         {
             UserDailyOverviewViewModel = userDailyOverviewViewModel;
             UserSelectActivityViewModel = userSelectActivityViewModel;
 
             _currentUser = currentUser;
+            _attendanceRecordStore = attendanceRecordStore;
 
-            if (_currentUser.AttendanceRecordStore.CurrentAttendanceRecord?.Activity.Property.IsPlan ?? false)
+            if (_attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User)?.Activity.Property.IsPlan ?? false)
             {
                 navigateUserHasCurretlyPlanService.Navigate();
             }
