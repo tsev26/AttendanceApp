@@ -16,14 +16,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Border
-            Grid.Column="0"
-            Margin="10"
-            Padding="5"
-            Background="AntiqueWhite"
-            BorderBrush="Black"
-            BorderThickness="1"
-            CornerRadius="5">
+        <Border Grid.Column="0" Style="{StaticResource BorderBackground}">
 
             <Grid Margin="10">
                 <Grid Grid.Row="0">
@@ -39,32 +32,29 @@
                         Style="{StaticResource DetailTextBlock}"
                         Text="Opravy" />
 
-                    <ListView
-                        x:Name="ListOfAttendanceRecordFixes"
-                        Grid.Row="1"
-                        Width="auto"
-                        Margin="10"
-                        BorderThickness="2"
-                        Focusable="False"
-                        ItemsSource="{Binding AttendanceRecordFixes}"
-                        SelectedIndex="{Binding SelectedAttendanceRecordFixIndex}"
-                        SelectionMode="Single">
-                        <ListView.View>
-                            <GridView AllowsColumnReorder="False">
-                                <GridView.ColumnHeaderContainerStyle>
-                                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                    </Style>
-                                </GridView.ColumnHeaderContainerStyle>
-                                <GridViewColumn DisplayMemberBinding="{Binding FixType, Converter={StaticResource DisplayEnumNameConverter}}" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Activity}" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Entry, StringFormat={}{0:dd.MM.yyyy HH:mm}}" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Approved, Converter={StaticResource DisplayEnumNameConverter}}" />
+                    <Border Grid.Row="1" Style="{StaticResource BorderBasic}">
+                        <ListView
+                            x:Name="ListOfAttendanceRecordFixes"
+                            Focusable="False"
+                            ItemsSource="{Binding AttendanceRecordFixes}"
+                            SelectedIndex="{Binding SelectedAttendanceRecordFixIndex}"
+                            SelectionMode="Single">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridView.ColumnHeaderContainerStyle>
+                                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </Style>
+                                    </GridView.ColumnHeaderContainerStyle>
+                                    <GridViewColumn DisplayMemberBinding="{Binding FixType, Converter={StaticResource DisplayEnumNameConverter}}" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Activity}" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Entry, StringFormat={}{0:dd.MM.yyyy HH:mm}}" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Approved, Converter={StaticResource DisplayEnumNameConverter}}" />
 
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Border>
                     <StackPanel
                         Grid.Row="2"
                         HorizontalAlignment="Center"
@@ -82,14 +72,7 @@
         </Border>
 
 
-        <Border
-            Grid.Column="1"
-            Margin="10"
-            Padding="5"
-            Background="AntiqueWhite"
-            BorderBrush="Black"
-            BorderThickness="1"
-            CornerRadius="5">
+        <Border Grid.Column="1" Style="{StaticResource BorderBackground}">
             <Grid Margin="10">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -103,30 +86,28 @@
                     Style="{StaticResource DetailTextBlock}"
                     Text="Zápisy" />
 
-                <ListView
-                    x:Name="ListOfAttendanceRecords"
-                    Grid.Row="1"
-                    Width="auto"
-                    Margin="10"
-                    HorizontalContentAlignment="Center"
-                    BorderThickness="2"
-                    Focusable="False"
-                    ItemsSource="{Binding AttendanceRecords}"
-                    SelectedIndex="{Binding SelectedAttendanceRecordIndex}"
-                    SelectionMode="Single">
-                    <ListView.View>
-                        <GridView AllowsColumnReorder="False">
-                            <GridView.ColumnHeaderContainerStyle>
-                                <Style TargetType="{x:Type GridViewColumnHeader}">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </Style>
-                            </GridView.ColumnHeaderContainerStyle>
-                            <GridViewColumn Width="125" DisplayMemberBinding="{Binding Activity}" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Entry, StringFormat={}{0:dd.MM.yyyy HH:mm}}" />
+                <Border Grid.Row="1" Style="{StaticResource BorderBasic}">
+                    <ListView
+                        x:Name="ListOfAttendanceRecords"
+                        Width="auto"
+                        Focusable="False"
+                        ItemsSource="{Binding AttendanceRecords}"
+                        SelectedIndex="{Binding SelectedAttendanceRecordIndex}"
+                        SelectionMode="Single">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="False">
+                                <GridView.ColumnHeaderContainerStyle>
+                                    <Style TargetType="{x:Type GridViewColumnHeader}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Style>
+                                </GridView.ColumnHeaderContainerStyle>
+                                <GridViewColumn Width="125" DisplayMemberBinding="{Binding Activity}" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Entry, StringFormat={}{0:dd.MM.yyyy HH:mm}}" />
 
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Border>
 
                 <StackPanel
                     Grid.Row="2"

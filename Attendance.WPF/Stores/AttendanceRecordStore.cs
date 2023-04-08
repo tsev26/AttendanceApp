@@ -333,5 +333,13 @@ namespace Attendance.WPF.Stores
             return ActivitiesTotalInDay.OrderByDescending(a => a.Duration).ToList();
         }
 
+        public List<AttendanceRecordFix> GetPendingFixes(User user)
+        {
+            List<AttendanceRecordFix> records = new List<AttendanceRecordFix>();
+
+            records.AddRange(_attendanceRecordFixes.Where(a => a.Approved == ApproveType.Waiting && (a.User.IsSubordinate(user))));
+
+            return records;
+        }
     }
 }

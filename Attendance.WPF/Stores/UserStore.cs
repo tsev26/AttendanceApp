@@ -79,5 +79,19 @@ namespace Attendance.WPF.Stores
             }
             UsersChange?.Invoke();
         }
+
+        public List<User> GetPendingUpdates(User? user)
+        {
+            List<User> records = new List<User>();
+
+            records.AddRange(Users.Where(a => a.ToApprove && (a.IsSubordinate(user))));
+
+            return records;
+        }
+
+        public User GetUserByUserId(int userId)
+        {
+            return Users.FirstOrDefault(a => a.UserId == userId && !a.ToApprove);
+        }
     }
 }

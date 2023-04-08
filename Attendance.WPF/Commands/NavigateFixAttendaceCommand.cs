@@ -39,7 +39,7 @@ namespace Attendance.WPF.Commands
             bool isSelected = false;
             if (_userDailyOverviewViewModel != null)
             {
-                attendanceRecord = _userDailyOverviewViewModel.CurrentUser.AttendanceRecordStore.AttendanceRecords.FirstOrDefault(a => a == _userDailyOverviewViewModel.SelectedAttendanceRecord.AttendanceRecord);
+                attendanceRecord = _userDailyOverviewViewModel.CurrentUser.AttendanceRecordStore.AttendanceRecords.FirstOrDefault(a => a == _userDailyOverviewViewModel.SelectedAttendanceRecord?.AttendanceRecord);
                 _selectedUserStore.SelectedUser = _userDailyOverviewViewModel.CurrentUser.User;
                 isSelected = _userDailyOverviewViewModel.IsSelectedAttendanceRecord;
             }
@@ -51,14 +51,14 @@ namespace Attendance.WPF.Commands
             }
 
             
-            if (parameter is string value && attendanceRecord != null)
+            if (parameter is string value)
             {
-                if (value == "removeRecord" && isSelected)
+                if (value == "removeRecord" && isSelected && attendanceRecord != null)
                 {
                     _selectedUserStore.AttendanceRecordStore.AddAttendanceRecordFixDelete(attendanceRecord);
                     _navigateFixesAttendance.Navigate();
                 }
-                else if (value == "updateRecord" && isSelected)
+                else if (value == "updateRecord" && isSelected && attendanceRecord != null)
                 {
                     _selectedUserStore.AttendanceRecord = attendanceRecord;
                     _navigateFixAttendance.Navigate();

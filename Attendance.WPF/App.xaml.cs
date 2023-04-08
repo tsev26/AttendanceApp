@@ -73,6 +73,7 @@ namespace Attendance.WPF
             services.AddTransient<UserHasCurrentlyPlanViewModel>(CreateUserHasCurrentlyPlanViewModel);
             services.AddTransient<UserFixAttendanceRecordViewModel>(CreateUserFixAttendanceRecordViewModel);
             services.AddTransient<UserFixesAttendanceRecordViewModel>(CreateUserFixesAttendanceRecordViewModel);
+            services.AddTransient<UsersRequestsViewModel>(CreateUsersRequestsViewModel);
 
             services.AddSingleton<MainViewModel>();
 
@@ -194,6 +195,7 @@ namespace Attendance.WPF
                 CreateUsersNavigationService(serviceProvider),
                 CreateUserHistoryService(serviceProvider),
                 CreateUserFixesNavigationService(serviceProvider),
+                CreateUsersRequestsService(serviceProvider),
                 serviceProvider.GetRequiredService<CurrentUser>()
                 );
         }
@@ -416,6 +418,23 @@ namespace Attendance.WPF
                  serviceProvider.GetRequiredService<NavigationStore>(),
                  serviceProvider.GetRequiredService<MessageStore>(),
                  () => serviceProvider.GetRequiredService<UserFixesAttendanceRecordViewModel>());
+        }
+
+        private UsersRequestsViewModel CreateUsersRequestsViewModel(IServiceProvider serviceProvider)
+        {
+            return new UsersRequestsViewModel(
+                serviceProvider.GetRequiredService<CurrentUser>(),
+                serviceProvider.GetRequiredService<AttendanceRecordStore>(),
+                serviceProvider.GetRequiredService<UserStore>()
+                );
+        }
+
+        private INavigationService CreateUsersRequestsService(IServiceProvider serviceProvider)
+        {
+            return new NavigationService<UsersRequestsViewModel>(
+                 serviceProvider.GetRequiredService<NavigationStore>(),
+                 serviceProvider.GetRequiredService<MessageStore>(),
+                 () => serviceProvider.GetRequiredService<UsersRequestsViewModel>());
         }
     }
 }

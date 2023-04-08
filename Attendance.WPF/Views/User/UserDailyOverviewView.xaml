@@ -128,14 +128,7 @@
             -->
 
             <!--  tabulka realne odpracovano, odpracovano a celkem prestavka  -->
-            <Border
-                Grid.Row="1"
-                Margin="10"
-                Padding="0,0,0,5"
-                Background="FloralWhite"
-                BorderBrush="Black"
-                BorderThickness="1"
-                CornerRadius="5">
+            <Border Grid.Row="1" Style="{StaticResource BorderBasic}">
                 <StackPanel>
 
                     <!--<TextBlock
@@ -218,21 +211,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-
-
-                <!--<TextBlock
-                    HorizontalAlignment="Left"
-                    FontSize="22"
-                    Margin="150,0,0,0"
-                    Text="Součty"
-                    TextDecorations="Underline" />-->
-                <Border
-                    Grid.Column="0"
-                    Margin="10"
-                    Background="FloralWhite"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="5">
+                <Border Grid.Column="0" Style="{StaticResource BorderBasic}">
                     <StackPanel>
                         <Grid Margin="0,5,0,0" HorizontalAlignment="Center">
                             <Grid.ColumnDefinitions>
@@ -291,20 +270,7 @@
                 </Border>
 
 
-
-
-                <!--<TextBlock
-                    HorizontalAlignment="Left"
-                    FontSize="22"
-                    Text="Dnešní příchody"
-                    TextDecorations="Underline" />-->
-                <Border
-                    Grid.Column="1"
-                    Margin="10"
-                    Background="FloralWhite"
-                    BorderBrush="Black"
-                    BorderThickness="1"
-                    CornerRadius="5">
+                <Border Grid.Column="1" Style="{StaticResource BorderBasic}">
                     <Grid Margin="0,5,0,0" HorizontalAlignment="Center">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />

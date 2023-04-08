@@ -79,7 +79,7 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
@@ -161,14 +161,16 @@
                             HorizontalAlignment="Center"
                             FontSize="16"
                             Style="{StaticResource DetailTextBlock}"
-                            Text=" - " />
+                            Text=" - "
+                            Visibility="{Binding IsCurrentActivitySet, Converter={StaticResource bool2VisibilityConverter}}" />
 
                         <TextBlock
                             HorizontalAlignment="Center"
                             d:Text="Současná aktivita"
                             FontSize="24"
                             Style="{StaticResource DetailTextBlock}"
-                            Text="{Binding CurrentActivity, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                            Text="{Binding CurrentActivity, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                            Visibility="{Binding IsCurrentActivitySet, Converter={StaticResource bool2VisibilityConverter}}" />
                     </StackPanel>
 
 
@@ -182,8 +184,19 @@
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
 
+
                         <Button
                             Grid.Column="0"
+                            Margin="0,0,5,0"
+                            Command="{Binding NavigateRequestsCommand}"
+                            Content="Žádosti"
+                            Focusable="False"
+                            FontSize="20"
+                            Style="{StaticResource ViewButton}"
+                            Visibility="{Binding UserIsSupervisor, Converter={StaticResource bool2VisibilityConverter}}" />
+
+                        <Button
+                            Grid.Column="1"
                             Margin="0,0,5,0"
                             Command="{Binding NavigateUsersCommand}"
                             Content="Podřízení"
@@ -193,7 +206,7 @@
                             Visibility="{Binding UserIsSupervisor, Converter={StaticResource bool2VisibilityConverter}}" />
 
                         <Button
-                            Grid.Column="1"
+                            Grid.Column="2"
                             Margin="0,0,5,0"
                             Command="{Binding NavigateGroupsCommand}"
                             Content="Skupiny"
@@ -203,7 +216,7 @@
                             Visibility="{Binding UserIsAdmin, Converter={StaticResource bool2VisibilityConverter}}" />
 
                         <Button
-                            Grid.Column="2"
+                            Grid.Column="3"
                             Margin="0,0,5,0"
                             Command="{Binding NavigateActivitiesCommand}"
                             Content="Aktivity"
@@ -213,7 +226,7 @@
                             Visibility="{Binding UserIsAdmin, Converter={StaticResource bool2VisibilityConverter}}" />
 
                         <Button
-                            Grid.Column="3"
+                            Grid.Column="4"
                             Margin="0,0,5,0"
                             HorizontalAlignment="Right"
                             Command="{Binding NavigateHomeCommand}"

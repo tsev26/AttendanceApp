@@ -24,5 +24,18 @@ namespace Attendance.WPF
         {
             InitializeComponent();
         }
+
+        static void AutoResizeGridViewColumns(GridView view)
+        {
+            if (view == null || view.Columns.Count < 1) return;
+            // Simulates column auto sizing
+            foreach (var column in view.Columns)
+            {
+                // Forcing change
+                if (double.IsNaN(column.Width))
+                    column.Width = 1;
+                column.Width = double.NaN;
+            }
+        }
     }
 }

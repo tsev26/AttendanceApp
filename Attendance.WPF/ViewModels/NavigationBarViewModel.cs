@@ -23,6 +23,7 @@ namespace Attendance.WPF.ViewModels
                                       INavigationService navigateUsersService,
                                       INavigationService navigateHistoryService,
                                       INavigationService navigateFixesService,
+                                      INavigationService navigateRequestService,
                                       CurrentUser currentUser)
         {
             NavigateHomeCommand = new NavigateCommand(navigateHomeService);
@@ -34,6 +35,7 @@ namespace Attendance.WPF.ViewModels
             NavigateUsersCommand = new NavigateCommand(navigateUsersService);
             NavigateHistoryCommnad = new NavigateCommand(navigateHistoryService);
             NavigateFixesCommnad = new NavigateCommand(navigateFixesService);
+            NavigateRequestsCommand = new NavigateCommand(navigateRequestService);
             _currentUser = currentUser;
             _currentUser.CurrentUserChange += CurrentUser_CurrentUserChange;
         }
@@ -45,11 +47,14 @@ namespace Attendance.WPF.ViewModels
             OnPropertyChanged(nameof(UserIsAdmin));
             OnPropertyChanged(nameof(CurrentActivity));
             OnPropertyChanged(nameof(UserIsSupervisor));
+            OnPropertyChanged(nameof(IsCurrentActivitySet));
         }
 
         public string CurrentName => _currentUser.User?.LastName + " " + _currentUser.User?.FirstName;
 
         public string CurrentActivity => _currentUser.AttendanceRecordStore.CurrentAttendanceRecord?.Activity.Name;
+
+        public bool IsCurrentActivitySet => _currentUser.AttendanceRecordStore.CurrentAttendanceRecord?.Activity != null;
 
         public bool UserLogOn => _currentUser.User != null;
 
@@ -66,6 +71,7 @@ namespace Attendance.WPF.ViewModels
         public ICommand NavigateUsersCommand { get; }
         public ICommand NavigateHistoryCommnad { get; }
         public ICommand NavigateFixesCommnad { get; }
+        public ICommand NavigateRequestsCommand { get; }
         public override void Dispose()
         {
             _currentUser.CurrentUserChange -= CurrentUser_CurrentUserChange;

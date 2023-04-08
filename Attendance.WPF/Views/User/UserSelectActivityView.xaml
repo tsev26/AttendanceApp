@@ -27,12 +27,9 @@
             Text="Aktivity" />
         <Grid Grid.Row="1">
             <Border
-                Margin="10"
+                Grid.Row="1"
                 Padding="10"
-                Background="FloralWhite"
-                BorderBrush="Black"
-                BorderThickness="1"
-                CornerRadius="5">
+                Style="{StaticResource BorderBasic}">
 
                 <ItemsControl
                     x:Name="ActivityItemsControl"

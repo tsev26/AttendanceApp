@@ -16,14 +16,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Border
-            Grid.Column="0"
-            Margin="10"
-            Padding="5"
-            Background="AntiqueWhite"
-            BorderBrush="Black"
-            BorderThickness="1"
-            CornerRadius="5">
+        <Border Grid.Column="0" Style="{StaticResource BorderBackground}">
 
             <Grid Margin="10">
                 <Grid.RowDefinitions>
@@ -37,42 +30,40 @@
                     Style="{StaticResource DetailTextBlock}"
                     Text="Aktivity" />
 
-                <ListView
-                    x:Name="ListOfGroups"
-                    Grid.Row="1"
-                    Width="auto"
-                    Margin="10"
-                    BorderThickness="2"
-                    Focusable="False"
-                    ItemsSource="{Binding Activities}"
-                    SelectedIndex="{Binding SelectedActivityIndex}"
-                    SelectionMode="Single">
-                    <ListView.View>
-                        <GridView AllowsColumnReorder="False">
-                            <GridViewColumn>
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            FontSize="26"
-                                            TextAlignment="Center">
-                                            <Run Text="{Binding ActName1, Mode=OneWay}" /><Run
-                                                FontWeight="Bold"
-                                                Text="{Binding ActName2, Mode=OneWay}"
-                                                TextDecorations="Underline" /><Run Text="{Binding ActName3, Mode=OneWay}" />
-                                        </TextBlock>
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                            <GridView.ColumnHeaderContainerStyle>
-                                <Style TargetType="{x:Type GridViewColumnHeader}">
-                                    <Setter Property="Visibility" Value="Collapsed" />
-                                </Style>
-                            </GridView.ColumnHeaderContainerStyle>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                <Border Grid.Row="1" Style="{StaticResource BorderBasic}">
+                    <ListView
+                        x:Name="ListOfGroups"
+                        Focusable="False"
+                        ItemsSource="{Binding Activities}"
+                        SelectedIndex="{Binding SelectedActivityIndex}"
+                        SelectionMode="Single">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="False">
+                                <GridViewColumn>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                FontSize="26"
+                                                TextAlignment="Center">
+                                                <Run Text="{Binding ActName1, Mode=OneWay}" /><Run
+                                                    FontWeight="Bold"
+                                                    Text="{Binding ActName2, Mode=OneWay}"
+                                                    TextDecorations="Underline" /><Run Text="{Binding ActName3, Mode=OneWay}" />
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridView.ColumnHeaderContainerStyle>
+                                    <Style TargetType="{x:Type GridViewColumnHeader}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </Style>
+                                </GridView.ColumnHeaderContainerStyle>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Border>
 
                 <StackPanel
                     Grid.Row="2"
@@ -94,14 +85,7 @@
             </Grid>
         </Border>
 
-        <Border
-            Grid.Column="1"
-            Margin="10"
-            Padding="5"
-            Background="AntiqueWhite"
-            BorderBrush="Black"
-            BorderThickness="1"
-            CornerRadius="5">
+        <Border Grid.Column="1" Style="{StaticResource BorderBackground}">
             <Grid>
 
                 <Grid
@@ -119,14 +103,7 @@
                         Style="{StaticResource DetailTextBlock}"
                         Text="Globální nastavení aktivit" />
 
-                    <Border
-                        Grid.Row="1"
-                        Margin="10"
-                        Padding="5"
-                        Background="FloralWhite"
-                        BorderBrush="Black"
-                        BorderThickness="1"
-                        CornerRadius="5">
+                    <Border Grid.Row="1" Style="{StaticResource BorderBasic}">
 
                         <Grid Margin="20,10,20,20">
                             <Grid.RowDefinitions>
@@ -281,12 +258,8 @@
 
                     <Border
                         Grid.Row="1"
-                        Margin="10"
                         Padding="5"
-                        Background="FloralWhite"
-                        BorderBrush="Black"
-                        BorderThickness="1"
-                        CornerRadius="5">
+                        Style="{StaticResource BorderBasic}">
 
                         <Grid Margin="20,10,20,20">
                             <Grid.RowDefinitions>

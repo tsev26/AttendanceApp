@@ -16,14 +16,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Border
-            Grid.Column="0"
-            Margin="10"
-            Padding="5"
-            Background="AntiqueWhite"
-            BorderBrush="Black"
-            BorderThickness="1"
-            CornerRadius="5">
+        <Border Grid.Column="0" Style="{StaticResource BorderBackground}">
 
             <Grid Margin="10">
                 <Grid.RowDefinitions>
@@ -66,41 +59,38 @@
                         Style="{StaticResource DetailTextBlock}"
                         Text="Uživatelé" />
 
-                    <ListView
-                        x:Name="ListOfUsers"
-                        Grid.Row="1"
-                        Width="auto"
-                        Margin="10"
-                        BorderThickness="2"
-                        Focusable="False"
-                        ItemsSource="{Binding Users}"
-                        SelectedIndex="{Binding SelectedUserIndex}"
-                        SelectionMode="Single">
-                        <ListView.View>
-                            <GridView AllowsColumnReorder="False">
-                                <GridViewColumn>
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock>
-                                                <TextBlock.Text>
-                                                    <MultiBinding StringFormat="{}{0} {1}">
-                                                        <Binding Path="LastName" />
-                                                        <Binding Path="FirstName" />
-                                                    </MultiBinding>
-                                                </TextBlock.Text>
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridView.ColumnHeaderContainerStyle>
-                                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                    </Style>
-                                </GridView.ColumnHeaderContainerStyle>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-
+                    <Border Grid.Row="1" Style="{StaticResource BorderBasic}">
+                        <ListView
+                            x:Name="ListOfUsers"
+                            Focusable="False"
+                            ItemsSource="{Binding Users}"
+                            SelectedIndex="{Binding SelectedUserIndex}"
+                            SelectionMode="Single">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridViewColumn>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock>
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0} {1}">
+                                                            <Binding Path="LastName" />
+                                                            <Binding Path="FirstName" />
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridView.ColumnHeaderContainerStyle>
+                                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </Style>
+                                    </GridView.ColumnHeaderContainerStyle>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Border>
                     <StackPanel
                         Grid.Row="2"
                         Margin="0,0,0,10"
@@ -211,14 +201,7 @@
             </Grid>
         </Border>
 
-        <Border
-            Grid.Column="1"
-            Margin="10"
-            Padding="5"
-            Background="AntiqueWhite"
-            BorderBrush="Black"
-            BorderThickness="1"
-            CornerRadius="5">
+        <Border Grid.Column="1" Style="{StaticResource BorderBackground}">
             <Grid>
                 <Grid
                     Margin="10"
@@ -236,14 +219,7 @@
                         Style="{StaticResource DetailTextBlock}"
                         Text="Profil" />
 
-                    <Border
-                        Grid.Row="1"
-                        Margin="10"
-                        Padding="5"
-                        Background="FloralWhite"
-                        BorderBrush="Black"
-                        BorderThickness="1"
-                        CornerRadius="5">
+                    <Border Grid.Row="1" Style="{StaticResource BorderBasic}">
 
                         <Grid Margin="10" HorizontalAlignment="Center">
                             <Grid.RowDefinitions>
@@ -528,7 +504,6 @@
 
                         </Grid>
 
-
                     </Border>
 
                 </Grid>
@@ -546,28 +521,26 @@
                         Style="{StaticResource DetailTextBlock}"
                         Text="Klíče" />
 
+                    <Border Grid.Row="1" Style="{StaticResource BorderBasic}">
+                        <ListView
+                            x:Name="ListOfUserKeys"
+                            Focusable="False"
+                            ItemsSource="{Binding UsersKeys}"
+                            SelectedIndex="{Binding SelectedKeyIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectionMode="Single">
+                            <ListView.Resources>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </Style>
+                            </ListView.Resources>
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridViewColumn Width="200" DisplayMemberBinding="{Binding KeyValue}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Border>
 
-                    <ListView
-                        x:Name="ListOfUserKeys"
-                        Grid.Row="1"
-                        Margin="10"
-                        Background="FloralWhite"
-                        BorderThickness="2"
-                        Focusable="False"
-                        ItemsSource="{Binding UsersKeys}"
-                        SelectedIndex="{Binding SelectedKeyIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        SelectionMode="Single">
-                        <ListView.Resources>
-                            <Style TargetType="GridViewColumnHeader">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </Style>
-                        </ListView.Resources>
-                        <ListView.View>
-                            <GridView AllowsColumnReorder="False">
-                                <GridViewColumn Width="200" DisplayMemberBinding="{Binding KeyValue}" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
                     <StackPanel
                         Grid.Row="3"
                         HorizontalAlignment="Center"
@@ -593,10 +566,6 @@
                             Content="Upravit"
                             Style="{StaticResource MenuButton}" />
                     </StackPanel>
-
-
-
-
 
                 </Grid>
             </Grid>

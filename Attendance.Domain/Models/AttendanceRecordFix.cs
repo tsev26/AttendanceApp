@@ -30,7 +30,7 @@ namespace Attendance.Domain.Models
         Approved,
 
         [Display(Name = "Zamítnuto")]
-        Disapproved
+        Rejected
     }
 
     public class AttendanceRecordFix : DomainObject

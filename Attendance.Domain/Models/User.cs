@@ -68,7 +68,6 @@ namespace Attendance.Domain.Models
         public bool HasObligation => Obligation != null;
         public Obligation UserObligation => HasObligation ? Obligation : Group.Obligation;
         public string HasObligationString => HasObligation ? "(nastavení z uživatele)" : "(nastavení ze skupiny)";
-
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
@@ -128,6 +127,16 @@ namespace Attendance.Domain.Models
                 Id = this.Id,
                 Obligation = Obligation?.Clone()
             };
+        }
+
+        public bool IsSubordinate(User user)
+        {
+            return Group.Supervisor == user || user.IsAdmin;
+        }
+
+        public override string ToString()
+        {
+            return LastName + " " + FirstName;
         }
     }
 }

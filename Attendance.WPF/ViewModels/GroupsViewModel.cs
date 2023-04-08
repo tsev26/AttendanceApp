@@ -41,11 +41,11 @@ namespace Attendance.WPF.ViewModels
 
 
         public List<User> UsersToSet => (IsGroupSelected) ? ((GroupViewAddUser)
-                                        ? _userStore.Users.Where(a => a.Group != SelectedGroup).ToList()
-                                        : _userStore.Users.Where(a => a != SelectedGroup.Supervisor).ToList())
+                                        ? _userStore.Users.Where(a => a.Group != SelectedGroup && !a.ToApprove).ToList()
+                                        : _userStore.Users.Where(a => a != SelectedGroup.Supervisor && !a.ToApprove).ToList())
                                         : null;
 
-        public List<User> UsersInGroup => (IsGroupSelected) ? _userStore.Users.Where(a => a.Group == SelectedGroup).ToList() : null;
+        public List<User> UsersInGroup => (IsGroupSelected) ? _userStore.Users.Where(a => a.Group == SelectedGroup && !a.ToApprove).ToList() : null;
 
         private int _selectedUserToSetIndex = -1;
         public int SelectedUserToSetIndex
