@@ -242,6 +242,7 @@ namespace Attendance.WPF
             return new GroupsViewModel(
                 serviceProvider.GetRequiredService<GroupStore>(),
                 serviceProvider.GetRequiredService<UserStore>(),
+                serviceProvider.GetRequiredService<ActivityStore>(),
                 CreateGroupUpsertNavigationService(serviceProvider)
 
                 );

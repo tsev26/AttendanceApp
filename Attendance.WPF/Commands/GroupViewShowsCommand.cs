@@ -34,7 +34,7 @@ namespace Attendance.WPF.Commands
             {
                 _groupsViewModel.AddUserOrSetSupervisor = false;
             }
-            
+
         }
     }
 }

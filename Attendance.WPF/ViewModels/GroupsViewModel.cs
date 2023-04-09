@@ -19,19 +19,23 @@ namespace Attendance.WPF.ViewModels
     {
         private readonly GroupStore _groupStore;
         private readonly UserStore _userStore;
+        private readonly ActivityStore _activityStore;
 
         public GroupsViewModel(GroupStore groupStore,
                                UserStore userStore,
+                               ActivityStore activityStore,
                                INavigationService navigateAddGroup)
         {
             _groupStore = groupStore;
             _userStore = userStore;
+            _activityStore = activityStore;
 
             NavigateCreateGroupCommand = new NavigateCommand(navigateAddGroup);
             DeleteGroupCommand = new DeleteGroupCommand(_groupStore, this);
             SaveGroupChanges = new SaveGroupChangesCommand(_groupStore, this);
             GroupViewShowsCommand = new GroupViewShowsCommand(this);
             SetUserToGroupCommand = new SetUserToGroupCommand(this, _userStore, _groupStore);
+            SetActivityToGroupCommand = new SetActivityToGroupCommand(this, groupStore, activityStore);
 
             _groupStore.GroupsChange += GroupStore_GroupsChange;
             _userStore.UsersChange += UserStore_UsersChange;
@@ -75,23 +79,12 @@ namespace Attendance.WPF.ViewModels
             OnPropertyChanged(nameof(UsersToSet));
         }
 
-        /*
-        private void GroupSelectionChange()
-        {
-            Groups.Clear();
-            foreach (var group in _groupStore.Groups.ToList())
-            {
-                Groups.Add(group);
-            }
-        }
-        */
-
         public ICommand SetUserToGroupCommand { get; }
         public ICommand NavigateCreateGroupCommand { get; }
         public ICommand DeleteGroupCommand { get; }
         public ICommand SaveGroupChanges { get; }
         public ICommand GroupViewShowsCommand { get; }
-
+        public ICommand SetActivityToGroupCommand { get; }
 
         public List<Group> Groups { get; set; }
 
@@ -166,6 +159,20 @@ namespace Attendance.WPF.ViewModels
             }
         }
 
+        private bool _setSupervisor;
+        public bool SetSupervisor
+        {
+            get
+            {
+                return _setSupervisor;
+            }
+            set
+            {
+                _setSupervisor = value;
+                OnPropertyChanged(nameof(SetSupervisor));
+            }
+        }
+
         private bool _groupViewAddUser;
         public bool GroupViewAddUser
         {
@@ -188,6 +195,19 @@ namespace Attendance.WPF.ViewModels
 
         public string GroupViewAddUserOrSetSupervisorText => GroupViewAddUser ? "Přidat uživatele" : "Nastavit vedoucího";
 
+        private bool _groupSetting;
+        public bool GroupSetting
+        {
+            get
+            {
+                return _groupSetting;
+            }
+            set
+            {
+                _groupSetting = value;
+                OnPropertyChanged(nameof(GroupSetting));
+            }
+        }
 
         public bool GroupSetting => !AddUserOrSetSupervisor && IsGroupSelected;
 
@@ -212,6 +232,61 @@ namespace Attendance.WPF.ViewModels
         public bool WorksFriday => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.WorksFriday : false;
         public bool WorksSaturday => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.WorksSaturday : false;
         public bool WorksSunday => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex].Obligation.WorksSunday : false;
+
+
+        private bool _setActivities;
+        public bool SetActivities
+        {
+            get
+            {
+                return _setActivities;
+            }
+            set
+            {
+                _setActivities = value;
+                OnPropertyChanged(nameof(SetActivities));
+            }
+        }
+
+        public List<Activity> ActivitiesGroup => IsGroupSelected && SetActivities ? SelectedGroup.Obligation.AvailableActivities : null;
+
+        private int _selectedActivityGroupIndex;
+        public int SelectedActivityGroupIndex
+        {
+            get
+            {
+                return _selectedActivityGroupIndex;
+            }
+            set
+            {
+                _selectedActivityGroupIndex = value;
+                OnPropertyChanged(nameof(SelectedActivityGroupIndex));
+                OnPropertyChanged(nameof(IsSelectedActivityGroupIndex));
+                OnPropertyChanged(nameof(SelectedActivityGroup));
+            }
+        }
+        public bool IsSelectedActivityGroupIndex => SelectedActivityGroupIndex != -1;
+        public Activity SelectedActivityGroup => IsSelectedActivityGroupIndex ? ActivitiesGroup[SelectedActivityGroupIndex] : null;
+
+
+        public List<Activity> ActivitiesNotAssignedGroup => IsGroupSelected && SetActivities ? _activityStore.Activities.Where(a => !ActivitiesGroup.Contains(a)).ToList() : null;
+        private int _selectedActivityNotAssignedGroupIndex;
+        public int SelectedActivityNotAssignedGroupIndex
+        {
+            get
+            {
+                return _selectedActivityNotAssignedGroupIndex;
+            }
+            set
+            {
+                _selectedActivityNotAssignedGroupIndex = value;
+                OnPropertyChanged(nameof(SelectedActivityNotAssignedGroupIndex));
+                OnPropertyChanged(nameof(IsSelectedActivityNotAssignedGroupIndex));
+                OnPropertyChanged(nameof(SelectedActivityNotAssignedGroupIndex));
+            }
+        }
+        public bool IsSelectedActivityNotAssignedGroupIndex => SelectedActivityNotAssignedGroupIndex != -1;
+        public Activity SelectedActivityNotAssignedGroup => IsSelectedActivityNotAssignedGroupIndex ? ActivitiesNotAssignedGroup[SelectedActivityNotAssignedGroupIndex] : null;
 
 
         public override void Dispose()

@@ -92,16 +92,16 @@
                         <Button
                             Margin="5,0,5,0"
                             Command="{Binding GroupViewShowsCommand}"
+                            CommandParameter="obligation"
                             Content="Nastavení"
-                            Style="{StaticResource MenuButton}"
-                            Visibility="{Binding SettingButtonVisibility, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            Style="{StaticResource MenuButton}" />
 
                         <Button
                             Margin="5,0,5,0"
                             Command="{Binding GroupViewShowsCommand}"
+                            CommandParameter="activities"
                             Content="Aktivity"
-                            Style="{StaticResource MenuButton}"
-                            Visibility="{Binding SettingButtonVisibility, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            Style="{StaticResource MenuButton}" />
                     </StackPanel>
 
                 </Grid>
@@ -148,8 +148,7 @@
                             Command="{Binding GroupViewShowsCommand}"
                             CommandParameter="addUser"
                             Content="Přidat uživatele"
-                            Style="{StaticResource MenuButton}"
-                            Visibility="{Binding AddUserButtonVisibility, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            Style="{StaticResource MenuButton}" />
                     </StackPanel>
                 </Grid>
 
@@ -161,7 +160,7 @@
 
         <Border Grid.Column="1" Style="{StaticResource BorderBackground}">
             <Grid Margin="10">
-                <Grid Visibility="{Binding GroupSetting, Converter={StaticResource bool2VisibilityConverter}}">
+                <Grid d:Visibility="Collapsed" Visibility="{Binding GroupSetting, Converter={StaticResource bool2VisibilityConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
@@ -408,7 +407,7 @@
 
                 </Grid>
 
-                <Grid Visibility="{Binding AddUserOrSetSupervisor, Converter={StaticResource bool2VisibilityConverter}}">
+                <Grid d:Visibility="Collapsed" Visibility="{Binding AddUserOrSetSupervisor, Converter={StaticResource bool2VisibilityConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="*" />
@@ -457,6 +456,86 @@
                         Content="Nastavit vedoucího"
                         Style="{StaticResource MenuButton}"
                         Visibility="{Binding GroupViewSetUser, Converter={StaticResource bool2VisibilityConverter}}" />
+                </Grid>
+
+                <Grid d:Visibility="Visible" Visibility="{Binding SetActivities, Converter={StaticResource bool2VisibilityConverter}}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource DetailTextBlock}"
+                        Text="Aktivity skupiny" />
+
+                    <Border Grid.Row="1" Style="{StaticResource BorderBasic}">
+                        <ListView
+                            x:Name="ListOfUsedActivities"
+                            Focusable="False"
+                            ItemsSource="{Binding ActivitiesGroup}"
+                            SelectedIndex="{Binding SelectedActivityGroupIndex}"
+                            SelectionMode="Single">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridView.ColumnHeaderContainerStyle>
+                                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </Style>
+                                    </GridView.ColumnHeaderContainerStyle>
+                                    <GridViewColumn DisplayMemberBinding="{Binding FirstName, Mode=TwoWay}" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding LastName, Mode=TwoWay}" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Group.Name, Mode=TwoWay}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Border>
+
+                    <Button
+                        Grid.Row="3"
+                        Command="{Binding SetActivityToGroupCommand}"
+                        CommandParameter="removeActivityToGroup"
+                        Content="Odebrat aktivitu"
+                        Style="{StaticResource MenuButton}"
+                        Visibility="{Binding GroupViewAddUser, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+
+                    <Border Grid.Row="4" Style="{StaticResource BorderBasic}">
+                        <ListView
+                            x:Name="ListOfNotUsedActivities"
+                            Focusable="False"
+                            ItemsSource="{Binding ActivitiesNotAssignedGroup}"
+                            SelectedIndex="{Binding SelectedActivityNotAssignedGroupIndex}"
+                            SelectionMode="Single">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="False">
+                                    <GridView.ColumnHeaderContainerStyle>
+                                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                        </Style>
+                                    </GridView.ColumnHeaderContainerStyle>
+                                    <GridViewColumn DisplayMemberBinding="{Binding FirstName, Mode=TwoWay}" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding LastName, Mode=TwoWay}" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Group.Name, Mode=TwoWay}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Border>
+
+
+                    <Button
+                        Grid.Row="5"
+                        Command="{Binding SetActivityToGroupCommand}"
+                        CommandParameter="addActivityToGroup"
+                        Content="Přiřadit aktivitu"
+                        Style="{StaticResource MenuButton}"
+                        Visibility="{Binding GroupViewAddUser, Converter={StaticResource bool2VisibilityConverter}}" />
+
                 </Grid>
             </Grid>
         </Border>
