@@ -29,6 +29,8 @@
 
     <converters:ToggleButtonChangeStyleConverter x:Key="ToggleButtonChangeStyleConverter" />
 
+    <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+
 
     <Style TargetType="{x:Type controls:ListViewBetter}">
         <Setter Property="Foreground" Value="Black" />

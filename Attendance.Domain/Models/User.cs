@@ -94,11 +94,6 @@ namespace Attendance.Domain.Models
                    Obligation?.WorksSunday == other.Obligation?.WorksSunday;
         }
 
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode() ^ (FirstName.GetHashCode() + LastName.GetHashCode());
-        }
-
         public static bool operator ==(User a, User b)
         {
             if (ReferenceEquals(a, b))

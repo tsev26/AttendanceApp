@@ -35,6 +35,7 @@ namespace Attendance.WPF.Commands
         {
             if (parameter is string keyOperation)
             {
+                
                 if (keyOperation == "Remove")
                 {
                     if (_usersViewModel != null)
@@ -85,6 +86,7 @@ namespace Attendance.WPF.Commands
                     
                     _navigateModalUpsertKey.Navigate();
                 }
+                
             }
         }
     }

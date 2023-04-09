@@ -4,6 +4,7 @@ using Attendance.WPF.Services;
 using Attendance.WPF.Stores;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
@@ -37,21 +38,24 @@ namespace Attendance.WPF.ViewModels
             ShowUsersKeys = false;
             ShowUsersAttendace = false;
 
-            LoadUsers();
+            UserStore_UsersChange();
         }
-
         private void SelectedUserStore_SelectedUserChange()
         {
             if (!IsUserSelected) return;
-            UsersKeys = _selectedUserStore.SelectedUser.Keys.Select(a => a.Clone()).ToList();
+            UsersKeys = SelectedUser.Keys.Select(a => a.Clone()).ToList();
             OnPropertyChanged(nameof(UsersKeys));
 
             SelectedKeyIndex = -1;
         }
+      
 
         private void UserStore_UsersChange()
         {
-            LoadUsers();
+            Users = _userStore.Users.Where(a => !a.ToApprove && a.IsSubordinate(CurrentUser.User)).Select(u => u.Clone()).ToList();
+            OnPropertyChanged(nameof(Users));
+
+            SelectedUserIndex = -1;
         }
 
         public ICommand SaveUserCommand { get; }
@@ -62,12 +66,6 @@ namespace Attendance.WPF.ViewModels
         public CurrentUserStore CurrentUser { get; }
         public List<Group> Groups => _groupStore.Groups;
 
-        private void LoadUsers()
-        {
-            Users = _userStore.Users.Select(u => u.Clone()).Where(a => !a.ToApprove).ToList();
-            SelectedUserIndex = -1;
-            OnPropertyChanged(nameof(Users));
-        }
         public List<User> Users { get; set; }
 
         private int _selectedUserIndex = -1;
@@ -85,14 +83,9 @@ namespace Attendance.WPF.ViewModels
         }
 
         public bool IsUserSelected => SelectedUserIndex != -1;
+        public User SelectedUser => IsUserSelected ? Users[SelectedUserIndex] : null;
 
-        public User SelectedUser {
-            get
-            {
-                _selectedUserStore.SelectedUser = IsUserSelected ? Users[SelectedUserIndex] : null;
-                return _selectedUserStore.SelectedUser;
-            }       
-        }
+
         private bool _showUsersProfile = false;
         public bool ShowUsersProfile
         {
@@ -157,7 +150,6 @@ namespace Attendance.WPF.ViewModels
 
         public bool IsKeySelected => SelectedKeyIndex != -1;
         public Key SelectedKey => IsKeySelected ? UsersKeys[SelectedKeyIndex] : null;
-
 
         public override void Dispose()
         {

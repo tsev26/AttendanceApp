@@ -67,7 +67,6 @@ namespace Attendance.WPF.ViewModels
         {
             Groups = _groupStore.Groups.Select(a => a.Clone()).ToList();
             OnPropertyChanged(nameof(Groups));
-            
         }
 
         private void UserStore_UsersChange()
@@ -118,7 +117,6 @@ namespace Attendance.WPF.ViewModels
         }
 
         public bool IsGroupSelected => SelectedGroupIndex != -1;
-
         public Group SelectedGroup => (SelectedGroupIndex != -1) ? Groups[SelectedGroupIndex] : null;
 
         private int _selectedUserIndex = -1;

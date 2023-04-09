@@ -1,4 +1,5 @@
-﻿using Attendance.WPF.Stores;
+﻿using Attendance.WPF.Services;
+using Attendance.WPF.Stores;
 using Attendance.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,8 @@ namespace Attendance.WPF.Commands
 {
     public class SaveUserCommand : CommandBase
     {
-        private UserStore _userStore;
-        private UsersViewModel _usersViewModel;
+        private readonly UserStore _userStore;
+        private readonly UsersViewModel _usersViewModel;
 
         public SaveUserCommand(UserStore userStore, UsersViewModel usersViewModel)
         {

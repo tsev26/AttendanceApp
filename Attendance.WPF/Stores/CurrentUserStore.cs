@@ -18,6 +18,12 @@ namespace Attendance.WPF.Stores
 {
     public class CurrentUserStore
     {
+        private readonly UserStore _userStore;
+        public CurrentUserStore(UserStore userStore)
+        {
+            _userStore = userStore;
+        }
+
         public event Action CurrentUserChange;
         public event Action CurrentAttendanceChange;
         public event Action CurrentUserKeysChange;
@@ -35,6 +41,10 @@ namespace Attendance.WPF.Stores
                 CurrentUserChange?.Invoke();
             }
         }
+
+        public bool IsUserSuperVisor => _userStore.Users.Any(a => a.IsSubordinate(User));
+
+        public List<User> SubordinateUsers => _userStore.Users.Where(a => a.IsSubordinate(User)).ToList();
 
         public void LoadUser(User user)
         {
