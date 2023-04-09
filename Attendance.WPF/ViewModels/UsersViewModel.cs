@@ -43,7 +43,7 @@ namespace Attendance.WPF.ViewModels
         private void SelectedUserStore_SelectedUserChange()
         {
             if (!IsUserSelected) return;
-            UsersKeys = SelectedUser.Keys.Select(a => a.Clone()).ToList();
+            UsersKeys = SelectedUser.Keys.ToList(); //.Select(a => a.Clone())
             OnPropertyChanged(nameof(UsersKeys));
 
             SelectedKeyIndex = -1;
@@ -52,7 +52,7 @@ namespace Attendance.WPF.ViewModels
 
         private void UserStore_UsersChange()
         {
-            Users = _userStore.Users.Where(a => !a.ToApprove && a.IsSubordinate(CurrentUser.User)).Select(u => u.Clone()).ToList();
+            Users = _userStore.Users.Where(a => !a.ToApprove && a.IsSubordinate(CurrentUser.User)).ToList(); //.Select(u => u.Clone())
             OnPropertyChanged(nameof(Users));
 
             SelectedUserIndex = -1;

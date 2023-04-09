@@ -20,21 +20,27 @@ namespace Attendance.WPF.Commands
         {
             if (parameter is string value)
             {
-                if (value == "addUser")
-                {
-                    _groupsViewModel.GroupViewAddUser = true;
-                }
-                else if (value == "setSupervisor")
-                {
-                    _groupsViewModel.GroupViewAddUser = false;
-                }
-                _groupsViewModel.AddUserOrSetSupervisor = true;
-            }
-            else
-            {
                 _groupsViewModel.AddUserOrSetSupervisor = false;
+                _groupsViewModel.SetActivities = false;
+                _groupsViewModel.GroupSetting = false;
+                switch (value)
+                {
+                    case "addUser":
+                        _groupsViewModel.GroupViewAddUser = true;
+                        _groupsViewModel.AddUserOrSetSupervisor = true;
+                        break;
+                    case "setSupervisor":
+                        _groupsViewModel.GroupViewAddUser = false;
+                        _groupsViewModel.AddUserOrSetSupervisor = true;
+                        break;
+                    case "activities":
+                        _groupsViewModel.SetActivities = true;
+                        break;
+                    case "obligation":
+                        _groupsViewModel.GroupSetting = true;
+                        break;
+                }
             }
-
         }
     }
 }

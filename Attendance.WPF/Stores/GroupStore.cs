@@ -1,7 +1,6 @@
 ﻿using Attendance.Domain.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +18,7 @@ namespace Attendance.WPF.Stores
         }
 
         public event Action GroupsChange;
+        public event Action GroupsActivitiesChange;
 
         public List<Group> Groups
         {
@@ -91,6 +91,18 @@ namespace Attendance.WPF.Stores
                 _groups[index] = group;
             }
             GroupsChange?.Invoke();
+        }
+
+        public void RemoveActivityFromGroup(Group group, Activity activity)
+        {
+            group.Obligation.AvailableActivities.Remove(activity);
+            GroupsActivitiesChange?.Invoke();
+        }
+
+        public void AddActivityToGroup(Group group, Activity activity)
+        {
+            group.Obligation.AvailableActivities.Add(activity);
+            GroupsActivitiesChange?.Invoke();
         }
     }
 }

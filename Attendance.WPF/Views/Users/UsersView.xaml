@@ -43,20 +43,7 @@
                         SelectionMode="Single">
                         <ListView.View>
                             <GridView AllowsColumnReorder="False">
-                                <GridViewColumn>
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock>
-                                                <TextBlock.Text>
-                                                    <MultiBinding StringFormat="{}{0} {1}">
-                                                        <Binding Path="LastName" />
-                                                        <Binding Path="FirstName" />
-                                                    </MultiBinding>
-                                                </TextBlock.Text>
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding .}" />
                                 <GridView.ColumnHeaderContainerStyle>
                                     <Style TargetType="{x:Type GridViewColumnHeader}">
                                         <Setter Property="Visibility" Value="Collapsed" />

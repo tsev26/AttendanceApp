@@ -1,4 +1,5 @@
-﻿using Attendance.WPF.Stores;
+﻿using Attendance.Domain.Models;
+using Attendance.WPF.Stores;
 using Attendance.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,10 @@ namespace Attendance.WPF.Commands
         private readonly GroupStore _groupStore;
         private readonly ActivityStore _activityStore;
 
-        public SetActivityToGroupCommand(GroupsViewModel groupsViewModel, GroupStore groupStore, ActivityStore activityStore)
+        public SetActivityToGroupCommand(GroupsViewModel groupsViewModel, GroupStore groupStore)
         {
             _groupsViewModel = groupsViewModel;
             _groupStore = groupStore;
-            _activityStore = activityStore;
         }
 
         public override void Execute(object? parameter)
@@ -27,11 +27,11 @@ namespace Attendance.WPF.Commands
             {
                 if (value == "addActivityToGroup")
                 {
-                    
+                    _groupStore.AddActivityToGroup(_groupsViewModel.SelectedGroup, _groupsViewModel.SelectedActivityNotAssignedGroup);
                 }
                 else if (value == "removeActivityToGroup")
-                {
-
+                { 
+                    _groupStore.RemoveActivityFromGroup(_groupsViewModel.SelectedGroup, _groupsViewModel.SelectedActivityGroup);
                 }
             }
         }

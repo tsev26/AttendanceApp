@@ -1,6 +1,7 @@
 ﻿using Attendance.Domain.Models;
 using Attendance.WPF.Stores;
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Documents;
 
@@ -93,8 +94,13 @@ namespace Attendance.WPF.ViewModels
             activityStore.AddActivity(pauseActivity);
             */
 
+            List<Activity> activitiesBasic = new List<Activity>();
+            activitiesBasic.Add(workActivity);
+            activitiesBasic.Add(homeActivity);
+            activitiesBasic.Add(pauseActivity);
 
-            Obligation obligation = new Obligation(8, true, new TimeOnly(9, 0, 0), new TimeOnly(15, 0, 0),  true, true, true, true, true, false, false, activityStore.Activities);
+
+            Obligation obligation = new Obligation(8, true, new TimeOnly(9, 0, 0), new TimeOnly(15, 0, 0),  true, true, true, true, true, false, false, activitiesBasic);
             Obligation obligationVedeni = new Obligation(6, true, new TimeOnly(12, 0, 0), new TimeOnly(13, 0, 0), true, true, false, true, true, false, false, activityStore.Activities);
 
             User admin = new User("admin", "admin", "tsevcu@gmail.com", true);
@@ -132,17 +138,13 @@ namespace Attendance.WPF.ViewModels
             user4.Keys.Add(new Key("eva"));
             userStore.AddUser(user4);
 
-
             userStore.SetGroup(user1, leadershipGroup);
             userStore.SetGroup(user2, basicGroup);
             userStore.SetGroup(user3, basicGroup);
             userStore.SetGroup(user4, basicGroup);
 
-
             groupStore.AddGroup(basicGroup);
             groupStore.AddGroup(leadershipGroup);
-
-            currentUser.LoadUser(user1);
 
             attendanceRecordStore.AddAttendanceRecord(user1,workActivity, new DateTime(2023, 3, 01, 8, 0, 0));
             attendanceRecordStore.AddAttendanceRecord(user1, homeActivity, new DateTime(2023, 3, 03, 15, 0, 0));
@@ -160,7 +162,6 @@ namespace Attendance.WPF.ViewModels
             attendanceRecordStore.AddAttendanceRecord(user1, homeActivity, new DateTime(2023, 3, 24, 15, 0, 0));
 
             attendanceRecordStore.AddAttendanceRecord(user1, workActivity, new DateTime(2023, 3, 26, 16, 0, 0));
-            currentUser.User = null;
         }
 
         public NavigationBarViewModel NavigationBarViewModel { get; }

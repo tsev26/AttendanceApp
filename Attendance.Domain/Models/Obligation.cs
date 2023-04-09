@@ -33,7 +33,7 @@ namespace Attendance.Domain.Models
             WorksFriday = worksFriday;
             WorksSaturday = worksSaturday;
             WorksSunday = worksSunday;
-            AvailableActivities = availableActivities;
+            AvailableActivities = new List<Activity>(availableActivities);
         }
 
         public Obligation(Obligation obligation)
@@ -49,13 +49,14 @@ namespace Attendance.Domain.Models
             WorksFriday = obligation.WorksFriday;
             WorksSaturday = obligation.WorksSaturday;
             WorksSunday = obligation.WorksSunday;
-            AvailableActivities = obligation.AvailableActivities;
+            AvailableActivities = new List<Activity>(obligation.AvailableActivities);
         }
 
         public Obligation() 
         {
             MinHoursWorked = 0;
             HasRegularWorkingTime = false;
+            AvailableActivities = new List<Activity>();
         }
 
         public double MinHoursWorked { get; set; }

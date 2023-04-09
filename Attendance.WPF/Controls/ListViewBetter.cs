@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +37,41 @@ namespace Attendance.WPF.Controls
             }
 
             column.Width = double.NaN;
+        }
+
+
+
+        protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
+        {
+            base.OnItemsChanged(e);
+
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                SelectedIndex = -1;
+            }
+        }
+
+        protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
+        {
+            base.OnItemsSourceChanged(oldValue, newValue);
+
+            if (newValue is INotifyCollectionChanged collection)
+            {
+                collection.CollectionChanged += OnItemsCollectionChanged;
+            }
+
+            if (oldValue is INotifyCollectionChanged oldCollection)
+            {
+                oldCollection.CollectionChanged -= OnItemsCollectionChanged;
+            }
+        }
+
+        private void OnItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                SelectedIndex = -1;
+            }
         }
     }
 }
