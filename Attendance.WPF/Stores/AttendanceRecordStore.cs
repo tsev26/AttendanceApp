@@ -52,10 +52,7 @@ namespace Attendance.WPF.Stores
 
         public void AddAttendanceRecord(User user, Activity activity)
         {
-            AttendanceRecord attendanceRecord = new AttendanceRecord(user, activity, DateTime.Now);
-            _attendanceRecords.Add(attendanceRecord);
-            CountTotalDay(user, attendanceRecord);
-            CurrentAttendanceChange?.Invoke();
+            AddAttendanceRecord(user, activity, DateTime.Now);
         }
         public void AddAttendanceRecord(User user, Activity activity, DateTime dateTime)
         {
@@ -69,6 +66,7 @@ namespace Attendance.WPF.Stores
         public void AddAttendanceRecord(User user, Activity activity, DateTime dateTime, AttendanceRecordDetail attendanceRecordDetail)
         {
             AttendanceRecord attendanceRecord = new AttendanceRecord(user, activity, dateTime, attendanceRecordDetail);
+            AddAttendanceRecord(user, _activityStore.GlobalSetting.MainNonWorkActivity, attendanceRecordDetail.ExpectedEnd);
             _attendanceRecords.Add(attendanceRecord);
             CountTotalDay(user, attendanceRecord);
             CurrentAttendanceChange?.Invoke();
@@ -176,7 +174,7 @@ namespace Attendance.WPF.Stores
 
                 if (startDate == endDate)
                 {
-                    attendanceRecordWithEndings.Add(new AttendanceRecordWithEnding(orderedAttendanceRecord[i].User, orderedAttendanceRecord[i].Activity, startDateTime, endDateTime));
+                    attendanceRecordWithEndings.Add(new AttendanceRecordWithEnding(orderedAttendanceRecord[i].User, orderedAttendanceRecord[i].Activity, startDateTime, endDateTime, orderedAttendanceRecord[i].AttendanceRecordDetail));
                 }
                 else
                 {
@@ -185,31 +183,31 @@ namespace Attendance.WPF.Stores
                         if (dateS == startDate)
                         {
                             DateTime endOfTheDay = new DateTime(dateS.Year, dateS.Month, dateS.Day, 23, 59, 59);
-                            attendanceRecordWithEndings.Add(new AttendanceRecordWithEnding(orderedAttendanceRecord[i].User, orderedAttendanceRecord[i].Activity, startDateTime, endOfTheDay));
+                            attendanceRecordWithEndings.Add(new AttendanceRecordWithEnding(orderedAttendanceRecord[i].User, orderedAttendanceRecord[i].Activity, startDateTime, endOfTheDay, orderedAttendanceRecord[i].AttendanceRecordDetail));
                         }
                         else if (dateS == endDate)
                         {
                             DateTime startOfTheDay = new DateTime(dateS.Year, dateS.Month, dateS.Day, 0, 0, 0);
-                            attendanceRecordWithEndings.Add(new AttendanceRecordWithEnding(orderedAttendanceRecord[i].User, orderedAttendanceRecord[i].Activity, startOfTheDay, endDateTime));
+                            attendanceRecordWithEndings.Add(new AttendanceRecordWithEnding(orderedAttendanceRecord[i].User, orderedAttendanceRecord[i].Activity, startOfTheDay, endDateTime, orderedAttendanceRecord[i].AttendanceRecordDetail));
                         }
                         else
                         {
                             DateTime startOfTheDay = new DateTime(dateS.Year, dateS.Month, dateS.Day, 0, 0, 0);
                             DateTime endOfTheDay = new DateTime(dateS.Year, dateS.Month, dateS.Day, 23, 59, 59);
-                            attendanceRecordWithEndings.Add(new AttendanceRecordWithEnding(orderedAttendanceRecord[i].User, orderedAttendanceRecord[i].Activity, startOfTheDay, endOfTheDay));
+                            attendanceRecordWithEndings.Add(new AttendanceRecordWithEnding(orderedAttendanceRecord[i].User, orderedAttendanceRecord[i].Activity, startOfTheDay, endOfTheDay, orderedAttendanceRecord[i].AttendanceRecordDetail));
                         }
                     }
                 }
             }
 
             List<AttendanceTotal> newAttendanceTotalInDay = attendanceRecordWithEndings.Where(a => a.Activity.Property.Count)
-                .GroupBy(d => new { d.User, d.Activity, d.Entry.Date })
+                .GroupBy(d => new { d.User, d.Activity, d.Entry.Date, d.Detail })
                 .Select(g => new AttendanceTotal
                 {
                     User = g.Key.User,
                     Date = DateOnly.FromDateTime(g.Key.Date),
                     Activity = g.Key.Activity,
-                    Duration = TimeSpan.FromSeconds(g.Sum(e => (e.Exit - e.Entry).TotalSeconds))
+                    Duration = (g.Key.Activity.Property.IsPlan && !g.Key.Activity.Property.HasTime) ? ((g.Key.Detail?.IsHalfDay ?? false) ? _activityStore.GlobalSetting.LenghtOfHalfDayActivity : _activityStore.GlobalSetting.LenghtOfAllDayActivity) : TimeSpan.FromSeconds(g.Sum(e => (e.Exit - e.Entry).TotalSeconds))
                 })
                 .ToList();
 
@@ -259,6 +257,7 @@ namespace Attendance.WPF.Stores
             }
 
             //check if activity isnt reached maxed in day
+            //and check plans without time
             foreach (AttendanceTotal attendanceTotal in newAttendanceTotalInDay)
             {
                 if (attendanceTotal.Duration > attendanceTotal.Activity.Property.MaxInDay && attendanceTotal.Activity.Property.Count && attendanceTotal.Activity.Property.MaxInDay != TimeSpan.Zero)
@@ -266,6 +265,9 @@ namespace Attendance.WPF.Stores
                     attendanceTotal.Duration = attendanceTotal.Activity.Property.MaxInDay;
                 }
             }
+
+            
+
 
 
             _attendanceTotal.RemoveAll(a => a.User == user && updatesDays.Contains(a.Date));
@@ -281,7 +283,7 @@ namespace Attendance.WPF.Stores
             List<AttendanceRecord> attendanceRecord = AttendanceRecords(user).Where(a => a.Entry <= DateTime.Now).ToList();
             if (attendanceRecord.Count > 0)
             {
-                AttendanceRecord lastRecord = attendanceRecord.OrderBy(a => a.Entry).Last();
+                AttendanceRecord lastRecord = attendanceRecord.Where(a => a.Entry <= DateTime.Now).OrderBy(a => a.Entry).Last();
                 if (lastRecord.Activity.Property.Count && (lastRecord.Activity.Property.IsWork == work || all) && DateOnly.FromDateTime(lastRecord.Entry) <= date)
                 {
                     if (lastRecord.Activity.Property.IsPause && lastRecord.Activity.Property.Count)
@@ -324,7 +326,7 @@ namespace Attendance.WPF.Stores
             //List<AttendanceRecord> RecordsInDay = AttendanceRecords.Where(a => DateOnly.FromDateTime(a.Entry) == date).ToList();
             List<AttendanceRecordItem> recordsInDay = AttendanceRecords(user).Where(a => DateOnly.FromDateTime(a.Entry) == date).OrderByDescending(a => a.Entry).Select(a => new AttendanceRecordItem(a, a.Activity, a.Entry.ToString("HH:mm"))).ToList();
 
-            AttendanceRecord oldRecord = AttendanceRecords(user).Where(a => DateOnly.FromDateTime(a.Entry) < date).OrderBy(a => a.Entry).LastOrDefault();
+            AttendanceRecord oldRecord = AttendanceRecords(user).Where(a => a.Entry <= DateTime.Now).Where(a => DateOnly.FromDateTime(a.Entry) < date).OrderBy(a => a.Entry).LastOrDefault();
             if (oldRecord != null && oldRecord.Activity.Property.Count)
             {
                 //DateTime startOfTheDay = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
@@ -368,7 +370,7 @@ namespace Attendance.WPF.Stores
             List<AttendanceRecord> attendanceRecord = AttendanceRecords(user).Where(a => a.Entry <= DateTime.Now).ToList();
             if (attendanceRecord.Count > 0)
             {
-                AttendanceRecord lastRecord = attendanceRecord.OrderBy(a => a.Entry).Last();
+                AttendanceRecord lastRecord = attendanceRecord.Where(a => a.Entry <= DateTime.Now).OrderBy(a => a.Entry).Last();
                 if (lastRecord.Activity.Property.Count && DateOnly.FromDateTime(lastRecord.Entry) <= date)
                 {
                     if (lastRecord.Activity.Property.IsPause && lastRecord.Activity.Property.Count)
@@ -385,7 +387,7 @@ namespace Attendance.WPF.Stores
                     DateTime endOfTheDay = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
                     if (dateS == date && now == date)
                     {
-                        AttendanceTotal? AttendanceWithOngoingActivity = ActivitiesTotalInDay.SingleOrDefault(a => a.Activity == lastRecord.Activity);
+                        AttendanceTotal? AttendanceWithOngoingActivity = ActivitiesTotalInDay.FirstOrDefault(a => a.Activity == lastRecord.Activity);
                         if (AttendanceWithOngoingActivity != null)
                         {
                             AttendanceWithOngoingActivity.Duration += (DateTime.Now - lastRecord.Entry);

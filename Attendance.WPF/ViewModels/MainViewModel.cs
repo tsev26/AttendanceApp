@@ -55,7 +55,7 @@ namespace Attendance.WPF.ViewModels
 
             activityStore.AddActivity(btActivity);
 
-            ActivityProperty vacationActivityProperty = new ActivityProperty(true, true, false, true, false, new TimeSpan(10, 0, 0), "dovolená");
+            ActivityProperty vacationActivityProperty = new ActivityProperty(true, true, false, false, false, new TimeSpan(12, 0, 0), "dovolená");
             Activity vacationActivity = new Activity("Dovolená", "O", vacationActivityProperty);
 
             activityStore.AddActivity(vacationActivity);
@@ -146,6 +146,7 @@ namespace Attendance.WPF.ViewModels
             groupStore.AddGroup(basicGroup);
             groupStore.AddGroup(leadershipGroup);
 
+            
             attendanceRecordStore.AddAttendanceRecord(user1,workActivity, new DateTime(2023, 3, 01, 8, 0, 0));
             attendanceRecordStore.AddAttendanceRecord(user1, homeActivity, new DateTime(2023, 3, 03, 15, 0, 0));
             attendanceRecordStore.AddAttendanceRecord(user1, workActivity, new DateTime(2023, 3, 04, 8, 0, 0));
@@ -160,8 +161,11 @@ namespace Attendance.WPF.ViewModels
 
             attendanceRecordStore.AddAttendanceRecord(user1, workActivity, new DateTime(2023, 3, 24, 8, 0, 0));
             attendanceRecordStore.AddAttendanceRecord(user1, homeActivity, new DateTime(2023, 3, 24, 15, 0, 0));
-
+            
             attendanceRecordStore.AddAttendanceRecord(user1, workActivity, new DateTime(2023, 3, 26, 16, 0, 0));
+
+
+            attendanceRecordStore.AddAttendanceRecord(user1, vacationActivity, new DateTime(2023,3,27,08,0,0), new AttendanceRecordDetail(new DateTime (2023,3,27,08,0,0),new DateTime(2023,4,11,16,0,0), "dovolenka"));
         }
 
         public NavigationBarViewModel NavigationBarViewModel { get; }

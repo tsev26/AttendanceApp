@@ -93,6 +93,7 @@ namespace Attendance.WPF.Commands
                             Activity selectedPlan = _userSelectActivitySpecialViewModel.SelectedActivity;
                             DateTime expectedStart;
                             DateTime expectedEnd;
+                            bool isHalfDay = false;
                             if (selectedPlan.Property.HasTime)
                             {
                                 expectedStart = _userSelectActivitySpecialViewModel.StartActivity.AddHours(_userSelectActivitySpecialViewModel.StartHour).AddMinutes(_userSelectActivitySpecialViewModel.StartMinute);
@@ -110,12 +111,14 @@ namespace Attendance.WPF.Commands
                                     if (_userSelectActivitySpecialViewModel.IsHalfDayStart)
                                     {
                                         expectedStart = _userSelectActivitySpecialViewModel.StartActivity.AddHours(6);
-                                        expectedEnd = _userSelectActivitySpecialViewModel.EndActivity.AddHours(14);
+                                        expectedEnd = _userSelectActivitySpecialViewModel.StartActivity.AddHours(14);
+                                        isHalfDay = true;
                                     }
                                     else
                                     {
                                         expectedStart = _userSelectActivitySpecialViewModel.StartActivity.AddHours(14);
-                                        expectedEnd = _userSelectActivitySpecialViewModel.EndActivity.AddHours(22);
+                                        expectedEnd = _userSelectActivitySpecialViewModel.StartActivity.AddHours(23);
+                                        isHalfDay = true;
                                     }
                                 }
 
@@ -125,10 +128,9 @@ namespace Attendance.WPF.Commands
                                 expectedStart = DateTime.Now;
                             }
 
-                            AttendanceRecordDetail attendanceRecordDetail = new AttendanceRecordDetail(expectedStart, expectedEnd, _userSelectActivitySpecialViewModel.Description);
+                            AttendanceRecordDetail attendanceRecordDetail = new AttendanceRecordDetail(expectedStart, expectedEnd, _userSelectActivitySpecialViewModel.Description, isHalfDay);
 
                             _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, selectedPlan, expectedStart, attendanceRecordDetail);
-                            _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, afterEnd, expectedEnd);
                             _navigateHomeService.Navigate();
                             _closeModalNavigation.Navigate();
                             break;
