@@ -13,6 +13,7 @@ namespace Attendance.Domain.Models
             PauseEvery = activityGlobalSetting.PauseEvery;
             PauseDuration = activityGlobalSetting.PauseDuration;
             MainWorkActivity = activityGlobalSetting.MainWorkActivity;
+            MainPauseActivity = activityGlobalSetting.MainPauseActivity;
             MainNonWorkActivity = activityGlobalSetting.MainNonWorkActivity;
             LenghtOfAllDayActivity = activityGlobalSetting.LenghtOfAllDayActivity;
             LenghtOfHalfDayActivity = activityGlobalSetting.LenghtOfHalfDayActivity;
@@ -21,6 +22,7 @@ namespace Attendance.Domain.Models
         public ActivityGlobalSetting(TimeSpan pauseEvery, 
                                      TimeSpan pauseDuration, 
                                      Activity mainWorkActivity, 
+                                     Activity mainPauseActivity,
                                      Activity mainNonWorkActivity, 
                                      TimeSpan lenghtOfAllDayActivity, 
                                      TimeSpan lenghtOfHalfDayActivity) : base()
@@ -28,6 +30,7 @@ namespace Attendance.Domain.Models
             PauseEvery = pauseEvery;
             PauseDuration = pauseDuration;
             MainWorkActivity = mainWorkActivity;
+            MainPauseActivity = mainPauseActivity;
             MainNonWorkActivity = mainNonWorkActivity;
             LenghtOfAllDayActivity = lenghtOfAllDayActivity;
             LenghtOfHalfDayActivity = lenghtOfHalfDayActivity;
@@ -36,6 +39,7 @@ namespace Attendance.Domain.Models
         public TimeSpan PauseEvery { get; set; }
         public TimeSpan PauseDuration { get; set; }
         public Activity MainWorkActivity { get; set; }
+        public Activity MainPauseActivity { get; set; }
         public Activity MainNonWorkActivity { get; set; }
         public TimeSpan LenghtOfAllDayActivity { get; set; }
         public TimeSpan LenghtOfHalfDayActivity { get; set; }

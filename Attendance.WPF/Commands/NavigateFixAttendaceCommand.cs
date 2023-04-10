@@ -69,7 +69,10 @@ namespace Attendance.WPF.Commands
                 if (value == "removeRecord" && isSelected && attendanceRecord != null)
                 {
                     _attendanceRecordStore.AddAttendanceRecordFixDelete(user,attendanceRecord);
-                    _navigateFixesAttendance.Navigate();
+                    if (_userDailyOverviewViewModel != null)
+                    {
+                        _navigateFixesAttendance.Navigate();
+                    } 
                 }
                 else if (value == "updateRecord" && isSelected && attendanceRecord != null)
                 {

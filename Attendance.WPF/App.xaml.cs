@@ -1,4 +1,5 @@
-﻿using Attendance.WPF.Services;
+﻿using Attendance.Domain.Models;
+using Attendance.WPF.Services;
 using Attendance.WPF.Stores;
 using Attendance.WPF.ViewModels;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +37,7 @@ namespace Attendance.WPF
             services.AddSingleton<NavigationStore>();
             services.AddSingleton<ModalNavigationStore>();
             services.AddSingleton<MessageStore>();
+
 
             services.AddSingleton<AttendanceRecordStore>();
             services.AddSingleton<UserStore>();

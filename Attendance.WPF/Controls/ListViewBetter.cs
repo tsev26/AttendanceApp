@@ -29,6 +29,7 @@ namespace Attendance.WPF.Controls
             }
         }
 
+        
         private void ResizeGridViewColumn(GridViewColumn column)
         {
             if (double.IsNaN(column.Width))
@@ -40,7 +41,7 @@ namespace Attendance.WPF.Controls
         }
 
 
-
+        /*
         protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
         {
             base.OnItemsChanged(e);
@@ -73,5 +74,6 @@ namespace Attendance.WPF.Controls
                 SelectedIndex = -1;
             }
         }
+        */
     }
 }

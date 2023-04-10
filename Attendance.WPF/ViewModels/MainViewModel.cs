@@ -60,7 +60,7 @@ namespace Attendance.WPF.ViewModels
 
             activityStore.AddActivity(vacationActivity);
 
-            ActivityGlobalSetting activityGlobalSetting = new ActivityGlobalSetting(new TimeSpan(6, 0, 0), new TimeSpan(0, 30, 0), workActivity, homeActivity, new TimeSpan(8, 0, 0), new TimeSpan(4, 0, 0));
+            ActivityGlobalSetting activityGlobalSetting = new ActivityGlobalSetting(new TimeSpan(6, 0, 0), new TimeSpan(0, 30, 0), workActivity, pauseActivity ,homeActivity, new TimeSpan(8, 0, 0), new TimeSpan(4, 0, 0));
             activityStore.GlobalSetting = activityGlobalSetting;
 
             /*

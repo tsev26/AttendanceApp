@@ -114,6 +114,7 @@
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -173,15 +174,35 @@
                                 Text="{Binding ActivityGlobalSetting.MainWorkActivity.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
 
-
                             <TextBlock
                                 Grid.Row="3"
+                                Grid.Column="0"
+                                Style="{StaticResource DetailTextBlock}"
+                                Text="Hlavní pauza aktivita" />
+
+                            <ComboBox
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                Width="200"
+                                Height="35"
+                                Margin="5"
+                                HorizontalAlignment="Right"
+                                VerticalContentAlignment="Center"
+                                DisplayMemberPath="Name"
+                                FontSize="20"
+                                ItemsSource="{Binding Activities}"
+                                SelectedItem="{Binding ActivityGlobalSetting.MainPauseActivity, Mode=TwoWay}"
+                                Text="{Binding ActivityGlobalSetting.MainPauseActivity.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+
+                            <TextBlock
+                                Grid.Row="4"
                                 Grid.Column="0"
                                 Style="{StaticResource DetailTextBlock}"
                                 Text="Hlavní nepracovní aktivita" />
 
                             <ComboBox
-                                Grid.Row="3"
+                                Grid.Row="4"
                                 Grid.Column="1"
                                 Width="200"
                                 Height="35"
@@ -195,12 +216,12 @@
                                 Text="{Binding ActivityGlobalSetting.MainNonWorkActivity.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             <TextBlock
-                                Grid.Row="4"
+                                Grid.Row="5"
                                 Grid.Column="0"
                                 Style="{StaticResource DetailTextBlock}"
                                 Text="Délka celodenní aktivity" />
                             <TextBox
-                                Grid.Row="4"
+                                Grid.Row="5"
                                 Grid.Column="1"
                                 Width="200"
                                 Height="35"
@@ -211,12 +232,12 @@
                                 Text="{Binding ActivityGlobalSetting.LenghtOfAllDayActivity, Mode=TwoWay, StringFormat={}{0:hh\\:mm}}" />
 
                             <TextBlock
-                                Grid.Row="5"
+                                Grid.Row="6"
                                 Grid.Column="0"
                                 Style="{StaticResource DetailTextBlock}"
                                 Text="Délka půldenní aktivity" />
                             <TextBox
-                                Grid.Row="5"
+                                Grid.Row="6"
                                 Grid.Column="1"
                                 Width="200"
                                 Height="35"
