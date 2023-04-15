@@ -14,11 +14,12 @@ namespace Attendance.WPF.ViewModels
     {
         private readonly SelectedDataStore _selectedUserStore;
         public UserKeyUpsertViewModel(SelectedDataStore selectedUserStore,
+                                      MessageStore messageStore,
                                       INavigationService closeModalNavigationService)
         {
             _selectedUserStore = selectedUserStore;
             CloseModalCommand = new CloseModalCommand(closeModalNavigationService);
-            KeyUpsertCommand = new KeyUpsertCommand(selectedUserStore, closeModalNavigationService);
+            KeyUpsertCommand = new KeyUpsertCommand(selectedUserStore, messageStore, closeModalNavigationService);
             NewKeyValue = selectedUserStore.SelectedKeyValue?.KeyValue;
         }
 

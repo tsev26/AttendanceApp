@@ -19,13 +19,14 @@ namespace Attendance.WPF.ViewModels
                                                   SelectedDataStore selectedUserStore,
                                                   ActivityStore activityStore,
                                                   AttendanceRecordStore attendanceRecordStore,
+                                                  MessageStore messageStore,
                                                   INavigationService navigateHomeService,
                                                   INavigationService closeModalNavigationService)
         {
             _selectedUserStore = selectedUserStore;
             _currentUser = currentUser;
             CloseModalCommand = new CloseModalCommand(closeModalNavigationService);
-            UserSetActivityCommand = new UserSetActivityCommand(currentUser, activityStore, attendanceRecordStore, this, navigateHomeService, closeModalNavigationService);
+            UserSetActivityCommand = new UserSetActivityCommand(currentUser, activityStore, attendanceRecordStore, this, messageStore, navigateHomeService, closeModalNavigationService);
         }
 
         public ICommand CloseModalCommand { get; }

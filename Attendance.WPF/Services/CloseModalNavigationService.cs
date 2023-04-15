@@ -14,6 +14,7 @@ namespace Attendance.WPF.Services
 
         public void Navigate(string message = "")
         {
+            _messageStore.Message = message;
             _messageStore.ModalMessage = "";
             _modalNavigationStore.Close();
         }

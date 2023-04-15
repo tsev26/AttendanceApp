@@ -109,7 +109,7 @@
                             HorizontalAlignment="Center"
                             FontSize="14"
                             Style="{StaticResource DetailTextBlock}"
-                            Text="{Binding UserUpdate.HasObligationString}" />
+                            Text="{Binding ObligationFrom}" />
 
                         <TextBlock
                             Grid.Row="5"
@@ -310,7 +310,7 @@
 
         <Grid Grid.Column="1">
             <Border Grid.Column="0" Style="{StaticResource BorderBackground}" />
-            <Grid Margin="20">
+            <Grid Margin="15">
 
                 <Grid Grid.Row="1" Margin="10">
                     <Grid.RowDefinitions>

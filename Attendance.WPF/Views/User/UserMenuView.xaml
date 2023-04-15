@@ -23,14 +23,12 @@
             <Border Grid.Column="0" Style="{StaticResource BorderBackground}">
                 <views:UserSelectActivityView
                     x:Name="UserSelectActivity"
-                    Margin="10"
                     DataContext="{Binding UserSelectActivityViewModel}"
                     Focusable="True" />
             </Border>
 
             <Border Grid.Column="1" Style="{StaticResource BorderBackground}">
                 <views:UserDailyOverviewView
-                    Margin="10"
                     DataContext="{Binding UserDailyOverviewViewModel}"
                     Focusable="False" />
             </Border>

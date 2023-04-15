@@ -97,6 +97,11 @@
                 <views:UsersRequestsView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodels:UserPlanViewModel}">
+                <views:UserPlanView />
+            </DataTemplate>
+
+
 
         </Grid.Resources>
 

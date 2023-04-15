@@ -25,8 +25,10 @@ namespace Attendance.WPF.ViewModels
                                       INavigationService navigateHistoryService,
                                       INavigationService navigateFixesService,
                                       INavigationService navigateRequestService,
+                                      INavigationService navigateUserPlanService,
                                       CurrentUserStore currentUser,
-                                      AttendanceRecordStore attendanceRecordStore)
+                                      AttendanceRecordStore attendanceRecordStore,
+                                      MessageStore messageStore)
         {
             NavigateHomeCommand = new NavigateCommand(navigateHomeService);
             NavigateUsersKeysCommand = new NavigateCommand(navigateUsersKeysService);
@@ -38,10 +40,19 @@ namespace Attendance.WPF.ViewModels
             NavigateHistoryCommnad = new NavigateCommand(navigateHistoryService);
             NavigateFixesCommnad = new NavigateCommand(navigateFixesService);
             NavigateRequestsCommand = new NavigateCommand(navigateRequestService);
+            NavigateUserPlanCommand = new NavigateCommand(navigateUserPlanService);
+
             _currentUser = currentUser;
             _attendanceRecordStore = attendanceRecordStore;
+            MessageStore = messageStore;
 
             _currentUser.CurrentUserChange += CurrentUser_CurrentUserChange;
+            MessageStore.MessageChanged += MessageStore_MessageChanged;
+        }
+
+        private void MessageStore_MessageChanged()
+        {
+            OnPropertyChanged(nameof(MessageStore));
         }
 
         private void CurrentUser_CurrentUserChange()
@@ -52,7 +63,10 @@ namespace Attendance.WPF.ViewModels
             OnPropertyChanged(nameof(CurrentActivity));
             OnPropertyChanged(nameof(UserIsSupervisor));
             OnPropertyChanged(nameof(IsCurrentActivitySet));
+            OnPropertyChanged(nameof(IsButtonPlanVisibile));
         }
+
+        public MessageStore MessageStore { get; private set;  }
 
         public string CurrentName => _currentUser.User?.LastName + " " + _currentUser.User?.FirstName;
 
@@ -74,6 +88,10 @@ namespace Attendance.WPF.ViewModels
         public ICommand NavigateHistoryCommnad { get; }
         public ICommand NavigateFixesCommnad { get; }
         public ICommand NavigateRequestsCommand { get; }
+        public ICommand NavigateUserPlanCommand { get; }
+
+        public bool IsButtonPlanVisibile => UserLogOn && _currentUser.User.UserObligation.AvailableActivities.Exists(a => a.Property.IsPlan);
+
         public override void Dispose()
         {
             _currentUser.CurrentUserChange -= CurrentUser_CurrentUserChange;

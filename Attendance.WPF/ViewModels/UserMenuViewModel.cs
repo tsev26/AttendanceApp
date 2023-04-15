@@ -1,4 +1,5 @@
-﻿using Attendance.WPF.Services;
+﻿using Attendance.Domain.Models;
+using Attendance.WPF.Services;
 using Attendance.WPF.Stores;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace Attendance.WPF.ViewModels
     {
         private readonly CurrentUserStore _currentUser;
         private readonly AttendanceRecordStore _attendanceRecordStore;
+        private readonly ActivityStore _activityStore;
+        private readonly INavigationService _navigateHome;
         public UserMenuViewModel(UserSelectActivityViewModel userSelectActivityViewModel,
                                  UserDailyOverviewViewModel userDailyOverviewViewModel,
                                  CurrentUserStore currentUser,
@@ -24,6 +27,7 @@ namespace Attendance.WPF.ViewModels
             _currentUser = currentUser;
             _attendanceRecordStore = attendanceRecordStore;
 
+
             if (_attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User)?.Activity.Property.IsPlan ?? false)
             {
                 navigateUserHasCurretlyPlanService.Navigate();
@@ -32,6 +36,18 @@ namespace Attendance.WPF.ViewModels
 
         public UserDailyOverviewViewModel UserDailyOverviewViewModel { get; }
         public UserSelectActivityViewModel UserSelectActivityViewModel { get; }
+
+        private void CheckFastWorkSetting()
+        {
+            Activity? currentUserActivity = _attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User).Activity;
+
+            if (currentUserActivity != null && _currentUser.User.IsFastWorkSet && (!currentUserActivity.Property.Count || (currentUserActivity.Property.IsPause && !currentUserActivity.Property.IsPlan)))
+            {
+                Activity mainWorkActivity = _activityStore.GlobalSetting.MainWorkActivity;
+                _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, mainWorkActivity);
+                _navigateHome.Navigate();
+            }
+        }
 
         public override void Dispose()
         {

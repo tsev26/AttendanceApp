@@ -18,17 +18,23 @@ namespace Attendance.WPF.ViewModels
         private readonly CurrentUserStore _currentUser;
         private readonly SelectedDataStore _selectedUserStore;
 
-        public UserKeysViewModel(CurrentUserStore currentUser, SelectedDataStore selectedUserStore, INavigationService navigateUpsertKey)
+        public UserKeysViewModel(CurrentUserStore currentUser, SelectedDataStore selectedUserStore, ActivityStore activityStore, MessageStore messageStore, INavigationService navigateUpsertKey)
         {
             _currentUser = currentUser;
             _selectedUserStore = selectedUserStore;
             _selectedUserStore.SelectedUser = _currentUser.User;
-            NavigateUpsertKey = new KeyCommand(selectedUserStore, this, navigateUpsertKey);
+            NavigateUpsertKey = new KeyCommand(selectedUserStore, this, messageStore, navigateUpsertKey);
             _selectedUserStore.SelectedUserChange += SelectedUserChange_CurrentUserKeysChange;
+
+            MainWorkActivity = activityStore.GlobalSetting.MainWorkActivity;
+            SaveFastWorkChangeCommand = new SaveFastWorkChangeCommand(selectedUserStore, this);
+            _isFastWorkSet = _selectedUserStore.SelectedUser.IsFastWorkSet;
+
             SelectedUserChange_CurrentUserKeysChange();
         }
 
         public ICommand NavigateUpsertKey { get; }
+        public ICommand SaveFastWorkChangeCommand { get; }
 
         private void SelectedUserChange_CurrentUserKeysChange()
         {
@@ -36,6 +42,23 @@ namespace Attendance.WPF.ViewModels
             OnPropertyChanged(nameof(UsersKeys));
 
             SelectedIndex = -1;
+        }
+
+        public Activity MainWorkActivity { get; private set; }
+
+        private bool _isFastWorkSet;
+        public bool IsFastWorkSet
+        {
+            get
+            {
+                return _isFastWorkSet;
+            }
+            set
+            {
+                _isFastWorkSet = value;
+                OnPropertyChanged(nameof(IsFastWorkSet));
+                SaveFastWorkChangeCommand.Execute(this);
+            }
         }
 
         public List<Key> UsersKeys { get; set; }

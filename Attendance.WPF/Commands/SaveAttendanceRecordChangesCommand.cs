@@ -46,7 +46,7 @@ namespace Attendance.WPF.Commands
             }
 
             _closeModalNavigationService.Navigate();
-            _navigateFixesAttendance.Navigate();
+            _navigateFixesAttendance.Navigate("Vytvořena žádost o opravu docházky");
         }
     }
 }

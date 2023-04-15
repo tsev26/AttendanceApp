@@ -86,7 +86,10 @@
                     Style="{StaticResource DetailTextBlock}"
                     Text="Zápisy" />
 
-                <Border Grid.Row="1" Style="{StaticResource BorderBasic}">
+                <Border
+                    Grid.Row="1"
+                    Margin="10"
+                    Style="{StaticResource BorderBasic}">
                     <ListView
                         x:Name="ListOfAttendanceRecords"
                         Width="auto"

@@ -24,7 +24,7 @@
             Background="White"
             Style="{StaticResource BorderBackground}">
 
-            <Border Margin="5,10" Style="{StaticResource BorderBackground}">
+            <Border Margin="-1,4,-1,-1" Style="{StaticResource BorderBackground}">
                 <StackPanel
                     Margin="0,-100,0,0"
                     HorizontalAlignment="Center"

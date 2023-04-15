@@ -58,8 +58,13 @@ namespace Attendance.WPF.Stores
             SelectedUserChange?.Invoke();
         }
 
-        public void UpsertKey(User user, Key newKeyValue)
+        public bool UpsertKey(User user, Key newKeyValue)
         {
+            bool change = false;
+            if (_userStore.Users.Exists(a => a.Keys.Contains(newKeyValue)))
+            {
+                return change;
+            }
             Key? existingKey = user.Keys.FirstOrDefault(a => a.Id == newKeyValue.Id);
             if (existingKey != null)
             {
@@ -71,6 +76,12 @@ namespace Attendance.WPF.Stores
                 user.Keys.Add(newKeyValue);
             }
             SelectedUserChange?.Invoke();
+            return change;
+        }
+
+        public void SetFastWork(bool isFastWorkSet)
+        {
+            SelectedUser.IsFastWorkSet = isFastWorkSet;
         }
     }
 }

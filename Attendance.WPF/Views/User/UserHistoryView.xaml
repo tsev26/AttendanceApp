@@ -93,7 +93,6 @@
 
         <Border Grid.Column="1" Style="{StaticResource BorderBackground}">
             <local:UserDailyOverviewView
-                Margin="10"
                 DataContext="{Binding UserDailyOverviewViewModel}"
                 Focusable="False" />
         </Border>

@@ -23,6 +23,7 @@ namespace Attendance.Domain.Models
             Email = email;
             IsAdmin = isAdmin;
             ToApprove = toApprove;
+            IsFastWorkSet = false;
             Keys = new List<Key>();
         }
 
@@ -40,6 +41,7 @@ namespace Attendance.Domain.Models
             Email = email;
             IsAdmin = isAdmin;
             ToApprove = toApprove;
+            IsFastWorkSet = false;
             Keys = new List<Key>();
         }
 
@@ -53,6 +55,7 @@ namespace Attendance.Domain.Models
             ToApprove = user.ToApprove;
             Keys = user.Keys;
             Group = user.Group;
+            IsFastWorkSet = user.IsFastWorkSet;
         }
 
         public int UserId { get; set; }
@@ -60,6 +63,7 @@ namespace Attendance.Domain.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public bool IsAdmin { get; set; }
+        public bool IsFastWorkSet { get; set; }
         public bool ToApprove { get; set; }
         public Group Group { get; set; }
         public List<Key> Keys { get; set; }

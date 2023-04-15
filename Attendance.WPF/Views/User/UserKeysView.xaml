@@ -75,7 +75,61 @@
 
         <Grid Grid.Column="1">
             <Border Style="{StaticResource BorderBackground}" />
-            <Grid Margin="20">
+            <Grid Margin="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Margin="0"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource DetailTextBlock}"
+                        Text="Rychlý zápis" />
+
+                    <Border Grid.Row="1" Style="{StaticResource BorderBasic}">
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Row="0" HorizontalAlignment="Center">
+                                <TextBlock
+                                    FontSize="20"
+                                    Style="{StaticResource DetailTextBlock}"
+                                    Text="Rychlý zápis hlavní aktivity" />
+
+                                <StackPanel
+                                    Grid.Row="0"
+                                    HorizontalAlignment="Center"
+                                    Orientation="Horizontal">
+                                    <TextBlock
+                                        FontSize="18"
+                                        Style="{StaticResource DetailTextBlock}"
+                                        Text="Hlavní aktivita: " />
+                                    <TextBlock
+                                        FontSize="18"
+                                        Style="{StaticResource DetailTextBlock}"
+                                        Text="{Binding MainWorkActivity}" />
+                                </StackPanel>
+                            </StackPanel>
+
+                            <ToggleButton
+                                Grid.Column="1"
+                                Width="50"
+                                HorizontalAlignment="Center"
+                                IsChecked="{Binding IsFastWorkSet, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Border>
+                </Grid>
 
                 <Grid
                     Grid.Row="1"

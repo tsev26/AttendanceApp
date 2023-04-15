@@ -43,6 +43,7 @@
                     ShowTime="False" />
             </Border>
 
+
             <StackPanel
                 Grid.Column="1"
                 HorizontalAlignment="Center"
@@ -67,6 +68,29 @@
             </Border>
         </Grid>
 
+        <StackPanel
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            Panel.ZIndex="1"
+            Orientation="Horizontal"
+            Visibility="{Binding MessageStore.HasMessage, Converter={StaticResource bool2VisibilityConverter}}">
+            <Border
+                Grid.Column="0"
+                Margin="5"
+                Padding="5"
+                Background="FloralWhite"
+                BorderBrush="Black"
+                BorderThickness="0.5"
+                CornerRadius="5">
+                <TextBlock
+                    MaxWidth="750"
+                    Foreground="Red"
+                    Style="{StaticResource DetailTextBlock}"
+                    Text="{Binding MessageStore.Message}"
+                    TextWrapping="NoWrap" />
+            </Border>
+        </StackPanel>
+
         <Grid Grid.Row="1" Visibility="{Binding UserLogOn, Converter={StaticResource BoolToVisibilityConverter}}">
 
             <Border
@@ -90,6 +114,7 @@
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
 
                         <Button
@@ -105,6 +130,16 @@
                         <Button
                             Grid.Column="1"
                             Margin="0,0,5,0"
+                            Command="{Binding NavigateUserPlanCommand}"
+                            Content="Plány"
+                            Focusable="False"
+                            FontSize="20"
+                            Style="{StaticResource ViewButton}"
+                            Visibility="{Binding IsButtonPlanVisibile, Converter={StaticResource bool2VisibilityConverter}}" />
+
+                        <Button
+                            Grid.Column="2"
+                            Margin="0,0,5,0"
                             Command="{Binding NavigateHistoryCommnad}"
                             Content="Historie"
                             Focusable="False"
@@ -113,7 +148,7 @@
                             Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
 
                         <Button
-                            Grid.Column="2"
+                            Grid.Column="3"
                             Margin="0,0,5,0"
                             Command="{Binding NavigateFixesCommnad}"
                             Content="Opravy"
@@ -123,7 +158,7 @@
                             Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
 
                         <Button
-                            Grid.Column="3"
+                            Grid.Column="4"
                             Margin="0,0,5,0"
                             Command="{Binding NavigateProfileCommand}"
                             Content="Profil"
@@ -133,7 +168,7 @@
                             Visibility="{Binding UserLogOn, Converter={StaticResource bool2VisibilityConverter}}" />
 
                         <Button
-                            Grid.Column="4"
+                            Grid.Column="5"
                             Margin="0,0,5,0"
                             Command="{Binding NavigateUsersKeysCommand}"
                             Content="Klíče"

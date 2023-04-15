@@ -25,6 +25,9 @@
             HorizontalAlignment="Center"
             Style="{StaticResource DetailTextBlock}"
             Text="Aktivity" />
+
+        <TextBlock Grid.Row="0" Text="{Binding AfterLoad}" />
+
         <Grid Grid.Row="1">
             <Border
                 Grid.Row="1"

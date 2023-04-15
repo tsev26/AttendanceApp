@@ -21,16 +21,20 @@ namespace Attendance.WPF.Commands
         private readonly ActivityStore _activityStore;
         private readonly AttendanceRecordStore _attendanceRecordStore;
         private readonly UserSelectActivitySpecialViewModel _userSelectActivitySpecialViewModel;
+        private readonly UserPlanViewModel _userPlanViewModel;
+        private readonly MessageStore _messageStore;
 
         public UserSetActivityCommand(CurrentUserStore currentUser,
                                       ActivityStore activityStore,
                                       AttendanceRecordStore attendanceRecordStore,
+                                      MessageStore messageStore,
                                       INavigationService navigateHomeService, 
                                       INavigationService closeModalNavigationService)
         {
             _currentUser = currentUser;
             _activityStore = activityStore;
             _attendanceRecordStore = attendanceRecordStore;
+            _messageStore = messageStore;
 
             _navigateHomeService = navigateHomeService;
             _closeModalNavigation = closeModalNavigationService;
@@ -39,27 +43,48 @@ namespace Attendance.WPF.Commands
         public UserSetActivityCommand(CurrentUserStore currentUser, 
                                       SelectedDataStore selectedUserStore,
                                       AttendanceRecordStore attendanceRecordStore,
-                                      INavigationService navigateHomeService, 
-                                      INavigationService navigateSpecialActivityService = null)
+                                      MessageStore messageStore,
+                                      INavigationService navigateHomeService)
         {
             _currentUser = currentUser;
             _selectedUserStore = selectedUserStore;
             _attendanceRecordStore = attendanceRecordStore;
+            _messageStore = messageStore;
 
             _navigateHomeService = navigateHomeService;
-            _navigateSpecialActivityService = navigateSpecialActivityService;
+        }
+
+        public UserSetActivityCommand(CurrentUserStore currentUserStore,
+                                      SelectedDataStore selectedUserStore,
+                                      AttendanceRecordStore attendanceRecordStore,
+                                      UserPlanViewModel userPlanViewModel,
+                                      MessageStore messageStore,
+                                      INavigationService navigateToHome, 
+                                      INavigationService navigateSpecialActivity
+                                      )
+        {
+            _currentUser = currentUserStore;
+            _selectedUserStore = selectedUserStore;
+            _attendanceRecordStore = attendanceRecordStore;
+            _userPlanViewModel = userPlanViewModel;
+            _messageStore = messageStore;
+
+            _navigateHomeService = navigateToHome;
+            _navigateSpecialActivityService = navigateSpecialActivity;
         }
 
         public UserSetActivityCommand(CurrentUserStore currentUser, 
                                       ActivityStore activityStore,
                                       AttendanceRecordStore attendanceRecordStore,
-                                      UserSelectActivitySpecialViewModel userSelectActivitySpecialViewModel, 
+                                      UserSelectActivitySpecialViewModel userSelectActivitySpecialViewModel,
+                                      MessageStore messageStore,
                                       INavigationService navigateHomeService, 
                                       INavigationService closeModalNavigation)
         {
             _currentUser = currentUser;
             _activityStore = activityStore;
             _attendanceRecordStore = attendanceRecordStore;
+            _messageStore = messageStore;
 
             _navigateHomeService = navigateHomeService;
             _closeModalNavigation = closeModalNavigation;
@@ -78,13 +103,22 @@ namespace Attendance.WPF.Commands
                 else
                 {
                     _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, activity);
-                    _navigateHomeService.Navigate();
+                    _navigateHomeService.Navigate(_currentUser.User + " zapsal " + activity);
                 }
                 
             }
             else if (parameter is string value)
             {
-                AttendanceRecord attendanceRecord = _attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User);
+                AttendanceRecord attendanceRecord;
+                if (_userPlanViewModel != null)
+                {
+                    attendanceRecord = _userPlanViewModel.SelectedFuturePlan;
+                }
+                else
+                {
+                    attendanceRecord = _attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User);
+                }
+                 
                 switch (value)
                 {
                     case "plan":
@@ -93,6 +127,7 @@ namespace Attendance.WPF.Commands
                             Activity selectedPlan = _userSelectActivitySpecialViewModel.SelectedActivity;
                             DateTime expectedStart;
                             DateTime expectedEnd;
+                            DateTime now = DateTime.Now;
                             bool isHalfDay = false;
                             if (selectedPlan.Property.HasTime)
                             {
@@ -123,27 +158,35 @@ namespace Attendance.WPF.Commands
                                 }
 
                             }
-                            if (expectedStart < DateTime.Now)
+                            if (expectedStart < now)
                             {
-                                expectedStart = DateTime.Now;
+                                expectedStart = now;
                             }
 
                             AttendanceRecordDetail attendanceRecordDetail = new AttendanceRecordDetail(expectedStart, expectedEnd, _userSelectActivitySpecialViewModel.Description, isHalfDay);
 
                             _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, selectedPlan, expectedStart, attendanceRecordDetail);
-                            _navigateHomeService.Navigate();
-                            _closeModalNavigation.Navigate();
+                            if (expectedStart == now)
+                            {
+                                _navigateHomeService.Navigate(_currentUser.User + " vytvořil a zapsal plán " + selectedPlan);
+                            }
+                            _closeModalNavigation.Navigate(_currentUser.User + " vytvořil plán " + selectedPlan);
                             break;
                         }
 
                     case "MoveStart":
                         attendanceRecord.Entry = DateTime.Now;
-                        _navigateHomeService.Navigate();
                         _closeModalNavigation.Navigate();
+                        _navigateHomeService.Navigate("Začátek plánu " + attendanceRecord.Activity + " posunut na teď");
                         break;
                     case "Remove":
+                        if (_userPlanViewModel == null)
+                        {
+                            _closeModalNavigation.Navigate();
+                        }
                         _attendanceRecordStore.RemoveAttendanceRecord(attendanceRecord);
-                        _closeModalNavigation.Navigate();
+                        _messageStore.Message = "Plán " + attendanceRecord.Activity + " odstraněn";
+
                         break;
                     case "MoveEnd":
                         AttendanceRecord endOfPlan = _attendanceRecordStore.AttendanceRecords(_currentUser.User).FirstOrDefault(a => a.Entry == attendanceRecord.AttendanceRecordDetail.ExpectedEnd);
@@ -151,7 +194,7 @@ namespace Attendance.WPF.Commands
                         attendanceRecord.AttendanceRecordDetail.ExpectedEnd = DateTime.Now;
                         Activity mainActivity = _activityStore.GlobalSetting.MainWorkActivity;
                         _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, mainActivity);
-                        _closeModalNavigation.Navigate();
+                        _closeModalNavigation.Navigate("Plán " + attendanceRecord.Activity + " předčasně ukončen");
                         break;
                 }
             }

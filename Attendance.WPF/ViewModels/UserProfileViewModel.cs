@@ -14,14 +14,14 @@ namespace Attendance.WPF.ViewModels
     public class UserProfileViewModel : ViewModelBase
     {
         private readonly UserStore _userStore;
-        public UserProfileViewModel(CurrentUserStore currentUser, UserStore userStore)
+        public UserProfileViewModel(CurrentUserStore currentUser, UserStore userStore, MessageStore messageStore)
         {
             CurrentUser = currentUser;
             _userStore = userStore;
 
             UserUpdates = new ObservableCollection<User>();
-            UpdatesOnUserCommand = new CreateUpdateOnUserCommand(userStore, this);
-            DeleteUpdateOnUserCommand = new DeleteUpdateOnUserCommand(userStore, this);
+            UpdatesOnUserCommand = new CreateUpdateOnUserCommand(userStore, this, messageStore);
+            DeleteUpdateOnUserCommand = new DeleteUpdateOnUserCommand(userStore, this, messageStore);
 
             SetCurrentUserUpdates();
 
@@ -49,6 +49,7 @@ namespace Attendance.WPF.ViewModels
             {
                 UserUpdate = CurrentUser.User.Clone();
             }
+            ObligationFrom = UserUpdate.HasObligationString;
             UserUpdate.Keys = CurrentUser.User.Keys;
             UserUpdate.Group = CurrentUser.User.Group;
             if (UserUpdate.Obligation == null)
@@ -96,7 +97,7 @@ namespace Attendance.WPF.ViewModels
 
         public bool ObligationFromUser { get; set; }
 
-        public string ObligationFrom => "(nastavení " + (ObligationFromUser ? "z uživatele" : "ze skupiny") + ")";
+        public string ObligationFrom { get; private set; } 
 
         public override void Dispose()
         { 
