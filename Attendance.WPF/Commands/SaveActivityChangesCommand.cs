@@ -10,12 +10,14 @@ namespace Attendance.WPF.Commands
 {
     public class SaveActivityChangesCommand : CommandBase
     {
-        private ActivityStore _activityStore;
-        private ActivitiesViewModel _activitiesViewModel;
+        private readonly ActivityStore _activityStore;
+        private readonly MessageStore _messageStore;
+        private readonly ActivitiesViewModel _activitiesViewModel;
 
-        public SaveActivityChangesCommand(ActivityStore activityStore, ActivitiesViewModel activitiesViewModel)
+        public SaveActivityChangesCommand(ActivityStore activityStore, MessageStore messageStore, ActivitiesViewModel activitiesViewModel)
         {
             _activityStore = activityStore;
+            _messageStore = messageStore;
             _activitiesViewModel = activitiesViewModel;
         }
 
@@ -25,10 +27,13 @@ namespace Attendance.WPF.Commands
             {
                 if (type == "activity")
                 {
+                    _messageStore.Message = "Aktivita " + _activitiesViewModel.SelectedActivity.Name + " upravena";
                     _activityStore.UpdateActivity(_activitiesViewModel.SelectedActivity);
+                    
                 }
                 else if (type == "globalSetting")
                 {
+                    _messageStore.Message = "Globální nastavení aktualizováno";
                     _activityStore.UpdateActivityGlobalSetting(_activitiesViewModel.ActivityGlobalSetting);
                 }
             }

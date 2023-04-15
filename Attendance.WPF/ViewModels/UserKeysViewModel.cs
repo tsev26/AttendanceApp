@@ -27,7 +27,7 @@ namespace Attendance.WPF.ViewModels
             _selectedUserStore.SelectedUserChange += SelectedUserChange_CurrentUserKeysChange;
 
             MainWorkActivity = activityStore.GlobalSetting.MainWorkActivity;
-            SaveFastWorkChangeCommand = new SaveFastWorkChangeCommand(selectedUserStore, this);
+            SaveFastWorkChangeCommand = new SaveFastWorkChangeCommand(selectedUserStore, messageStore, this);
             _isFastWorkSet = _selectedUserStore.SelectedUser.IsFastWorkSet;
 
             SelectedUserChange_CurrentUserKeysChange();

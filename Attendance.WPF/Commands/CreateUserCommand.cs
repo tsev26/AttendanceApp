@@ -29,7 +29,7 @@ namespace Attendance.WPF.Commands
             newUser.Group = _userUpsertViewModel.SelectedGroup;
             newUser.Keys.Add(new Key(_userUpsertViewModel.KeyValue));
             _userStore.AddUser(newUser);
-            _closeModalNavigationService.Navigate();
+            _closeModalNavigationService.Navigate("Uživatel " + newUser + " vytvořen");
         }
     }
 }

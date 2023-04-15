@@ -24,6 +24,7 @@ namespace Attendance.WPF.ViewModels
         public GroupsViewModel(GroupStore groupStore,
                                UserStore userStore,
                                ActivityStore activityStore,
+                               MessageStore messageStore,
                                INavigationService navigateAddGroup)
         {
             _groupStore = groupStore;
@@ -31,11 +32,11 @@ namespace Attendance.WPF.ViewModels
             _activityStore = activityStore;
 
             NavigateCreateGroupCommand = new NavigateCommand(navigateAddGroup);
-            DeleteGroupCommand = new DeleteGroupCommand(_groupStore, this);
-            SaveGroupChanges = new SaveGroupChangesCommand(_groupStore, this);
+            DeleteGroupCommand = new DeleteGroupCommand(_groupStore, messageStore, this);
+            SaveGroupChanges = new SaveGroupChangesCommand(_groupStore, messageStore, this);
             GroupViewShowsCommand = new GroupViewShowsCommand(this);
-            SetUserToGroupCommand = new SetUserToGroupCommand(this, _userStore, _groupStore);
-            SetActivityToGroupCommand = new SetActivityToGroupCommand(this, groupStore);
+            SetUserToGroupCommand = new SetUserToGroupCommand(this, _userStore, _groupStore, messageStore);
+            SetActivityToGroupCommand = new SetActivityToGroupCommand(this, groupStore, messageStore);
 
             Groups = new List<Group>(_groupStore.Groups);
             ActivitiesGroup = new List<Activity>();
@@ -76,6 +77,7 @@ namespace Attendance.WPF.ViewModels
         {
             Groups = _groupStore.Groups.ToList();
             OnPropertyChanged(nameof(Groups));
+            OnPropertyChanged(nameof(UsersToSet));
         }
 
         private void UserStore_UsersChange()
@@ -284,7 +286,7 @@ namespace Attendance.WPF.ViewModels
             }
         }
         public bool IsSelectedActivityGroupIndex => SelectedActivityGroupIndex != -1;
-        public Activity SelectedActivityGroup => IsSelectedActivityGroupIndex ? ActivitiesGroup[SelectedActivityGroupIndex] : null;
+        public Activity? SelectedActivityGroup => IsSelectedActivityGroupIndex ? ActivitiesGroup[SelectedActivityGroupIndex] : null;
 
 
         public List<Activity> ActivitiesNotAssignedGroup { get; set; } 
@@ -302,11 +304,11 @@ namespace Attendance.WPF.ViewModels
                 _selectedActivityNotAssignedGroupIndex = value;
                 OnPropertyChanged(nameof(SelectedActivityNotAssignedGroupIndex));
                 OnPropertyChanged(nameof(IsSelectedActivityNotAssignedGroupIndex));
-                OnPropertyChanged(nameof(SelectedActivityNotAssignedGroupIndex));
+                OnPropertyChanged(nameof(SelectedActivityNotAssignedGroup));
             }
         }
         public bool IsSelectedActivityNotAssignedGroupIndex => SelectedActivityNotAssignedGroupIndex != -1;
-        public Activity SelectedActivityNotAssignedGroup => IsSelectedActivityNotAssignedGroupIndex ? ActivitiesNotAssignedGroup[SelectedActivityNotAssignedGroupIndex] : null;
+        public Activity? SelectedActivityNotAssignedGroup => IsSelectedActivityNotAssignedGroupIndex ? ActivitiesNotAssignedGroup[SelectedActivityNotAssignedGroupIndex] : null;
 
 
         public override void Dispose()

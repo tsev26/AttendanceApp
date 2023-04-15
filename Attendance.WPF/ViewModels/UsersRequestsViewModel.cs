@@ -16,14 +16,14 @@ namespace Attendance.WPF.ViewModels
         private readonly AttendanceRecordStore _attendanceRecordStore;
         private readonly UserStore _userStore;
 
-        public UsersRequestsViewModel(CurrentUserStore currentUser, AttendanceRecordStore attendanceRecordStore, UserStore userStore)
+        public UsersRequestsViewModel(CurrentUserStore currentUser, AttendanceRecordStore attendanceRecordStore, UserStore userStore, MessageStore messageStore)
         {
             _currentUser = currentUser;
             _attendanceRecordStore = attendanceRecordStore;
             _userStore = userStore;
 
-            ProfileDecisionCommand = new ProfileDecisionCommand(userStore, this);
-            FixDecisionCommand = new FixDecisionCommand(attendanceRecordStore, this);
+            ProfileDecisionCommand = new ProfileDecisionCommand(userStore, messageStore, this);
+            FixDecisionCommand = new FixDecisionCommand(attendanceRecordStore, messageStore, this);
 
             _userStore.UsersChange += UserStore_UsersChange;
             _attendanceRecordStore.CurrentAttendanceRecordFixChange += AttendanceRecordStore_CurrentAttendanceRecordFixChange;

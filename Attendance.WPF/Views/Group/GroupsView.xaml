@@ -478,7 +478,18 @@
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                 </Style>
                                             </GridView.ColumnHeaderContainerStyle>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Name}" />
+                                            <GridViewColumn>
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock>
+                                                            <Run Text="{Binding ActName1, Mode=OneWay}" /><Run
+                                                                FontWeight="Bold"
+                                                                Text="{Binding ActName2, Mode=OneWay}"
+                                                                TextDecorations="Underline" /><Run Text="{Binding ActName3, Mode=OneWay}" />
+                                                        </TextBlock>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
                                         </GridView>
                                     </ListView.View>
                                 </controls:ListViewBetter>
@@ -528,7 +539,18 @@
                                                     <Setter Property="Visibility" Value="Collapsed" />
                                                 </Style>
                                             </GridView.ColumnHeaderContainerStyle>
-                                            <GridViewColumn DisplayMemberBinding="{Binding Name}" />
+                                            <GridViewColumn>
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock>
+                                                            <Run Text="{Binding ActName1, Mode=OneWay}" /><Run
+                                                                FontWeight="Bold"
+                                                                Text="{Binding ActName2, Mode=OneWay}"
+                                                                TextDecorations="Underline" /><Run Text="{Binding ActName3, Mode=OneWay}" />
+                                                        </TextBlock>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
                                         </GridView>
                                     </ListView.View>
                                 </controls:ListViewBetter>

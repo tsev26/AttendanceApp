@@ -75,6 +75,7 @@ namespace Attendance.WPF.Stores
             {
                 user.Keys.Add(newKeyValue);
             }
+            change = true;
             SelectedUserChange?.Invoke();
             return change;
         }

@@ -52,6 +52,7 @@ namespace Attendance.WPF.Stores
             {
                 _activities[index] = activity;
             }
+
             ActivitiesChange?.Invoke();
         }
 

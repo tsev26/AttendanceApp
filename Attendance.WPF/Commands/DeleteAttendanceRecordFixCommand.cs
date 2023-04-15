@@ -13,20 +13,24 @@ namespace Attendance.WPF.Commands
     {
         private readonly CurrentUserStore _currentUser;
         private readonly AttendanceRecordStore _attendanceRecordStore;
+        private readonly MessageStore _messageStore;
         private readonly UserFixesAttendanceRecordViewModel _userFixesAttendanceRecordViewModel;
 
         public DeleteAttendanceRecordFixCommand(CurrentUserStore currentUser, 
                                                 AttendanceRecordStore attendanceRecordStore, 
+                                                MessageStore messageStore,
                                                 UserFixesAttendanceRecordViewModel userFixesAttendanceRecordViewModel)
         {
             _currentUser = currentUser;
             _attendanceRecordStore = attendanceRecordStore;
+            _messageStore = messageStore;
             _userFixesAttendanceRecordViewModel = userFixesAttendanceRecordViewModel;
         }
 
         public override void Execute(object? parameter)
         {
             _attendanceRecordStore.RemoveAttendanceRecordFix(_userFixesAttendanceRecordViewModel.SelectedAttendanceRecordFix);
+            _messageStore.Message = "Žádost o úpravu docházky odstraněna";
         }
     }
 }

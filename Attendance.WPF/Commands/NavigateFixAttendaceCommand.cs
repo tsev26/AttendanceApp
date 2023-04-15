@@ -18,10 +18,12 @@ namespace Attendance.WPF.Commands
         private readonly UserDailyOverviewViewModel _userDailyOverviewViewModel;
         private readonly UserFixesAttendanceRecordViewModel _userFixesAttendanceRecordViewModel;
         private readonly AttendanceRecordStore _attendanceRecordStore;
+        private readonly MessageStore _messageStore;
 
         public NavigateFixAttendaceCommand(SelectedDataStore selectedUserStore, 
                                            UserDailyOverviewViewModel userDailyOverviewViewModel,
                                            AttendanceRecordStore attendanceRecordStore,
+                                           MessageStore messageStore,
                                            INavigationService navigateFixAttendance, 
                                            INavigationService navigateFixesAttendance)
         {
@@ -30,17 +32,20 @@ namespace Attendance.WPF.Commands
             _navigateFixesAttendance = navigateFixesAttendance;
             _userDailyOverviewViewModel = userDailyOverviewViewModel;
             _attendanceRecordStore = attendanceRecordStore;
+            _messageStore = messageStore;
         }
 
         public NavigateFixAttendaceCommand(SelectedDataStore selectedUserStore, 
                                            UserFixesAttendanceRecordViewModel userFixesAttendanceRecordViewModel,
                                            AttendanceRecordStore attendanceRecordStore,
+                                           MessageStore messageStore,
                                            INavigationService navigateFixAttendance)
         {
             _selectedUserStore = selectedUserStore;
             _navigateFixAttendance = navigateFixAttendance;
             _userFixesAttendanceRecordViewModel = userFixesAttendanceRecordViewModel;
             _attendanceRecordStore = attendanceRecordStore;
+            _messageStore = messageStore;
         }
 
         public override void Execute(object? parameter)
@@ -72,7 +77,8 @@ namespace Attendance.WPF.Commands
                     if (_userDailyOverviewViewModel != null)
                     {
                         _navigateFixesAttendance.Navigate();
-                    } 
+                    }
+                    _messageStore.Message = "Vytvořena žádost o smazání záznamu docházky";
                 }
                 else if (value == "updateRecord" && isSelected && attendanceRecord != null)
                 {

@@ -12,11 +12,13 @@ namespace Attendance.WPF.Commands
     public class FixDecisionCommand : CommandBase
     {
         private readonly AttendanceRecordStore _attendanceRecordStore;
+        private readonly MessageStore _messageStore;
         private readonly UsersRequestsViewModel _usersRequestsViewModel;
 
-        public FixDecisionCommand(AttendanceRecordStore attendanceRecordStore, UsersRequestsViewModel usersRequestsViewModel)
+        public FixDecisionCommand(AttendanceRecordStore attendanceRecordStore, MessageStore messageStore, UsersRequestsViewModel usersRequestsViewModel)
         {
             _attendanceRecordStore = attendanceRecordStore;
+            _messageStore = messageStore;
             _usersRequestsViewModel = usersRequestsViewModel;
         }
 
@@ -28,10 +30,12 @@ namespace Attendance.WPF.Commands
                 if (value == "Approve")
                 {
                     _attendanceRecordStore.ApproveFix(attendanceRecordFix);
+                    _messageStore.Message = "Změna v docházce schválena";
                 }
                 else if (value == "Reject")
                 {
                     _attendanceRecordStore.RejectFix(attendanceRecordFix);
+                    _messageStore.Message = "Změna v docházce zamutnuta";
                 }
             }
         }

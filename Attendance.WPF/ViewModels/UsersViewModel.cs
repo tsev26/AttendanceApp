@@ -19,17 +19,17 @@ namespace Attendance.WPF.ViewModels
         private readonly UserStore _userStore;
         private readonly GroupStore _groupStore;
         private readonly SelectedDataStore _selectedUserStore;
-        public UsersViewModel(UserStore userStore, CurrentUserStore currentUser, GroupStore groupStore, SelectedDataStore selectedUserStore, INavigationService navigateUserUpsert, INavigationService navigateUpsertKey)
+        public UsersViewModel(UserStore userStore, CurrentUserStore currentUser, GroupStore groupStore, SelectedDataStore selectedUserStore, MessageStore messageStore, INavigationService navigateUserUpsert, INavigationService navigateUpsertKey)
         {
             _userStore = userStore;
             CurrentUser = currentUser;
             _groupStore = groupStore;
             _selectedUserStore = selectedUserStore;
 
-            SaveUserCommand = new SaveUserCommand(userStore, this);
+            SaveUserCommand = new SaveUserCommand(userStore, this, messageStore);
             CreateUserNavigateCommand = new NavigateCommand(navigateUserUpsert);
             UsersViewShowsCommand = new UsersViewShowsCommand(this);
-            NavigateUpsertKey = new KeyCommand(selectedUserStore, this, navigateUpsertKey);
+            NavigateUpsertKey = new KeyCommand(selectedUserStore, this, messageStore, navigateUpsertKey);
 
             _userStore.UsersChange += UserStore_UsersChange;
             _selectedUserStore.SelectedUserChange += SelectedUserStore_SelectedUserChange;

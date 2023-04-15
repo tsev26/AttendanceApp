@@ -11,11 +11,13 @@ namespace Attendance.WPF.Commands
     public class ProfileDecisionCommand : CommandBase
     {
         private readonly UserStore _userStore;
+        private readonly MessageStore _messageStore;
         private readonly UsersRequestsViewModel _usersRequestsViewModel;
 
-        public ProfileDecisionCommand(UserStore userStore, UsersRequestsViewModel usersRequestsViewModel)
+        public ProfileDecisionCommand(UserStore userStore, MessageStore messageStore, UsersRequestsViewModel usersRequestsViewModel)
         {
             _userStore = userStore;
+            _messageStore = messageStore;
             _usersRequestsViewModel = usersRequestsViewModel;
         }
 
@@ -27,10 +29,12 @@ namespace Attendance.WPF.Commands
                 {
                     _userStore.UpdateUser(_usersRequestsViewModel.SelectedPendingProfileUpdate);
                     _userStore.DeleteUser(_usersRequestsViewModel.SelectedPendingProfileUpdate);
+                    _messageStore.Message = "Žádost o změnu profilu schválena";
                 } 
                 else if (value == "Reject")
                 {
                     _userStore.DeleteUser(_usersRequestsViewModel.SelectedPendingProfileUpdate);
+                    _messageStore.Message = "Žádost o změnu profilu zamítnuta";
                 }
             }
         }

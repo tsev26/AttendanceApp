@@ -32,21 +32,22 @@ namespace Attendance.WPF.Commands
 
         public override void Execute(object? parameter)
         {
+            
             //add entry 
             if (_selectedUserStore.AttendanceRecord == null)
             {
                 DateTime newEntry = new DateTime(_userFixAttendanceRecordViewModel.Date.Year, _userFixAttendanceRecordViewModel.Date.Month, _userFixAttendanceRecordViewModel.Date.Day, _userFixAttendanceRecordViewModel.Hour, _userFixAttendanceRecordViewModel.Minute, 0);
                 _attendanceRecordStore.AddAttendanceRecordFixInsert(_selectedUserStore.SelectedUser,_userFixAttendanceRecordViewModel.Activity, newEntry);
+                _navigateFixesAttendance.Navigate("Vytvořena žádost o vložení nového záznamu docházky");
             }
             //edit entry
             else
             {
                 DateTime newEntry = new DateTime(_userFixAttendanceRecordViewModel.Date.Year, _userFixAttendanceRecordViewModel.Date.Month, _userFixAttendanceRecordViewModel.Date.Day, _userFixAttendanceRecordViewModel.Hour, _userFixAttendanceRecordViewModel.Minute, 0);
                 _attendanceRecordStore.AddAttendanceRecordFixUpdate(_selectedUserStore.SelectedUser, _selectedUserStore.AttendanceRecord, _userFixAttendanceRecordViewModel.Activity, newEntry);
+                _navigateFixesAttendance.Navigate("Vytvořena žádost o úpravy záznamu docházky");
             }
-
             _closeModalNavigationService.Navigate();
-            _navigateFixesAttendance.Navigate("Vytvořena žádost o opravu docházky");
         }
     }
 }

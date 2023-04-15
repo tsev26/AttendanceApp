@@ -36,7 +36,7 @@ namespace Attendance.WPF.Commands
 
             Activity newActivity = new Activity(_activityUpsertViewModel.ActivityName, _activityUpsertViewModel.ActivityShortcut, activityProperty);
             _activityStore.AddActivity(newActivity);
-            _closeModalNavigationService.Navigate();
+            _closeModalNavigationService.Navigate("Aktivita " + _activityUpsertViewModel.ActivityName + " vytvořena");
         }
     }
 }

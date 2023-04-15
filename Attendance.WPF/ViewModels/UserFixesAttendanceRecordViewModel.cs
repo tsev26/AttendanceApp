@@ -16,13 +16,13 @@ namespace Attendance.WPF.ViewModels
         private readonly CurrentUserStore _currentUser;
 		private readonly AttendanceRecordStore _attendanceRecordStore;
 
-        public UserFixesAttendanceRecordViewModel(CurrentUserStore currentUser, SelectedDataStore selectedUserStore, AttendanceRecordStore attendanceRecordStore, INavigationService navigateFixAttendance)
+        public UserFixesAttendanceRecordViewModel(CurrentUserStore currentUser, SelectedDataStore selectedUserStore, AttendanceRecordStore attendanceRecordStore, MessageStore messageStore, INavigationService navigateFixAttendance)
         {
             _currentUser = currentUser;
 			_attendanceRecordStore = attendanceRecordStore;
 
-            NavigateFixAttendaceCommand = new NavigateFixAttendaceCommand(selectedUserStore, this, _attendanceRecordStore, navigateFixAttendance);
-			DeleteAttendanceRecordFixCommand = new DeleteAttendanceRecordFixCommand(currentUser, _attendanceRecordStore, this);
+            NavigateFixAttendaceCommand = new NavigateFixAttendaceCommand(selectedUserStore, this, _attendanceRecordStore, messageStore, navigateFixAttendance);
+			DeleteAttendanceRecordFixCommand = new DeleteAttendanceRecordFixCommand(currentUser, _attendanceRecordStore, messageStore, this);
 
             _attendanceRecordStore.CurrentAttendanceRecordFixChange += AttendanceRecordStore_CurrentAttendanceRecordFixChange;
         }

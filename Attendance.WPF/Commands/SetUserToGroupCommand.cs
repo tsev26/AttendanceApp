@@ -11,15 +11,17 @@ namespace Attendance.WPF.Commands
 {
     public class SetUserToGroupCommand : CommandBase
     {
-        private GroupsViewModel _groupsViewModel;
-        private UserStore _userStore;
-        private GroupStore _groupStore;
+        private readonly GroupsViewModel _groupsViewModel;
+        private readonly UserStore _userStore;
+        private readonly GroupStore _groupStore;
+        private readonly MessageStore _messageStore;
 
-        public SetUserToGroupCommand(GroupsViewModel groupsViewModel, UserStore userStore, GroupStore groupStore)
+        public SetUserToGroupCommand(GroupsViewModel groupsViewModel, UserStore userStore, GroupStore groupStore, MessageStore messageStore)
         {
             _groupsViewModel = groupsViewModel;
             _userStore = userStore;
             _groupStore = groupStore;
+            _messageStore = messageStore;
         }
 
         public override void Execute(object? parameter)
@@ -32,10 +34,12 @@ namespace Attendance.WPF.Commands
                 {
                     //_groupStore.AddUserToGroup(group, user);
                     _userStore.SetGroup(user, group);
+                    _messageStore.Message = "Uživatel " + user + " přidán do skupiny " + group.Name;
                 }
                 else if (value == "setSupervisorToGroup")
                 {
                     _groupStore.SetSupervisor(user, group);
+                    _messageStore.Message = "Uživatel " + user + " nastaven jako vedoucí skupiny " + group.Name;
                 }
             }
 

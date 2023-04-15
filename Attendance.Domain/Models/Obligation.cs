@@ -70,7 +70,7 @@ namespace Attendance.Domain.Models
         public bool WorksFriday { get; set; }
         public bool WorksSaturday { get; set; }
         public bool WorksSunday { get; set; }
-        public List<Activity> AvailableActivities { get; set; } 
+        public virtual List<Activity> AvailableActivities { get; set; } 
 
         public Obligation Clone()
         {

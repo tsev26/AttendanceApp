@@ -13,12 +13,13 @@ namespace Attendance.WPF.Commands
     {
         private readonly GroupsViewModel _groupsViewModel;
         private readonly GroupStore _groupStore;
-        private readonly ActivityStore _activityStore;
+        private readonly MessageStore _messageStore;
 
-        public SetActivityToGroupCommand(GroupsViewModel groupsViewModel, GroupStore groupStore)
+        public SetActivityToGroupCommand(GroupsViewModel groupsViewModel, GroupStore groupStore, MessageStore messageStore)
         {
             _groupsViewModel = groupsViewModel;
             _groupStore = groupStore;
+            _messageStore = messageStore;
         }
 
         public override void Execute(object? parameter)
@@ -27,11 +28,15 @@ namespace Attendance.WPF.Commands
             {
                 if (value == "addActivityToGroup")
                 {
-                    _groupStore.AddActivityToGroup(_groupsViewModel.SelectedGroup, _groupsViewModel.SelectedActivityNotAssignedGroup);
+                    Activity activityToAssign = _groupsViewModel.SelectedActivityNotAssignedGroup;
+                    _groupStore.AddActivityToGroup(_groupsViewModel.SelectedGroup, activityToAssign);
+                    _messageStore.Message = "Aktivita " + activityToAssign + " přidána do skupiny " + _groupsViewModel.SelectedGroup.Name;
                 }
                 else if (value == "removeActivityToGroup")
-                { 
-                    _groupStore.RemoveActivityFromGroup(_groupsViewModel.SelectedGroup, _groupsViewModel.SelectedActivityGroup);
+                {
+                    Activity activityToRemove = _groupsViewModel.SelectedActivityGroup;
+                    _groupStore.RemoveActivityFromGroup(_groupsViewModel.SelectedGroup, activityToRemove);
+                    _messageStore.Message = "Aktivita " + activityToRemove + " odebrána ze skupiny " + _groupsViewModel.SelectedGroup.Name;
                 }
             }
         }

@@ -1,5 +1,6 @@
 ﻿using Attendance.Domain.Models;
 using Attendance.WPF.Commands;
+using Attendance.WPF.Services;
 using Attendance.WPF.Stores;
 using System;
 using System.Collections.Generic;
@@ -16,22 +17,22 @@ namespace Attendance.WPF.ViewModels
     {
         private readonly ActivityStore _activityStore;
 
-        public ActivitiesViewModel(ActivityStore activityStore, Services.INavigationService navigationActivityCreateService)
+        public ActivitiesViewModel(ActivityStore activityStore, MessageStore messageStore, INavigationService navigationActivityCreateService)
         {
             _activityStore = activityStore;
             NavigateAddActivityCommand = new NavigateCommand(navigationActivityCreateService);
-            SaveActivityChangesCommand = new SaveActivityChangesCommand(activityStore, this);
+            SaveActivityChangesCommand = new SaveActivityChangesCommand(activityStore, messageStore, this);
             ActivityViewShowsCommand = new ActivityViewShowsCommand(this);
-
-            ActivityGlobalSetting = _activityStore.GlobalSetting.Clone();
 
             _activityStore.ActivitiesChange += ActivityStore_ActivitiesChange;
             _activityStore.GlobalSettingChange += ActivityStore_GlobalSettingChange;
             ActivityStore_ActivitiesChange();
+            ActivityStore_GlobalSettingChange();
         }
 
         private void ActivityStore_GlobalSettingChange()
         {
+            ActivityGlobalSetting = _activityStore.GlobalSetting.Clone();
             OnPropertyChanged(nameof(ActivityGlobalSetting));
         }
 
@@ -39,6 +40,7 @@ namespace Attendance.WPF.ViewModels
         {
             Activities = _activityStore.Activities.Select(a => a.Clone()).ToList();
             OnPropertyChanged(nameof(Activities));
+            ActivityStore_GlobalSettingChange();
         }
 
         public ICommand NavigateAddActivityCommand { get; }

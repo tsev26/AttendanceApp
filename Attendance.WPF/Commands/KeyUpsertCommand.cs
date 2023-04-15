@@ -27,11 +27,11 @@ namespace Attendance.WPF.Commands
 
             if (!change)
             {
-                _messageStore.Message = "Klíč již existuje u jiného uživatele";
+                _messageStore.Message = "Klíč " + _selectedUserStore.SelectedKeyValue + " již existuje u jiného uživatele";
             }
             else
             {
-                _messageStore.Message = "Klíč zapsán";
+                _messageStore.Message = "Klíč " + _selectedUserStore.SelectedKeyValue + " zapsán";
             }
             _closeAndReloadModalService.Navigate();
         }

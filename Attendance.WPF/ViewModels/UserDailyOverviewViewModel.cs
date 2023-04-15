@@ -25,6 +25,7 @@ namespace Attendance.WPF.ViewModels
         public UserDailyOverviewViewModel(CurrentUserStore currentUser, 
                                           SelectedDataStore selectedDataStore, 
                                           AttendanceRecordStore attendanceRecordStore,
+                                          MessageStore messageStore,
                                           INavigationService navigateFixAttendance,
                                           INavigationService navigateFixesAttendance
                                           )
@@ -34,7 +35,7 @@ namespace Attendance.WPF.ViewModels
             _attendanceRecordStore = attendanceRecordStore;
             _selectedDataStore.AttendanceRecord = null;
             Date = DateOnly.FromDateTime(DateTime.Now);
-            NavigateFixAttendaceCommand = new NavigateFixAttendaceCommand(selectedDataStore, this, attendanceRecordStore, navigateFixAttendance, navigateFixesAttendance);
+            NavigateFixAttendaceCommand = new NavigateFixAttendaceCommand(selectedDataStore, this, attendanceRecordStore, messageStore, navigateFixAttendance, navigateFixesAttendance);
             _attendanceRecordStore.CurrentAttendanceChange += CurrentUser_CurrentAttendanceChange;
         }
 

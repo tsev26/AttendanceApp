@@ -124,6 +124,7 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<CurrentUserStore>(),
                 serviceProvider.GetRequiredService<SelectedDataStore>(),
                 serviceProvider.GetRequiredService<ActivityStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
                 CreateUserKeyUpsertNavigationService(serviceProvider)
                 );
         }
@@ -144,6 +145,7 @@ namespace Attendance.WPF
         {
             return new UserKeyUpsertViewModel(
                 serviceProvider.GetRequiredService<SelectedDataStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
                 serviceProvider.GetRequiredService<CloseModalNavigationService>()
                 );
         }
@@ -250,6 +252,7 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<GroupStore>(),
                 serviceProvider.GetRequiredService<UserStore>(),
                 serviceProvider.GetRequiredService<ActivityStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
                 CreateGroupUpsertNavigationService(serviceProvider)
 
                 );
@@ -276,6 +279,7 @@ namespace Attendance.WPF
         {
             return new ActivitiesViewModel(
                 serviceProvider.GetRequiredService<ActivityStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
                 CreateActivityUpsertNavigationService(serviceProvider)
                 );
         }
@@ -311,6 +315,7 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<CurrentUserStore>(),
                 serviceProvider.GetRequiredService<GroupStore>(),
                 serviceProvider.GetRequiredService<SelectedDataStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
                 CreateUserUpsertNavigationService(serviceProvider),
                 CreateUserKeyUpsertNavigationService(serviceProvider)
                 );
@@ -397,6 +402,7 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<CurrentUserStore>(),
                 serviceProvider.GetRequiredService<SelectedDataStore>(),
                 serviceProvider.GetRequiredService<AttendanceRecordStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
                 CreateFixAttendanceNavigationService(serviceProvider),
                 CreateUserFixesNavigationService(serviceProvider)
                 );
@@ -427,6 +433,7 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<CurrentUserStore>(),
                 serviceProvider.GetRequiredService<SelectedDataStore>(),
                 serviceProvider.GetRequiredService<AttendanceRecordStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
                 CreateFixAttendanceNavigationService(serviceProvider)
                 );
         }
@@ -444,7 +451,8 @@ namespace Attendance.WPF
             return new UsersRequestsViewModel(
                 serviceProvider.GetRequiredService<CurrentUserStore>(),
                 serviceProvider.GetRequiredService<AttendanceRecordStore>(),
-                serviceProvider.GetRequiredService<UserStore>()
+                serviceProvider.GetRequiredService<UserStore>(),
+                serviceProvider.GetRequiredService<MessageStore>()
                 );
         }
 

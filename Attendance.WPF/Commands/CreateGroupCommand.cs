@@ -29,7 +29,7 @@ namespace Attendance.WPF.Commands
         {
             Group newGroup = new Group(_groupUpsertViewModel.GroupName, _currentUser.User);
             _groupStore.AddGroup(newGroup);
-            _closeModalNavigationService.Navigate();
+            _closeModalNavigationService.Navigate("Skupina " + _groupUpsertViewModel.GroupName + " vytvořena");
         }
     }
 }
