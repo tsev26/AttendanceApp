@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace Attendance.Domain.Models
 {
     public class Group : DomainObject
     {
+        public Group() : base() { }
         public Group(
                      string name, 
                      User superVisor) : base ()
@@ -25,8 +27,19 @@ namespace Attendance.Domain.Models
         }
 
         public string Name { get; set; }
-        public User Supervisor { get; set; }
+
+        [ForeignKey("SupervisorId")]
+        public User? Supervisor { get; set; }
+        public int? SupervisorId { get; set; }
+
+
         public Obligation Obligation { get; set; }
+        public int ObligationId { get; set; }
+
+        [InverseProperty("Group")]
+        public List<User> Members { get; set; }
+
+
 
         public override string ToString()
         {
@@ -37,7 +50,7 @@ namespace Attendance.Domain.Models
         {
             return new Group(this)
             {
-                Id = this.Id,
+                ID = this.ID,
                 Obligation = this.Obligation.Clone(),
                 Supervisor = this.Supervisor,
             };
@@ -51,7 +64,7 @@ namespace Attendance.Domain.Models
             }
 
             Group other = (Group)obj;
-            return Id == other.Id &&
+            return ID == other.ID &&
                    Name == other.Name;
         }
 

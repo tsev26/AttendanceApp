@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace Attendance.Domain.Models
 {
     public class ActivityGlobalSetting : DomainObject
     {
+        public ActivityGlobalSetting() : base() { }
         public ActivityGlobalSetting(ActivityGlobalSetting activityGlobalSetting) : base()
         {
             PauseEvery = activityGlobalSetting.PauseEvery;
@@ -38,9 +40,18 @@ namespace Attendance.Domain.Models
 
         public TimeSpan PauseEvery { get; set; }
         public TimeSpan PauseDuration { get; set; }
+
+        [ForeignKey("MainWorkActivityId")]
         public Activity MainWorkActivity { get; set; }
+        public int MainWorkActivityId { get; set; }
+
+        [ForeignKey("MainPauseActivityId")]
         public Activity MainPauseActivity { get; set; }
+        public int MainPauseActivityId { get; set; }
+
+        [ForeignKey("MainNonWorkActivityId")]
         public Activity MainNonWorkActivity { get; set; }
+        public int MainNonWorkActivityId { get; set; }
         public TimeSpan LenghtOfAllDayActivity { get; set; }
         public TimeSpan LenghtOfHalfDayActivity { get; set; }
 
@@ -48,7 +59,7 @@ namespace Attendance.Domain.Models
         {
             return new ActivityGlobalSetting(this)
             {
-                Id = this.Id,
+                ID = this.ID,
             };
         }
     }

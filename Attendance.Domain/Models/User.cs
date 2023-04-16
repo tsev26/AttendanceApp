@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ namespace Attendance.Domain.Models
     public class User : DomainObject
     {
         private static int _nextId = 1;
+
+        public User() : base() { }
         public User(
                     string firstName,
                     string lastName,
@@ -65,13 +68,36 @@ namespace Attendance.Domain.Models
         public bool IsAdmin { get; set; }
         public bool IsFastWorkSet { get; set; }
         public bool ToApprove { get; set; }
-        public Group Group { get; set; }
-        public List<Key> Keys { get; set; }
-        public Obligation? Obligation { get; set; }
 
+        
+        public Group Group { get; set; }
+        [ForeignKey("Group")]
+        public int GroupId { get; set; }
+
+        [InverseProperty("User")]
+        public List<Key> Keys { get; set; }
+
+        
+        public Obligation? Obligation { get; set; }
+        [ForeignKey("Obligation")]
+        public int? ObligationId { get; set; }
+
+
+        [NotMapped]
         public bool HasObligation => Obligation != null;
-        public Obligation UserObligation => HasObligation ? Obligation : Group.Obligation;
+
+        [NotMapped]
+        public Obligation UserObligation => HasObligation ? Obligation : Group?.Obligation ?? null;
+
+        [NotMapped]
         public string HasObligationString => HasObligation ? "(nastavení z uživatele)" : "(nastavení ze skupiny)";
+
+        public void AddKey(string keyValue)
+        {
+            Key newKey = new Key(keyValue, this);
+            Keys.Add(newKey);
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
@@ -123,7 +149,7 @@ namespace Attendance.Domain.Models
         {
             return new User(this)
             {
-                Id = this.Id,
+                ID = this.ID,
                 Obligation = Obligation?.Clone()
             };
         }

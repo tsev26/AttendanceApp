@@ -84,7 +84,7 @@ namespace Attendance.WPF.Stores
 
         public void UpdateGroupObligation(Group group)
         {
-            int index = _groups.FindIndex(a => a.Id == group.Id);
+            int index = _groups.FindIndex(a => a.ID == group.ID);
 
             if (index != -1)
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,13 +14,26 @@ namespace Attendance.Domain.Models
             KeyValue = keyValue;
         }
 
+        public Key(string keyValue, User user) : base()
+        {
+            KeyValue = keyValue;
+            User = user;
+            UserId = user.ID;
+        }
+
         public string KeyValue { get; set; }
+
+        
+        [ForeignKey("UserId")]
+        public User User { get; set; }
+        public int UserId { get; set; }
+        
 
         public Key Clone()
         {
             return new Key(KeyValue)
             {
-                Id = this.Id
+                ID = this.ID
             };
         }
 
@@ -33,14 +47,6 @@ namespace Attendance.Domain.Models
             Key other = (Key)obj;
             return KeyValue == other.KeyValue;
         }
-
-        /*
-        public override int GetHashCode()
-        {
-            return Id.GetHashCode() ^ KeyValue.GetHashCode();
-        }
-        */
-
 
         public static bool operator ==(Key a, Key b)
         {

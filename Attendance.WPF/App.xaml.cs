@@ -1,14 +1,17 @@
 ﻿using Attendance.Domain.Models;
+using Attendance.EF;
 using Attendance.WPF.Services;
 using Attendance.WPF.Stores;
 using Attendance.WPF.ViewModels;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
@@ -19,18 +22,12 @@ namespace Attendance.WPF
     {
         private readonly IServiceProvider _servicesProvider;
 
-        public IConfigurationRoot Configuration { get; set; }
-
         public App()
         {
-            /*
-            IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables()
-                .Build();
-            */
-
             IServiceCollection services = new ServiceCollection();
+
+            //DB
+            services.AddSingleton<DbSQLiteContextFactory>();
 
 
             //Stores

@@ -76,7 +76,7 @@ namespace Attendance.WPF.Stores
         {
             AttendanceRecord newAttendanceRecord = new AttendanceRecord(user, activity, dateTime);
 
-            int index = _attendanceRecords.FindIndex(a => a.Id == oldAttendanceRecord.Id);
+            int index = _attendanceRecords.FindIndex(a => a.ID == oldAttendanceRecord.ID);
             if (index != -1)
             {
                 _attendanceRecords[index] = newAttendanceRecord;

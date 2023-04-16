@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,14 +17,16 @@ namespace Attendance.Domain.Models
             Duration = duration;
         }
 
-        public AttendanceTotal() : base()
-        {
+        public AttendanceTotal() : base() { }
 
-        }
-
+        [ForeignKey("UserId")]
         public User User { get; set; }
+        public int UserId { get; set; }
         public DateOnly Date { get; set; }
+
+        [ForeignKey("ActivityId")]
         public Activity Activity { get; set; }
+        public int ActivityId { get; set; }
         public TimeSpan Duration { get; set; }
     }
 }

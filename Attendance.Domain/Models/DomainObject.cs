@@ -5,14 +5,14 @@ namespace Attendance.Domain.Models
 {
     public class DomainObject
     {
-        private static int _nextId = 1;
+        private static int _nextID = 1;
         public DomainObject()
         {
-            Id = _nextId++;
+            ID = _nextID++;
         }
 
 
         [Key]
-        public int Id { get; set; }
+        public int ID { get; set; }
     }
 }

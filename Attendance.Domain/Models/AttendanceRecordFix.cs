@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,7 @@ namespace Attendance.Domain.Models
 
     public class AttendanceRecordFix : DomainObject
     {
+        public AttendanceRecordFix() : base() { }
         public AttendanceRecordFix(AttendanceRecord attendanceRecord, User user, Activity activity, DateTime entry)
         {
             AttendanceRecord = attendanceRecord;
@@ -69,10 +71,18 @@ namespace Attendance.Domain.Models
             Approved = ApproveType.Waiting;
         }
 
-        public AttendanceRecord AttendanceRecord { get; set; }
+        [ForeignKey("AttendanceRecordId")]
+        public AttendanceRecord? AttendanceRecord { get; set; }
+        public int AttendanceRecordId { get; set; }
+
+        [ForeignKey("UserId")]
         public User User { get; set; }
+        public int UserId { get; set; }
         public FixType FixType { get; set; }
+
+        [ForeignKey("ActivityId")]
         public Activity Activity { get; set; }
+        public int ActivityId { get; set; }
         public DateTime Entry { get; set; }
         public ApproveType Approved { get; set; }
     }

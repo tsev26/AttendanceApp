@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace Attendance.Domain.Models
 
         public ActivityProperty(ActivityProperty activityProperty) : base()
         {
-            Id = activityProperty.Id;
+            ID = activityProperty.ID;
             IsPlan = activityProperty.IsPlan;
             Count = activityProperty.Count;
             IsPause = activityProperty.IsPause;
@@ -45,11 +46,12 @@ namespace Attendance.Domain.Models
         public TimeSpan MaxInDay { get; set; }
         public string GroupByName { get; set; }
         public bool IsWork => !IsPause;
+
         public ActivityProperty Clone()
         {
             return new ActivityProperty(this)
             {
-                Id = this.Id
+                ID = this.ID
             };
         }
     }

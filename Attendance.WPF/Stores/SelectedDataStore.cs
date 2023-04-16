@@ -44,7 +44,7 @@ namespace Attendance.WPF.Stores
 
         public void UpdateUser(User user)
         {
-            int index = _userStore.Users.FindIndex(a => a.Id == user.Id);
+            int index = _userStore.Users.FindIndex(a => a.ID == user.ID);
             if (index != -1)
             {
                 _userStore.Users[index] = user;
@@ -65,7 +65,7 @@ namespace Attendance.WPF.Stores
             {
                 return change;
             }
-            Key? existingKey = user.Keys.FirstOrDefault(a => a.Id == newKeyValue.Id);
+            Key? existingKey = user.Keys.FirstOrDefault(a => a.ID == newKeyValue.ID);
             if (existingKey != null)
             {
                 int index = user.Keys.IndexOf(existingKey);

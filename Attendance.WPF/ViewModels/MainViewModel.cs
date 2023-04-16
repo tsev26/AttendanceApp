@@ -1,7 +1,9 @@
 ﻿using Attendance.Domain.Models;
+using Attendance.EF;
 using Attendance.WPF.Stores;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Documents;
 
@@ -16,7 +18,8 @@ namespace Attendance.WPF.ViewModels
 
         public bool IsModalOpen => _modalNavigationStore.IsOpen;
 
-        public MainViewModel(NavigationBarViewModel navigationBarViewModel,
+        public MainViewModel(DbSQLiteContextFactory dbSQLiteContextFactory,
+                             NavigationBarViewModel navigationBarViewModel,
                              NavigationStore navigationStore, 
                              ModalNavigationStore modalNavigationStore,
                              ActivityStore activityStore,
@@ -25,6 +28,29 @@ namespace Attendance.WPF.ViewModels
                              CurrentUserStore currentUser,
                              AttendanceRecordStore attendanceRecordStore)
         {
+            bool pathToDbExists = dbSQLiteContextFactory.InitDbSQLite();
+
+            //if path to db file doesnt exist select new one where will be created or connected to existing
+            if (!pathToDbExists)
+            {
+                var dialog = new Microsoft.Win32.OpenFileDialog
+                {
+                    CheckFileExists = false,
+                    CheckPathExists = true,
+                    FileName = "attendanceDB.sqlite",
+                    Filter = "Databázové soubory (*.sqlite)|*.sqlite|Složky|.",
+                    InitialDirectory = Directory.GetCurrentDirectory(),
+                    Title = "Vyberte soubor sqlite nebo složku kde se sqlite vytvoří"
+                };
+
+                if (dialog.ShowDialog() == true)
+                {
+                    string dbPath = dialog.FileName;
+                    dbSQLiteContextFactory.SetDbPath(dbPath);
+                }
+            }
+            dbSQLiteContextFactory.SetDefaultValuesIntoDb();
+
             _navigationStore = navigationStore;
             _modalNavigationStore = modalNavigationStore;
 
@@ -62,37 +88,6 @@ namespace Attendance.WPF.ViewModels
 
             ActivityGlobalSetting activityGlobalSetting = new ActivityGlobalSetting(new TimeSpan(6, 0, 0), new TimeSpan(0, 30, 0), workActivity, pauseActivity ,homeActivity, new TimeSpan(8, 0, 0), new TimeSpan(4, 0, 0));
             activityStore.GlobalSetting = activityGlobalSetting;
-
-            /*
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(workActivity);
-            activityStore.AddActivity(pauseActivity);
-            activityStore.AddActivity(pauseActivity);
-            */
 
             List<Activity> activitiesBasic = new List<Activity>();
             activitiesBasic.Add(workActivity);

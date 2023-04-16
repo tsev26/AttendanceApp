@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace Attendance.Domain.Models
 {
     public class Activity : DomainObject
     {
+        public Activity() : base() { }
         public Activity(string name, string shortcut, ActivityProperty property) : base()
         {
             Name = name;
@@ -17,7 +19,7 @@ namespace Attendance.Domain.Models
 
         public Activity(Activity activity) : base()
         {
-            Id = activity.Id;
+            ID = activity.ID;
             Name = activity.Name;
             Shortcut = activity.Shortcut;
             Property = activity.Property.Clone();
@@ -25,8 +27,10 @@ namespace Attendance.Domain.Models
 
         public string Name { get; set; }
         public string Shortcut { get; set; }
-        public ActivityProperty Property { get; set; }
 
+        [ForeignKey("PropertyId")]
+        public ActivityProperty Property { get; set; }
+        public int PropertyId { get; set; }
 
 
         private int PositionOfShortCutInName => Name.ToLower().IndexOf(Shortcut.ToLower()) + 1;
@@ -36,11 +40,12 @@ namespace Attendance.Domain.Models
         public string ActName2 => Shortcut;
         public string ActName3 => (PositionOfShortCutInName != 0) ? Name.Substring(PositionOfShortCutInName, LenghtOfName - PositionOfShortCutInName) : "";
 
+        public virtual List<Obligation> Obligations { get; set; }
         public Activity Clone()
         {
             return new Activity(this)
             {
-                Id = this.Id,
+                ID = this.ID,
                 Property = Property?.Clone()
             };
         }

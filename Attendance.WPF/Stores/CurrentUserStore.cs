@@ -64,7 +64,7 @@ namespace Attendance.WPF.Stores
 
         public void UpsertKey(Key newKeyValue)
         {
-            Key? existingKey = User.Keys.FirstOrDefault(a => a.Id == newKeyValue.Id);
+            Key? existingKey = User.Keys.FirstOrDefault(a => a.ID == newKeyValue.ID);
             if (existingKey != null)
             {
                 int index = User.Keys.IndexOf(existingKey);

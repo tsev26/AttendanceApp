@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -70,13 +71,19 @@ namespace Attendance.Domain.Models
         public bool WorksFriday { get; set; }
         public bool WorksSaturday { get; set; }
         public bool WorksSunday { get; set; }
-        public virtual List<Activity> AvailableActivities { get; set; } 
+
+        [InverseProperty("Obligations")]
+        public virtual List<Activity> AvailableActivities { get; set; }
+
+        public virtual User ObligationMember { get; set;  }
+
+        public virtual Group ObligationGroup { get; set; }
 
         public Obligation Clone()
         {
             return new Obligation(this)
             {
-                Id = this.Id
+                ID = this.ID
             };
         }
     }

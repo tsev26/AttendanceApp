@@ -47,7 +47,7 @@ namespace Attendance.WPF.Stores
 
         public void UpdateActivity(Activity activity)
         {
-            int index = _activities.FindIndex(a => a.Id == activity.Id);
+            int index = _activities.FindIndex(a => a.ID == activity.ID);
             if (index != -1)
             {
                 _activities[index] = activity;

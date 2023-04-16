@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ namespace Attendance.Domain.Models
 {
     public class AttendanceRecord : DomainObject
     {
+        public AttendanceRecord() : base() { }
         public AttendanceRecord(User user, Activity activity, DateTime entry, AttendanceRecordDetail? attendanceRecordDetail = null) : base()
         {
             User = user;
@@ -25,17 +27,24 @@ namespace Attendance.Domain.Models
             AttendanceRecordDetail = attendanceRecord.AttendanceRecordDetail;
         }
 
-
+        [ForeignKey("UserId")]
         public User User { get; set; }
+        public int UserId { get; set; }
+
+        [ForeignKey("ActivityId")]
         public Activity Activity { get; set; }
+        public int ActivityId { get; set; }
+
         public DateTime Entry { get; set; }
 
+        [ForeignKey("AttendanceRecordDetailInt")]
         public AttendanceRecordDetail? AttendanceRecordDetail { get; set; }
+        public int? AttendanceRecordDetailInt { get; set; }
 
         public override bool Equals(object? obj)
         {
             return obj is AttendanceRecord record &&
-                   Id == record.Id;
+                   ID == record.ID;
         }
 
         public static bool operator ==(AttendanceRecord a, AttendanceRecord b)
@@ -62,7 +71,7 @@ namespace Attendance.Domain.Models
         {
             return new AttendanceRecord(this)
             {
-                Id = this.Id,
+                ID = this.ID,
             };
         }
 
