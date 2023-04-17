@@ -1,4 +1,5 @@
 ﻿using Attendance.Domain.Models;
+using Attendance.EF.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,12 @@ namespace Attendance.WPF.Stores
     public class UserStore
     {
         private List<User> _users;
+        private readonly UserDataService _userDataService;
 
-        public UserStore()
+        public UserStore(UserDataService userDataService)
         {
             _users = new List<User>();
+            _userDataService = userDataService;
         }
 
         public event Action UsersChange;
@@ -88,6 +91,11 @@ namespace Attendance.WPF.Stores
             records.AddRange(Users.Where(a => a.ToApprove && (a.IsSubordinate(user))));
 
             return records;
+        }
+
+        public async Task<User> GetUserByKey(string key)
+        {
+            return await _userDataService.GetUserByKey(key);
         }
 
         public User GetUserByUserId(int userId)

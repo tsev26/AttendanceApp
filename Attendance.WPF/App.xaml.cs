@@ -1,5 +1,6 @@
 ﻿using Attendance.Domain.Models;
 using Attendance.EF;
+using Attendance.EF.Services;
 using Attendance.WPF.Services;
 using Attendance.WPF.Stores;
 using Attendance.WPF.ViewModels;
@@ -28,6 +29,8 @@ namespace Attendance.WPF
 
             //DB
             services.AddSingleton<DbSQLiteContextFactory>();
+            services.AddSingleton<UserDataService>();
+            services.AddSingleton<ActivityDataService>();
 
 
             //Stores

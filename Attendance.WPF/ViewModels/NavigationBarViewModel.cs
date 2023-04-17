@@ -78,7 +78,8 @@ namespace Attendance.WPF.ViewModels
 
         public bool UserIsAdmin => UserLogOn && _currentUser.User.IsAdmin;
 
-        public bool UserIsSupervisor => UserLogOn && _currentUser.IsUserSuperVisor;    public ICommand NavigateHomeCommand { get; }
+        public bool UserIsSupervisor => UserLogOn && _currentUser.IsUserSuperVisor;    
+        public ICommand NavigateHomeCommand { get; }
         public ICommand NavigateUsersKeysCommand { get; }
         public ICommand NavigateUserMenuCommand { get; }
         public ICommand NavigateProfileCommand { get; }

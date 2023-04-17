@@ -1,4 +1,5 @@
 ﻿using Attendance.Domain.Models;
+using Attendance.EF.Services;
 using Attendance.WPF.Model;
 using Attendance.WPF.Models;
 using System;
@@ -19,9 +20,11 @@ namespace Attendance.WPF.Stores
     public class CurrentUserStore
     {
         private readonly UserStore _userStore;
-        public CurrentUserStore(UserStore userStore)
+        private readonly UserDataService _userDataService;
+        public CurrentUserStore(UserStore userStore, UserDataService userDataService)
         {
             _userStore = userStore;
+            _userDataService = userDataService;
         }
 
         public event Action CurrentUserChange;
@@ -42,13 +45,14 @@ namespace Attendance.WPF.Stores
             }
         }
 
-        public bool IsUserSuperVisor => _userStore.Users.Any(a => a.IsSubordinate(User));
+        public bool IsUserSuperVisor { get; private set; }
 
         public List<User> SubordinateUsers => _userStore.Users.Where(a => a.IsSubordinate(User)).ToList();
 
-        public void LoadUser(User user)
+        public async Task LoadUser(User user)
         {
-            User = user;
+            IsUserSuperVisor = await _userDataService.IsSupervisor(user);
+            User = await _userDataService.LoadUserData(user); 
         }
 
         public void Clear()

@@ -1,9 +1,12 @@
 ﻿using Attendance.Domain.Models;
 using Attendance.EF;
+using Attendance.EF.Services;
 using Attendance.WPF.Stores;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Documents;
 
@@ -23,10 +26,7 @@ namespace Attendance.WPF.ViewModels
                              NavigationStore navigationStore, 
                              ModalNavigationStore modalNavigationStore,
                              ActivityStore activityStore,
-                             UserStore userStore,
-                             GroupStore groupStore,
-                             CurrentUserStore currentUser,
-                             AttendanceRecordStore attendanceRecordStore)
+                             ActivityDataService activityDataService)
         {
             bool pathToDbExists = dbSQLiteContextFactory.InitDbSQLite();
 
@@ -56,11 +56,13 @@ namespace Attendance.WPF.ViewModels
 
             NavigationBarViewModel = navigationBarViewModel;
 
+            activityStore.GlobalSetting = activityDataService.GetActivityGlobalSetting();
+
             _navigationStore.CurrentViewModelChanged += OnCurrentViewModelChanged;
             _modalNavigationStore.CurrentViewModelChanged += OnCurrentModelViewModelChanged;
 
 
-
+            /*
             ActivityProperty workActivityProperty = new ActivityProperty(false, true, false, true, false, new TimeSpan(15, 0, 0), "práce");
             Activity workActivity = new Activity("Práce", "P", workActivityProperty);
 
@@ -161,6 +163,7 @@ namespace Attendance.WPF.ViewModels
 
 
             attendanceRecordStore.AddAttendanceRecord(user1, vacationActivity, new DateTime(2023,3,27,08,0,0), new AttendanceRecordDetail(new DateTime (2023,3,27,08,0,0),new DateTime(2023,4,11,16,0,0), "dovolenka"));
+            */
         }
 
         public NavigationBarViewModel NavigationBarViewModel { get; }

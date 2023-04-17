@@ -186,6 +186,7 @@ namespace Attendance.EF
                         User admin = new User("admin", "admin", "tsevcu@gmail.com", true);
                         admin.Group = leadershipGroup;
                         admin.AddKey("aaa");
+                        admin.IsAdmin = true;
 
                         User user1 = new User("Tomáš", "Ševců", "tsevcu@gmail.com", false);
                         user1.Group = leadershipGroup;

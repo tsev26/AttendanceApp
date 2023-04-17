@@ -54,16 +54,19 @@ namespace Attendance.WPF.ViewModels
 		public bool HasText => (_userKey??"").Length > 0;
 
 
-        public void CheckIfKeyIsUsers(string key)
+        public async Task CheckIfKeyIsUsers(string key)
 		{
-			User? user = _userStore.Users.FirstOrDefault(a => a.Keys.Any(c => c.KeyValue.ToUpper() == key) && a.ToApprove == false);
+			User? user = await _userStore.GetUserByKey(key);
 
             if (user != null)
             {
-				_currentUser.User = user;
-                _currentUser.LoadUser(user);
+                await _currentUser.LoadUser(user);
 				_userKey = "";
-				_navigateToUserMenu.Navigate();
+				if (_currentUser.User != null)
+				{
+                    _navigateToUserMenu.Navigate();
+                }
+				
             }
 
             /*

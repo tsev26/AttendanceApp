@@ -82,6 +82,11 @@ namespace Attendance.Domain.Models
         [ForeignKey("Obligation")]
         public int? ObligationId { get; set; }
 
+        [InverseProperty("User")]
+        public List<AttendanceRecord> AttendanceRecords { get; set; }
+
+        [InverseProperty("User")]
+        public List<AttendanceTotal> AttendanceTotals { get; set; }
 
         [NotMapped]
         public bool HasObligation => Obligation != null;
