@@ -102,7 +102,7 @@ namespace Attendance.WPF.Commands
                 }
                 else
                 {
-                    _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, activity);
+                    await _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, activity);
                     _navigateHomeService.Navigate(_currentUser.User + " zapsal " + activity);
                 }
                 
@@ -116,7 +116,7 @@ namespace Attendance.WPF.Commands
                 }
                 else
                 {
-                    attendanceRecord = _attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User);
+                    attendanceRecord = _attendanceRecordStore.CurrentAttendanceRecord;
                 }
                  
                 switch (value)
@@ -165,17 +165,24 @@ namespace Attendance.WPF.Commands
 
                             AttendanceRecordDetail attendanceRecordDetail = new AttendanceRecordDetail(expectedStart, expectedEnd, _userSelectActivitySpecialViewModel.Description, isHalfDay);
 
-                            _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, selectedPlan, expectedStart, attendanceRecordDetail);
+                            await _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, selectedPlan, expectedStart, attendanceRecordDetail);
+
+                            string currentUserName = _currentUser.User.ToString();
+                            _closeModalNavigation.Navigate(currentUserName + " vytvořil plán " + selectedPlan);
                             if (expectedStart == now)
                             {
-                                _navigateHomeService.Navigate(_currentUser.User + " vytvořil a zapsal plán " + selectedPlan);
+                                _navigateHomeService.Navigate(currentUserName + " vytvořil a zapsal plán " + selectedPlan);
                             }
-                            _closeModalNavigation.Navigate(_currentUser.User + " vytvořil plán " + selectedPlan);
+                            
                             break;
                         }
 
                     case "MoveStart":
-                        attendanceRecord.Entry = DateTime.Now;
+                        User user = _currentUser.User;
+                        Activity activityToSet = attendanceRecord.Activity;
+                        await _attendanceRecordStore.RemoveAttendanceRecord(attendanceRecord);
+                        
+                        await _attendanceRecordStore.AddAttendanceRecord(user, activityToSet, DateTime.Now);
                         _closeModalNavigation.Navigate();
                         _navigateHomeService.Navigate("Začátek plánu " + attendanceRecord.Activity + " posunut na teď");
                         break;
@@ -189,11 +196,11 @@ namespace Attendance.WPF.Commands
 
                         break;
                     case "MoveEnd":
-                        AttendanceRecord endOfPlan = _attendanceRecordStore.AttendanceRecords(_currentUser.User).FirstOrDefault(a => a.Entry == attendanceRecord.AttendanceRecordDetail.ExpectedEnd);
-                        _attendanceRecordStore.RemoveAttendanceRecord(endOfPlan);
-                        attendanceRecord.AttendanceRecordDetail.ExpectedEnd = DateTime.Now;
+                        AttendanceRecord endOfPlan = _attendanceRecordStore.AttendanceRecords.FirstOrDefault(a => a.Entry == attendanceRecord.AttendanceRecordDetail.ExpectedEnd);
+                        await _attendanceRecordStore.RemoveAttendanceRecord(endOfPlan);
+                        //attendanceRecord.AttendanceRecordDetail.ExpectedEnd = DateTime.Now;
                         Activity mainActivity = _activityStore.GlobalSetting.MainWorkActivity;
-                        _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, mainActivity);
+                        await _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, mainActivity);
                         _closeModalNavigation.Navigate("Plán " + attendanceRecord.Activity + " předčasně ukončen");
                         break;
                 }

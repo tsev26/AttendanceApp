@@ -39,9 +39,9 @@ namespace Attendance.WPF.ViewModels
             OnPropertyChanged(nameof(AttendanceRecords));
         }
 
-		public List<AttendanceRecordFix> AttendanceRecordFixes => _attendanceRecordStore.AttendanceRecordFixes(_currentUser.User).OrderBy(a => a.Approved).ToList();
+		public List<AttendanceRecordFix> AttendanceRecordFixes => _attendanceRecordStore.AttendanceRecordFixes.OrderBy(a => a.Approved).ToList();
 
-        public List<AttendanceRecord> AttendanceRecords => _attendanceRecordStore.AttendanceRecords(_currentUser.User).OrderByDescending(a => a.Entry).ToList();
+        public List<AttendanceRecord> AttendanceRecords => _attendanceRecordStore.AttendanceRecords.OrderByDescending(a => a.Entry).ToList();
 
 		private int _selectedAttendanceRecordFixIndex = -1;
 		public int SelectedAttendanceRecordFixIndex

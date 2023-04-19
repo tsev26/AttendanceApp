@@ -42,7 +42,9 @@ namespace Attendance.Domain.Models
             AttendanceRecord = attendanceRecord;
 
             User = user;
+            UserId = user.ID;
             Activity = activity;
+            ActivityId = activity.ID;
             Entry = entry;
 
             FixType = FixType.Update;
@@ -52,7 +54,9 @@ namespace Attendance.Domain.Models
         public AttendanceRecordFix(User user, Activity activity, DateTime entry)
         {
             User = user;
+            UserId = user.ID;
             Activity = activity;
+            ActivityId = activity.ID;
             Entry = entry;
 
             FixType = FixType.Insert;
@@ -61,11 +65,15 @@ namespace Attendance.Domain.Models
 
         public AttendanceRecordFix(AttendanceRecord attendanceRecord, User user)
         {
+
             AttendanceRecord = attendanceRecord;
+            AttendanceRecordId = attendanceRecord.ID;
 
             Activity = attendanceRecord.Activity;
+            ActivityId = attendanceRecord.ActivityId;
             Entry = attendanceRecord.Entry;
             User = user;
+            UserId = user.ID;
 
             FixType = FixType.Delete;
             Approved = ApproveType.Waiting;
@@ -76,12 +84,12 @@ namespace Attendance.Domain.Models
         public int AttendanceRecordId { get; set; }
 
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public User? User { get; set; }
         public int UserId { get; set; }
         public FixType FixType { get; set; }
 
         [ForeignKey("ActivityId")]
-        public Activity Activity { get; set; }
+        public Activity? Activity { get; set; }
         public int ActivityId { get; set; }
         public DateTime Entry { get; set; }
         public ApproveType Approved { get; set; }

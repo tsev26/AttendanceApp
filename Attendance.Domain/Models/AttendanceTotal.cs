@@ -20,12 +20,12 @@ namespace Attendance.Domain.Models
         public AttendanceTotal() : base() { }
 
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public User? User { get; set; }
         public int UserId { get; set; }
         public DateOnly Date { get; set; }
 
         [ForeignKey("ActivityId")]
-        public Activity Activity { get; set; }
+        public Activity? Activity { get; set; }
         public int ActivityId { get; set; }
         public TimeSpan Duration { get; set; }
     }

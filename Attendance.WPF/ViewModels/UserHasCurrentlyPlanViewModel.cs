@@ -28,7 +28,7 @@ namespace Attendance.WPF.ViewModels
             UserSetActivityCommand = new UserSetActivityCommand(currentUser, activityStore, attendanceRecordStore, messageStore, navigateHomeService, closeModalNavigationService);
         }
 
-        public AttendanceRecord CurrentAttendanceRecord => _attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User);
+        public AttendanceRecord CurrentAttendanceRecord => _attendanceRecordStore.CurrentAttendanceRecord;
         public ICommand UserSetActivityCommand { get; }
     }
 }

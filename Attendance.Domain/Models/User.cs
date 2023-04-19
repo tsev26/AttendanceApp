@@ -28,6 +28,8 @@ namespace Attendance.Domain.Models
             ToApprove = toApprove;
             IsFastWorkSet = false;
             Keys = new List<Key>();
+            AttendanceRecords = new List<AttendanceRecord>();
+            AttendanceTotals = new List<AttendanceTotal>();
         }
 
         public User(
@@ -46,6 +48,8 @@ namespace Attendance.Domain.Models
             ToApprove = toApprove;
             IsFastWorkSet = false;
             Keys = new List<Key>();
+            AttendanceRecords = new List<AttendanceRecord>();
+            AttendanceTotals = new List<AttendanceTotal>();
         }
 
         public User(User user) : base()
@@ -59,6 +63,8 @@ namespace Attendance.Domain.Models
             Keys = user.Keys;
             Group = user.Group;
             IsFastWorkSet = user.IsFastWorkSet;
+            AttendanceRecords = new List<AttendanceRecord>();
+            AttendanceTotals = new List<AttendanceTotal>();
         }
 
         public int UserId { get; set; }

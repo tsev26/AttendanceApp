@@ -197,7 +197,7 @@
                             FontSize="16"
                             Style="{StaticResource DetailTextBlock}"
                             Text=" - "
-                            Visibility="{Binding IsCurrentActivitySet, Converter={StaticResource bool2VisibilityConverter}}" />
+                            Visibility="{Binding IsCurrentActivitySet, Converter={StaticResource bool2VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
 
                         <TextBlock
                             HorizontalAlignment="Center"
@@ -205,7 +205,7 @@
                             FontSize="24"
                             Style="{StaticResource DetailTextBlock}"
                             Text="{Binding CurrentActivity, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                            Visibility="{Binding IsCurrentActivitySet, Converter={StaticResource bool2VisibilityConverter}}" />
+                            Visibility="{Binding IsCurrentActivitySet, Converter={StaticResource bool2VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
                     </StackPanel>
 
 

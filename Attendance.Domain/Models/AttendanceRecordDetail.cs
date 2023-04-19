@@ -21,7 +21,7 @@ namespace Attendance.Domain.Models
         public DateTime ExpectedStart { get; set; }
         public DateTime ExpectedEnd { get; set; }
         public bool IsHalfDay { get; set; } 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
     }
 }

@@ -68,9 +68,9 @@ namespace Attendance.WPF.ViewModels
             }
         }
 
-        private void CheckFastWorkSetting()
+        private async Task CheckFastWorkSetting()
         {
-            Activity? currentUserActivity = _attendanceRecordStore.CurrentAttendanceRecord(_currentUserStore.User)?.Activity ?? null;
+            Activity? currentUserActivity = _attendanceRecordStore.CurrentAttendanceRecord?.Activity ?? null;
 
             if (currentUserActivity != null && _currentUserStore.User.IsFastWorkSet && (!currentUserActivity.Property.Count || (currentUserActivity.Property.IsPause && !currentUserActivity.Property.IsPlan)))
             {

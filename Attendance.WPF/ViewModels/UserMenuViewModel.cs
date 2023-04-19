@@ -28,7 +28,7 @@ namespace Attendance.WPF.ViewModels
             _attendanceRecordStore = attendanceRecordStore;
 
 
-            if (_attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User)?.Activity.Property.IsPlan ?? false)
+            if (_attendanceRecordStore.CurrentAttendanceRecord?.Activity.Property.IsPlan ?? false)
             {
                 navigateUserHasCurretlyPlanService.Navigate();
             }
@@ -39,7 +39,7 @@ namespace Attendance.WPF.ViewModels
 
         private void CheckFastWorkSetting()
         {
-            Activity? currentUserActivity = _attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User).Activity;
+            Activity? currentUserActivity = _attendanceRecordStore.CurrentAttendanceRecord.Activity;
 
             if (currentUserActivity != null && _currentUser.User.IsFastWorkSet && (!currentUserActivity.Property.Count || (currentUserActivity.Property.IsPause && !currentUserActivity.Property.IsPlan)))
             {

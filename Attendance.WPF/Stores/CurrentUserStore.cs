@@ -21,10 +21,13 @@ namespace Attendance.WPF.Stores
     {
         private readonly UserStore _userStore;
         private readonly UserDataService _userDataService;
-        public CurrentUserStore(UserStore userStore, UserDataService userDataService)
+        private readonly AttendanceRecordStore _attendanceRecordStore;
+
+        public CurrentUserStore(UserStore userStore, UserDataService userDataService, AttendanceRecordStore attendanceRecordStore)
         {
             _userStore = userStore;
             _userDataService = userDataService;
+            _attendanceRecordStore = attendanceRecordStore;
         }
 
         public event Action CurrentUserChange;
@@ -42,7 +45,28 @@ namespace Attendance.WPF.Stores
             {
                 _user = value;
                 CurrentUserChange?.Invoke();
+                LoadUserAttendances();
             }
+        }
+
+        private async Task LoadUserAttendances()
+        {
+            if (User != null)
+            {
+                await _attendanceRecordStore.LoadAttendanceRecords(User);
+
+                await _attendanceRecordStore.LoadAttendanceTotals(User);
+
+                await _attendanceRecordStore.LoadAttendanceRecordFixes(User);
+            }
+            else
+            {
+                _attendanceRecordStore.AttendanceRecords = new List<AttendanceRecord>();
+                _attendanceRecordStore.AttendanceRecordFixes = new List<AttendanceRecordFix>();
+                _attendanceRecordStore.AttendanceTotal = new List<AttendanceTotal>();
+            }
+            CurrentAttendanceChange?.Invoke();
+
         }
 
         public bool IsUserSuperVisor { get; private set; }

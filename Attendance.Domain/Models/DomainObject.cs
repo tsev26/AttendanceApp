@@ -1,18 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Attendance.Domain.Models
 {
     public class DomainObject
     {
-        private static int _nextID = 1;
-        public DomainObject()
-        {
-            ID = _nextID++;
-        }
-
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
     }
 }

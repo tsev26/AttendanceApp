@@ -47,7 +47,7 @@ namespace Attendance.WPF.ViewModels
 
         public List<Activity> Activities => _currentUserStore.User?.UserObligation.AvailableActivities.Where(a => a.Property.IsPlan).ToList() ?? null;
 
-        public List<AttendanceRecord> FuturePlans => _attendanceRecordStore.AttendanceRecords(_currentUserStore.User).Where(a => a.Entry > DateTime.Now && a.AttendanceRecordDetail != null).ToList();
+        public List<AttendanceRecord> FuturePlans => _attendanceRecordStore.AttendanceRecords.Where(a => a.Entry > DateTime.Now && a.AttendanceRecordDetail != null).ToList();
 
         private int _selectedIndex = -1;
         public int SelectedIndex

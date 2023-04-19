@@ -33,9 +33,9 @@ namespace Attendance.WPF.ViewModels
         public ICommand UserSetActivityCommand { get; }
 
 
-        public List<int> StartHours => (StartActivity.Date == DateTime.Now.Date) ? Enumerable.Range(DateTime.Now.Hour, 22 - DateTime.Now.Hour).ToList() : Enumerable.Range(6, 17).ToList();
+        public List<int> StartHours => (StartActivity.Date == DateTime.Now.Date) ? Enumerable.Range(DateTime.Now.Hour, 24 - DateTime.Now.Hour).ToList() : Enumerable.Range(6, 17).ToList();
 
-        public List<int> EndHours => (EndActivity.Date == DateTime.Now.Date) ? Enumerable.Range(DateTime.Now.Hour, 22-DateTime.Now.Hour).ToList() : Enumerable.Range(6, 17).ToList();
+        public List<int> EndHours => (EndActivity.Date == DateTime.Now.Date) ? Enumerable.Range(DateTime.Now.Hour, 24-DateTime.Now.Hour).ToList() : Enumerable.Range(6, 17).ToList();
 
         public List<int> StartMinutes => (StartActivity.Date == DateTime.Now.Date) ? Enumerable.Range(DateTime.Now.Minute, 59-DateTime.Now.Minute).Select(n => ((int)(n / 15.0)) * 15).Distinct().ToList() : Enumerable.Range(0, 59).Select(n => ((int)(n / 15.0)) * 15).Distinct().ToList();
         public List<int> EndMinutes => (StartActivity.Date == DateTime.Now.Date && StartHour == EndHour) ? Enumerable.Range(DateTime.Now.Minute, 59-DateTime.Now.Minute).Select(n => ((int)(n / 15.0)) * 15).Distinct().ToList() : Enumerable.Range(0, 59).Select(n => ((int)(n / 15.0)) * 15).Distinct().ToList();

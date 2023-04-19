@@ -47,7 +47,14 @@ namespace Attendance.WPF.ViewModels
             MessageStore = messageStore;
 
             _currentUser.CurrentUserChange += CurrentUser_CurrentUserChange;
+            _currentUser.CurrentAttendanceChange += CurrentUser_CurrentAttendanceChange;
             MessageStore.MessageChanged += MessageStore_MessageChanged;
+        }
+
+        private void CurrentUser_CurrentAttendanceChange()
+        {
+            OnPropertyChanged(nameof(CurrentActivity));
+            OnPropertyChanged(nameof(IsCurrentActivitySet));
         }
 
         private void MessageStore_MessageChanged()
@@ -60,7 +67,6 @@ namespace Attendance.WPF.ViewModels
             OnPropertyChanged(nameof(CurrentName));
             OnPropertyChanged(nameof(UserLogOn));
             OnPropertyChanged(nameof(UserIsAdmin));
-            OnPropertyChanged(nameof(CurrentActivity));
             OnPropertyChanged(nameof(UserIsSupervisor));
             OnPropertyChanged(nameof(IsCurrentActivitySet));
             OnPropertyChanged(nameof(IsButtonPlanVisibile));
@@ -70,9 +76,9 @@ namespace Attendance.WPF.ViewModels
 
         public string CurrentName => _currentUser.User?.LastName + " " + _currentUser.User?.FirstName;
 
-        public string CurrentActivity => _attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User)?.Activity.Name;
+        public string CurrentActivity => _attendanceRecordStore.CurrentAttendanceRecord?.Activity.Name;
 
-        public bool IsCurrentActivitySet => _attendanceRecordStore.CurrentAttendanceRecord(_currentUser.User)?.Activity != null;
+        public bool IsCurrentActivitySet => _attendanceRecordStore.CurrentAttendanceRecord?.Activity != null;
 
         public bool UserLogOn => _currentUser.User != null;
 

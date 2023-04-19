@@ -63,9 +63,11 @@ namespace Attendance.EF
             DbContextOptions<DatabaseContext> options = new DbContextOptionsBuilder<DatabaseContext>()
             .UseSqlite($"Data Source={_connectionString}")
             .EnableSensitiveDataLogging()
+            .EnableDetailedErrors()
             .Options;
 
-            return new DatabaseContext(options);
+            DatabaseContext database = new DatabaseContext(options);
+            return database;
         }
 
         public void WriteDbConnection()

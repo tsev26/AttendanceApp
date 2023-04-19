@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Attendance.Domain.Models
 {
-    public class Activity : DomainObject
+    public class Activity : DomainObject, IEquatable<Activity>
     {
         public Activity() : base() { }
         public Activity(string name, string shortcut, ActivityProperty property) : base()
@@ -54,5 +54,44 @@ namespace Attendance.Domain.Models
         {
             return Name;
         }
+
+        public bool Equals(Activity other)
+        {
+            if (other == null)
+                return false;
+
+            return ID == other.ID;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Activity);
+        }
+
+        public override int GetHashCode()
+        {
+            return ID.GetHashCode();
+        }
+
+        public static bool operator ==(Activity a, Activity b)
+        {
+            if (ReferenceEquals(a, b))
+            {
+                return true;
+            }
+
+            if (a is null || b is null)
+            {
+                return false;
+            }
+
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Activity a, Activity b)
+        {
+            return !(a == b);
+        }
+
     }
 }

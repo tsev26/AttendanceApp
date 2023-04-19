@@ -30,6 +30,8 @@ namespace Attendance.WPF.Stores
             }
         }
 
+        public AttendanceRecordStore AttendanceRecordStore { get; }
+
         public void AddUser(User newUser)
         {
             if (!_users.Contains(newUser))

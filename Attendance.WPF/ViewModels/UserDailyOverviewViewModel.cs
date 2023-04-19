@@ -44,6 +44,10 @@ namespace Attendance.WPF.ViewModels
         private void CurrentUser_CurrentAttendanceChange()
         {
             OnPropertyChanged(nameof(AttendanceRecordsInDay));
+            OnPropertyChanged(nameof(WorkedInDayTotal));
+            OnPropertyChanged(nameof(WorkedInDay));
+            OnPropertyChanged(nameof(PauseInDay));
+            OnPropertyChanged(nameof(ActivitiesTotalInDay));
         }
 
         private void StartClock()
@@ -64,7 +68,6 @@ namespace Attendance.WPF.ViewModels
 
         private DateOnly _date;
         
-
         public DateOnly Date
         {
             get
@@ -105,9 +108,9 @@ namespace Attendance.WPF.ViewModels
 
         public string PauseInDay => _attendanceRecordStore.PauseInDay(CurrentUser.User, Date);
 
-        public List<AttendanceRecordItem> AttendanceRecordsInDay => _attendanceRecordStore.RecordsInDay(CurrentUser.User, Date);
+        public List<AttendanceRecordItem> AttendanceRecordsInDay => _attendanceRecordStore.RecordsInDay(Date);
 
-        public List<AttendanceTotal> ActivitiesTotalInDay => _attendanceRecordStore.ActivitiesTotalInDay(CurrentUser.User, Date);
+        public List<AttendanceTotal> ActivitiesTotalInDay => _attendanceRecordStore.ActivitiesTotalInDay(Date);
 
 
         private int _selectedAttendanceRecordIndex = -1;

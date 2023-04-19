@@ -24,8 +24,12 @@ namespace Attendance.EF.Services
             {
                 ActivityGlobalSetting activityGlobalSetting = context.ActivityGlobalSetting
                                                                      .Include(a => a.MainWorkActivity)
+                                                                     .ThenInclude(a => a.Property)
                                                                      .Include(a => a.MainNonWorkActivity)
+                                                                     .ThenInclude(a => a.Property)
                                                                      .Include(a => a.MainPauseActivity)
+                                                                     .ThenInclude(a => a.Property)
+                                                                     .AsNoTracking()
                                                                      .FirstOrDefault();
                 return activityGlobalSetting;
             }
@@ -37,6 +41,7 @@ namespace Attendance.EF.Services
             {
                 List<Activity> activities = await context.Activities
                                                    .Include(a => a.Property)
+                                                   .AsNoTracking()
                                                    .ToListAsync();
                 return activities;
             }
