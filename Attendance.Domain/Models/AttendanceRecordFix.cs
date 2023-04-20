@@ -40,6 +40,7 @@ namespace Attendance.Domain.Models
         public AttendanceRecordFix(AttendanceRecord attendanceRecord, User user, Activity activity, DateTime entry)
         {
             AttendanceRecord = attendanceRecord;
+            AttendanceRecordId = attendanceRecord.ID;
 
             User = user;
             UserId = user.ID;
@@ -81,7 +82,7 @@ namespace Attendance.Domain.Models
 
         [ForeignKey("AttendanceRecordId")]
         public AttendanceRecord? AttendanceRecord { get; set; }
-        public int AttendanceRecordId { get; set; }
+        public int? AttendanceRecordId { get; set; }
 
         [ForeignKey("UserId")]
         public User? User { get; set; }

@@ -76,9 +76,9 @@ namespace Attendance.Domain.Models
         public bool ToApprove { get; set; }
 
         
-        public Group Group { get; set; }
+        public Group? Group { get; set; }
         [ForeignKey("Group")]
-        public int GroupId { get; set; }
+        public int? GroupId { get; set; }
 
         [InverseProperty("User")]
         public List<Key> Keys { get; set; }
@@ -89,10 +89,10 @@ namespace Attendance.Domain.Models
         public int? ObligationId { get; set; }
 
         [InverseProperty("User")]
-        public List<AttendanceRecord> AttendanceRecords { get; set; }
+        public List<AttendanceRecord>? AttendanceRecords { get; set; }
 
         [InverseProperty("User")]
-        public List<AttendanceTotal> AttendanceTotals { get; set; }
+        public List<AttendanceTotal>? AttendanceTotals { get; set; }
 
         [NotMapped]
         public bool HasObligation => Obligation != null;

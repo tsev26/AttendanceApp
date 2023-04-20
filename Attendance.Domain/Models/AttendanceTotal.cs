@@ -12,8 +12,10 @@ namespace Attendance.Domain.Models
         public AttendanceTotal(User user, DateOnly date, Activity activity, TimeSpan duration) : base()
         {
             User = user;
+            UserId = user?.ID ?? 0;
             Date = date;
             Activity = activity;
+            ActivityId = activity.ID;
             Duration = duration;
         }
 

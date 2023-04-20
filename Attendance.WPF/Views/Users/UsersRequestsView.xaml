@@ -40,7 +40,7 @@
                         <ListView
                             x:Name="ListOfPendingFixes"
                             Focusable="False"
-                            ItemsSource="{Binding PendingRequestFixes}"
+                            ItemsSource="{Binding PendingRequestFixes, UpdateSourceTrigger=PropertyChanged}"
                             SelectedIndex="{Binding SelectedPendingRequestFixIndex}"
                             SelectionMode="Single">
                             <ListView.View>
@@ -138,24 +138,24 @@
                                 Text="Jméno">
                                 <TextBlock.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.FirstName" />
-                                        <Binding Path="SelectedPendingProfileNow.FirstName" />
+                                        <Binding Path="SelectedPendingProfileUpdate.FirstName" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.FirstName" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </TextBlock.Visibility>
                             </TextBlock>
                             <StackPanel Grid.Row="0" Grid.Column="1">
                                 <StackPanel.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.FirstName" />
-                                        <Binding Path="SelectedPendingProfileNow.FirstName" />
+                                        <Binding Path="SelectedPendingProfileUpdate.FirstName" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.FirstName" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </StackPanel.Visibility>
-                                <TextBlock Style="{StaticResource DetailTextBlock}" Text="{Binding SelectedPendingProfileNow.FirstName}" />
+                                <TextBlock Style="{StaticResource DetailTextBlock}" Text="{Binding SelectedPendingProfileNow.FirstName, UpdateSourceTrigger=PropertyChanged}" />
 
                                 <TextBlock
                                     Foreground="Red"
                                     Style="{StaticResource DetailTextBlock}"
-                                    Text="{Binding SelectedPendingProfileUpdate.FirstName}" />
+                                    Text="{Binding SelectedPendingProfileUpdate.FirstName, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
 
                             <TextBlock
@@ -166,24 +166,24 @@
                                 Text="Příjemní">
                                 <TextBlock.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.LastName" />
-                                        <Binding Path="SelectedPendingProfileNow.LastName" />
+                                        <Binding Path="SelectedPendingProfileUpdate.LastName" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.LastName" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </TextBlock.Visibility>
                             </TextBlock>
                             <StackPanel Grid.Row="1" Grid.Column="1">
                                 <StackPanel.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.LastName" />
-                                        <Binding Path="SelectedPendingProfileNow.LastName" />
+                                        <Binding Path="SelectedPendingProfileUpdate.LastName" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.LastName" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </StackPanel.Visibility>
-                                <TextBlock Style="{StaticResource DetailTextBlock}" Text="{Binding SelectedPendingProfileNow.LastName}" />
+                                <TextBlock Style="{StaticResource DetailTextBlock}" Text="{Binding SelectedPendingProfileNow.LastName, UpdateSourceTrigger=PropertyChanged}" />
 
                                 <TextBlock
                                     Foreground="Red"
                                     Style="{StaticResource DetailTextBlock}"
-                                    Text="{Binding SelectedPendingProfileUpdate.LastName}" />
+                                    Text="{Binding SelectedPendingProfileUpdate.LastName, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
 
                             <TextBlock
@@ -194,8 +194,8 @@
                                 Text="Email">
                                 <TextBlock.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.Email" />
-                                        <Binding Path="SelectedPendingProfileNow.Email" />
+                                        <Binding Path="SelectedPendingProfileUpdate.Email" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.Email" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </TextBlock.Visibility>
                             </TextBlock>
@@ -205,20 +205,20 @@
                                 Orientation="Horizontal">
                                 <StackPanel.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.Email" />
-                                        <Binding Path="SelectedPendingProfileNow.Email" />
+                                        <Binding Path="SelectedPendingProfileUpdate.Email" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.Email" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </StackPanel.Visibility>
                                 <TextBlock
                                     Margin="5"
                                     Style="{StaticResource DetailTextBlock}"
-                                    Text="{Binding SelectedPendingProfileNow.Email}" />
+                                    Text="{Binding SelectedPendingProfileNow.Email, UpdateSourceTrigger=PropertyChanged}" />
 
                                 <TextBlock
                                     Margin="5"
                                     Foreground="Red"
                                     Style="{StaticResource DetailTextBlock}"
-                                    Text="{Binding SelectedPendingProfileUpdate.Email}" />
+                                    Text="{Binding SelectedPendingProfileUpdate.Email, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
 
                             <TextBlock
@@ -229,27 +229,27 @@
                                 Text="Pravidelná pracovní doba">
                                 <TextBlock.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.HasRegularWorkingTime" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.HasRegularWorkingTime" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.HasRegularWorkingTime" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.HasRegularWorkingTime" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </TextBlock.Visibility>
                             </TextBlock>
                             <StackPanel Grid.Row="3" Grid.Column="1">
                                 <StackPanel.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.HasRegularWorkingTime" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.HasRegularWorkingTime" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.HasRegularWorkingTime" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.HasRegularWorkingTime" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </StackPanel.Visibility>
 
                                 <ToggleButton
                                     Width="50"
-                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.HasRegularWorkingTime}"
+                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.HasRegularWorkingTime, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False" />
 
                                 <ToggleButton
                                     Width="50"
-                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.HasRegularWorkingTime}"
+                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.HasRegularWorkingTime, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False"
                                     Style="{StaticResource ToggleButtonChange}" />
                             </StackPanel>
@@ -262,24 +262,24 @@
                                 Text="Pracovní doba">
                                 <TextBlock.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.MinHoursWorked" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.MinHoursWorked" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.MinHoursWorked" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.MinHoursWorked" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </TextBlock.Visibility>
                             </TextBlock>
                             <StackPanel Grid.Row="4" Grid.Column="1">
                                 <StackPanel.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.MinHoursWorked" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.MinHoursWorked" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.MinHoursWorked" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.MinHoursWorked" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </StackPanel.Visibility>
-                                <TextBlock Style="{StaticResource DetailTextBlock}" Text="{Binding SelectedPendingProfileNow.UserObligation.MinHoursWorked}" />
+                                <TextBlock Style="{StaticResource DetailTextBlock}" Text="{Binding SelectedPendingProfileNow.UserObligation.MinHoursWorked, UpdateSourceTrigger=PropertyChanged}" />
 
                                 <TextBlock
                                     Foreground="Red"
                                     Style="{StaticResource DetailTextBlock}"
-                                    Text="{Binding SelectedPendingProfileUpdate.UserObligation.MinHoursWorked}" />
+                                    Text="{Binding SelectedPendingProfileUpdate.UserObligation.MinHoursWorked, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
 
                             <TextBlock
@@ -290,24 +290,24 @@
                                 Text="Začátek pracovní doby">
                                 <TextBlock.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.LatestArival" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.LatestArival" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.LatestArival" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.LatestArival" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </TextBlock.Visibility>
                             </TextBlock>
                             <StackPanel Grid.Row="5" Grid.Column="1">
                                 <StackPanel.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.LatestArival" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.LatestArival" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.LatestArival" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.LatestArival" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </StackPanel.Visibility>
-                                <TextBlock Style="{StaticResource DetailTextBlock}" Text="{Binding SelectedPendingProfileNow.UserObligation.LatestArival, StringFormat=HH:mm, Converter={StaticResource TimeOnlyConverter}}" />
+                                <TextBlock Style="{StaticResource DetailTextBlock}" Text="{Binding SelectedPendingProfileNow.UserObligation.LatestArival, UpdateSourceTrigger=PropertyChanged, StringFormat=HH:mm, Converter={StaticResource TimeOnlyConverter}}" />
 
                                 <TextBlock
                                     Foreground="Red"
                                     Style="{StaticResource DetailTextBlock}"
-                                    Text="{Binding SelectedPendingProfileUpdate.UserObligation.LatestArival, StringFormat=HH:mm, Converter={StaticResource TimeOnlyConverter}}" />
+                                    Text="{Binding SelectedPendingProfileUpdate.UserObligation.LatestArival, UpdateSourceTrigger=PropertyChanged, StringFormat=HH:mm, Converter={StaticResource TimeOnlyConverter}}" />
                             </StackPanel>
 
                             <TextBlock
@@ -318,8 +318,8 @@
                                 Text="Konec pracovní doby">
                                 <TextBlock.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.EarliestDeparture" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.EarliestDeparture" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.EarliestDeparture" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.EarliestDeparture" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </TextBlock.Visibility>
                             </TextBlock>
@@ -330,12 +330,12 @@
                                         <Binding Path="SelectedPendingProfileNow.UserObligation.EarliestDeparture" />
                                     </MultiBinding>
                                 </StackPanel.Visibility>
-                                <TextBlock Style="{StaticResource DetailTextBlock}" Text="{Binding SelectedPendingProfileNow.UserObligation.EarliestDeparture, StringFormat=HH:mm, Converter={StaticResource TimeOnlyConverter}}" />
+                                <TextBlock Style="{StaticResource DetailTextBlock}" Text="{Binding SelectedPendingProfileNow.UserObligation.EarliestDeparture, UpdateSourceTrigger=PropertyChanged, StringFormat=HH:mm, Converter={StaticResource TimeOnlyConverter}}" />
 
                                 <TextBlock
                                     Foreground="Red"
                                     Style="{StaticResource DetailTextBlock}"
-                                    Text="{Binding SelectedPendingProfileUpdate.UserObligation.EarliestDeparture, StringFormat=HH:mm, Converter={StaticResource TimeOnlyConverter}}" />
+                                    Text="{Binding SelectedPendingProfileUpdate.UserObligation.EarliestDeparture, UpdateSourceTrigger=PropertyChanged, StringFormat=HH:mm, Converter={StaticResource TimeOnlyConverter}}" />
                             </StackPanel>
 
                             <Grid
@@ -344,20 +344,20 @@
                                 Margin="5">
                                 <Grid.Visibility>
                                     <MultiBinding Converter="{StaticResource ConditionForDaysVisibilityConverter}">
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksMonday" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksMonday" />
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksTuesday" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksTuesday" />
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksWednesday" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksWednesday" />
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksThursday" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksThursday" />
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksFriday" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksFriday" />
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksSaturday" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksSaturday" />
-                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksSunday" />
-                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksSunday" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksMonday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksMonday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksTuesday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksTuesday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksWednesday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksWednesday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksThursday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksThursday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksFriday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksFriday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksSaturday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksSaturday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksSunday" UpdateSourceTrigger="PropertyChanged" />
+                                        <Binding Path="SelectedPendingProfileNow.UserObligation.WorksSunday" UpdateSourceTrigger="PropertyChanged" />
                                     </MultiBinding>
                                 </Grid.Visibility>
                                 <Grid.ColumnDefinitions>
@@ -423,120 +423,120 @@
                                 <ToggleButton
                                     Grid.Row="2"
                                     Grid.Column="0"
-                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksMonday}"
+                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksMonday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False" />
                                 <ToggleButton
                                     Grid.Row="2"
                                     Grid.Column="1"
-                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksTuesday}"
+                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksTuesday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False" />
                                 <ToggleButton
                                     Grid.Row="2"
                                     Grid.Column="2"
-                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksWednesday}"
+                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksWednesday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False" />
                                 <ToggleButton
                                     Grid.Row="2"
                                     Grid.Column="3"
-                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksThursday}"
+                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksThursday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False" />
                                 <ToggleButton
                                     Grid.Row="2"
                                     Grid.Column="4"
-                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksFriday}"
+                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksFriday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False" />
                                 <ToggleButton
                                     Grid.Row="2"
                                     Grid.Column="5"
-                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksSaturday}"
+                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksSaturday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False" />
                                 <ToggleButton
                                     Grid.Row="2"
                                     Grid.Column="6"
-                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksSunday}"
+                                    IsChecked="{Binding SelectedPendingProfileNow.UserObligation.WorksSunday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False" />
 
                                 <ToggleButton
                                     Grid.Row="3"
                                     Grid.Column="0"
-                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksMonday}"
+                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksMonday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False">
                                     <ToggleButton.Style>
                                         <MultiBinding Converter="{StaticResource ToggleButtonChangeStyleConverter}">
-                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksMonday" />
-                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksMonday" />
+                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksMonday" UpdateSourceTrigger="PropertyChanged" />
+                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksMonday" UpdateSourceTrigger="PropertyChanged" />
                                         </MultiBinding>
                                     </ToggleButton.Style>
                                 </ToggleButton>
                                 <ToggleButton
                                     Grid.Row="3"
                                     Grid.Column="1"
-                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksTuesday}"
+                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksTuesday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False">
                                     <ToggleButton.Style>
                                         <MultiBinding Converter="{StaticResource ToggleButtonChangeStyleConverter}">
-                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksTuesday" />
-                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksTuesday" />
+                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksTuesday" UpdateSourceTrigger="PropertyChanged" />
+                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksTuesday" UpdateSourceTrigger="PropertyChanged" />
                                         </MultiBinding>
                                     </ToggleButton.Style>
                                 </ToggleButton>
                                 <ToggleButton
                                     Grid.Row="3"
                                     Grid.Column="2"
-                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksWednesday}"
+                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksWednesday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False">
                                     <ToggleButton.Style>
                                         <MultiBinding Converter="{StaticResource ToggleButtonChangeStyleConverter}">
-                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksWednesday" />
-                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksWednesday" />
+                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksWednesday" UpdateSourceTrigger="PropertyChanged" />
+                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksWednesday" UpdateSourceTrigger="PropertyChanged" />
                                         </MultiBinding>
                                     </ToggleButton.Style>
                                 </ToggleButton>
                                 <ToggleButton
                                     Grid.Row="3"
                                     Grid.Column="3"
-                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksThursday}"
+                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksThursday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False">
                                     <ToggleButton.Style>
                                         <MultiBinding Converter="{StaticResource ToggleButtonChangeStyleConverter}">
-                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksThursday" />
-                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksThursday" />
+                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksThursday" UpdateSourceTrigger="PropertyChanged" />
+                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksThursday" UpdateSourceTrigger="PropertyChanged" />
                                         </MultiBinding>
                                     </ToggleButton.Style>
                                 </ToggleButton>
                                 <ToggleButton
                                     Grid.Row="3"
                                     Grid.Column="4"
-                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksFriday}"
+                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksFriday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False">
                                     <ToggleButton.Style>
                                         <MultiBinding Converter="{StaticResource ToggleButtonChangeStyleConverter}">
-                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksFriday" />
-                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksFriday" />
+                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksFriday" UpdateSourceTrigger="PropertyChanged" />
+                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksFriday" UpdateSourceTrigger="PropertyChanged" />
                                         </MultiBinding>
                                     </ToggleButton.Style>
                                 </ToggleButton>
                                 <ToggleButton
                                     Grid.Row="3"
                                     Grid.Column="5"
-                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksSaturday}"
+                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksSaturday, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False">
                                     <ToggleButton.Style>
                                         <MultiBinding Converter="{StaticResource ToggleButtonChangeStyleConverter}">
-                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksSaturday" />
-                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksSaturday" />
+                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksSaturday" UpdateSourceTrigger="PropertyChanged" />
+                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksSaturday" UpdateSourceTrigger="PropertyChanged" />
                                         </MultiBinding>
                                     </ToggleButton.Style>
                                 </ToggleButton>
                                 <ToggleButton
                                     Grid.Row="3"
                                     Grid.Column="6"
-                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksSunday, Mode=TwoWay}"
+                                    IsChecked="{Binding SelectedPendingProfileUpdate.UserObligation.WorksSunday, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     IsEnabled="False">
                                     <ToggleButton.Style>
                                         <MultiBinding Converter="{StaticResource ToggleButtonChangeStyleConverter}">
-                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksSunday" />
-                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksSunday" />
+                                            <Binding Path="SelectedPendingProfileUpdate.UserObligation.WorksSunday" UpdateSourceTrigger="PropertyChanged" />
+                                            <Binding Path="SelectedPendingProfileNow.UserObligation.WorksSunday" UpdateSourceTrigger="PropertyChanged" />
                                         </MultiBinding>
                                     </ToggleButton.Style>
                                 </ToggleButton>

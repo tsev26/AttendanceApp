@@ -42,7 +42,7 @@ namespace Attendance.WPF.ViewModels
         public ICommand FixDecisionCommand { get; }
         public ICommand ProfileDecisionCommand { get; }
 
-        public List<AttendanceRecordFix> PendingRequestFixes => _attendanceRecordStore.GetPendingFixes(_currentUser.User);
+        public List<AttendanceRecordFix> PendingRequestFixes => _attendanceRecordStore.GetPendingFixes(_currentUser.User).GetAwaiter().GetResult();
 
         private int _selectedPendingRequestFixIndex = -1;
         public int SelectedPendingRequestFixIndex
@@ -72,7 +72,7 @@ namespace Attendance.WPF.ViewModels
         public AttendanceRecord SelectedAttendanceRecord => IsSelectedPendingRequestFix ? SelectedPendingRequestFix.AttendanceRecord : null;
         public bool IsSelectedAttendanceRecord => SelectedAttendanceRecord != null;
 
-        public List<User> PendingProfileUpdates => _userStore.GetPendingUpdates(_currentUser.User);
+        public List<User> PendingProfileUpdates => _userStore.GetPendingUpdates(_currentUser.User).GetAwaiter().GetResult();
 
         private int _selectedPendingProfileUpdateIndex = -1;
         public int SelectedPendingProfileUpdateIndex
@@ -98,7 +98,7 @@ namespace Attendance.WPF.ViewModels
 
         public bool IsSelectedPendingProfileUpdate => SelectedPendingProfileUpdateIndex != -1;
         public User SelectedPendingProfileUpdate => IsSelectedPendingProfileUpdate ? PendingProfileUpdates[SelectedPendingProfileUpdateIndex] : null;
-        public User SelectedPendingProfileNow => IsSelectedPendingProfileUpdate ? _userStore.GetUserByUserId(SelectedPendingProfileUpdate.UserId) : null;
+        public User SelectedPendingProfileNow => IsSelectedPendingProfileUpdate ? _userStore.GetUserByUserId(SelectedPendingProfileUpdate.UserId).GetAwaiter().GetResult() : null;
 
 
         public override void Dispose()

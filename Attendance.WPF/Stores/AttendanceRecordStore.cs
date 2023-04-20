@@ -75,7 +75,7 @@ namespace Attendance.WPF.Stores
             CurrentAttendanceChange?.Invoke();
         }
 
-        public void UpdateAttendanceRecord(User user, Activity activity, DateTime dateTime, AttendanceRecord oldAttendanceRecord)
+        public async Task UpdateAttendanceRecord(User user, Activity activity, DateTime dateTime, AttendanceRecord oldAttendanceRecord)
         {
             AttendanceRecord newAttendanceRecord = new AttendanceRecord(user, activity, dateTime);
 
@@ -84,6 +84,9 @@ namespace Attendance.WPF.Stores
             {
                 AttendanceRecords[index] = newAttendanceRecord;
             }
+
+            await _userDataService.UpdateAttendanceRecord(newAttendanceRecord, oldAttendanceRecord);
+
             CountTotalDayAsync(user, newAttendanceRecord, oldAttendanceRecord);
             CurrentAttendanceChange?.Invoke();
         }
@@ -96,17 +99,19 @@ namespace Attendance.WPF.Stores
             CurrentAttendanceRecordFixChange?.Invoke();
         }
 
-        public void AddAttendanceRecordFixUpdate(User user, AttendanceRecord attendanceRecord, Activity activity, DateTime entry)
+        public async Task AddAttendanceRecordFixUpdate(User user, AttendanceRecord attendanceRecord, Activity activity, DateTime entry)
         {
             AttendanceRecordFix attendanceRecordFix = new AttendanceRecordFix(attendanceRecord, user, activity, entry);
             AttendanceRecordFixes.Add(attendanceRecordFix);
+            await _userDataService.AddAttendanceRecordFix(attendanceRecordFix);
             CurrentAttendanceRecordFixChange?.Invoke();
         }
 
-        public void AddAttendanceRecordFixInsert(User user, Activity activity, DateTime entry)
+        public async Task AddAttendanceRecordFixInsert(User user, Activity activity, DateTime entry)
         {
             AttendanceRecordFix attendanceRecordFix = new AttendanceRecordFix(user, activity, entry);
             AttendanceRecordFixes.Add(attendanceRecordFix);
+            await _userDataService.AddAttendanceRecordFix(attendanceRecordFix);
             CurrentAttendanceRecordFixChange?.Invoke();
         }
 
@@ -251,7 +256,9 @@ namespace Attendance.WPF.Stores
                         }
                         else
                         {
-                            newAttendanceTotalInDay.Add(new AttendanceTotal(user, dateOnly, mainPauseActivity, totalRequiredPause - totalPauseInDay));
+                            AttendanceTotal pauseAttendanceTotal = new AttendanceTotal(user, dateOnly, mainPauseActivity, totalRequiredPause - totalPauseInDay);
+                            pauseAttendanceTotal.User = null;
+                            newAttendanceTotalInDay.Add(pauseAttendanceTotal);
                         }
 
                         //substract required pause from worked time
@@ -459,13 +466,9 @@ namespace Attendance.WPF.Stores
             return ActivitiesTotalInDay.OrderByDescending(a => a.Duration).ToList();
         }
 
-        public List<AttendanceRecordFix> GetPendingFixes(User user)
+        public async Task<List<AttendanceRecordFix>> GetPendingFixes(User user)
         {
-            List<AttendanceRecordFix> records = new List<AttendanceRecordFix>();
-
-            records.AddRange(AttendanceRecordFixes.Where(a => a.Approved == ApproveType.Waiting && (a.User.IsSubordinate(user))));
-
-            return records;
+            return await _userDataService.GetPendingAttendanceRecordFixes(user);
         }
 
         public async Task ApproveFix(AttendanceRecordFix attendanceRecordFix)
@@ -476,19 +479,21 @@ namespace Attendance.WPF.Stores
                     await AddAttendanceRecord(attendanceRecordFix.User, attendanceRecordFix.Activity, attendanceRecordFix.Entry);
                     break;
                 case FixType.Update:
-                    UpdateAttendanceRecord(attendanceRecordFix.User, attendanceRecordFix.Activity, attendanceRecordFix.Entry, attendanceRecordFix.AttendanceRecord);
+                    await UpdateAttendanceRecord(attendanceRecordFix.User, attendanceRecordFix.Activity, attendanceRecordFix.Entry, attendanceRecordFix.AttendanceRecord);
                     break;
                 case FixType.Delete:
-                    RemoveAttendanceRecord(attendanceRecordFix.AttendanceRecord);
+                    await RemoveAttendanceRecord(attendanceRecordFix.AttendanceRecord);
                     break;
             }
             attendanceRecordFix.Approved = ApproveType.Approved;
+            await _userDataService.FixDecision(attendanceRecordFix, ApproveType.Approved);
             CurrentAttendanceRecordFixChange?.Invoke();
         }
 
-        public void RejectFix(AttendanceRecordFix attendanceRecordFix)
+        public async Task RejectFix(AttendanceRecordFix attendanceRecordFix)
         {
             attendanceRecordFix.Approved = ApproveType.Rejected;
+            await _userDataService.FixDecision(attendanceRecordFix, ApproveType.Rejected);
             CurrentAttendanceRecordFixChange?.Invoke();
         }
     }

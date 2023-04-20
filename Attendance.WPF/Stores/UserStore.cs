@@ -32,17 +32,25 @@ namespace Attendance.WPF.Stores
 
         public AttendanceRecordStore AttendanceRecordStore { get; }
 
-        public void AddUser(User newUser)
+        public async Task AddUser(User newUser)
         {
-            if (!_users.Contains(newUser))
+            User user = await _userDataService.AddUser(newUser);
+            if (user != null)
             {
-                _users.Add(newUser);
-            }
+                _users.Add(user);
+            }    
+            
             UsersChange?.Invoke();
         }
 
-        public void DeleteUser(User deleteUser)
+        public async Task<List<User>> LoadFixProfile(User user)
         {
+            return await _userDataService.LoadUserProfileFixes(user);
+        }
+
+        public async Task DeleteUser(User deleteUser)
+        {
+            await _userDataService.RemoveUser(deleteUser);
             _users.Remove(deleteUser);
             UsersChange?.Invoke();
         }
@@ -53,14 +61,17 @@ namespace Attendance.WPF.Stores
             UsersChange?.Invoke();
         }
 
-        public void UpdateUser(User user)
+        public async Task UpdateUser(User user)
         {
+            await _userDataService.UpdateUser(user);
+            /*
             int index = _users.FindIndex(a => a.UserId == user.UserId);
             if (index != -1)
             {
                 user.ToApprove = false;
                 _users[index] = user;
             }
+            */
             UsersChange?.Invoke();
         }
 
@@ -86,13 +97,11 @@ namespace Attendance.WPF.Stores
             UsersChange?.Invoke();
         }
 
-        public List<User> GetPendingUpdates(User? user)
+        public async Task<List<User>> GetPendingUpdates(User? user)
         {
-            List<User> records = new List<User>();
-
-            records.AddRange(Users.Where(a => a.ToApprove && (a.IsSubordinate(user))));
-
-            return records;
+            //List<User> records = new List<User>();
+            //records.AddRange(Users.Where(a => a.ToApprove && (a.IsSubordinate(user))));
+            return await _userDataService.GetPendingProfileUpdates(user);
         }
 
         public async Task<User> GetUserByKey(string key)
@@ -100,9 +109,10 @@ namespace Attendance.WPF.Stores
             return await _userDataService.GetUserByKey(key);
         }
 
-        public User GetUserByUserId(int userId)
+        public async Task<User> GetUserByUserId(int userId)
         {
-            return Users.FirstOrDefault(a => a.UserId == userId && !a.ToApprove);
+            User user = await _userDataService.GetUserByUserId(userId);
+            return user;
         }
     }
 }

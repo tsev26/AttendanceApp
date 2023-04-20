@@ -106,7 +106,7 @@ namespace Attendance.WPF
         {
             return new SelectedDataStore(
                 serviceProvider.GetRequiredService<UserStore>(),
-                serviceProvider.GetRequiredService<AttendanceRecordStore>()
+                serviceProvider.GetRequiredService<UserDataService>()
                 );
         }
         private HomeViewModel CreateHomeViewModel(IServiceProvider serviceProvider)

@@ -45,7 +45,7 @@ namespace Attendance.WPF.ViewModels
         public ICommand UserSetActivityCommand { get; set; }
 
 
-        public List<Activity> Activities => _currentUserStore.User?.UserObligation.AvailableActivities.Where(a => a.Property.IsPlan).ToList() ?? null;
+        public List<Activity> Activities => _currentUserStore.User?.Group.Obligation.AvailableActivities.Where(a => a.Property.IsPlan).ToList() ?? null;
 
         public List<AttendanceRecord> FuturePlans => _attendanceRecordStore.AttendanceRecords.Where(a => a.Entry > DateTime.Now && a.AttendanceRecordDetail != null).ToList();
 

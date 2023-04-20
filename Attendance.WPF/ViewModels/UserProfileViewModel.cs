@@ -32,8 +32,13 @@ namespace Attendance.WPF.ViewModels
 
         private void UserStore_UsersChange()
         {
+            LoadFixProfile();
+        }
+
+        public async Task LoadFixProfile()
+        {
             UserUpdates.Clear();
-            foreach (var user in _userStore.Users.Where(a => a.UserId == CurrentUser.User.UserId && a.ToApprove == true))
+            foreach (var user in await _userStore.LoadFixProfile(CurrentUser.User))
             {
                 UserUpdates.Add(user);
             }

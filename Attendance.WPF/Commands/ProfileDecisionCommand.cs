@@ -1,4 +1,5 @@
-﻿using Attendance.WPF.Stores;
+﻿using Attendance.Domain.Models;
+using Attendance.WPF.Stores;
 using Attendance.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Attendance.WPF.Commands
 {
-    public class ProfileDecisionCommand : CommandBase
+    public class ProfileDecisionCommand : AsyncCommandBase
     {
         private readonly UserStore _userStore;
         private readonly MessageStore _messageStore;
@@ -21,16 +22,17 @@ namespace Attendance.WPF.Commands
             _usersRequestsViewModel = usersRequestsViewModel;
         }
 
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
             if (parameter is string value)
             {
                 if (value == "Approve")
                 {
-                    _userStore.UpdateUser(_usersRequestsViewModel.SelectedPendingProfileUpdate);
-                    _userStore.DeleteUser(_usersRequestsViewModel.SelectedPendingProfileUpdate);
+                    User updateUser = _usersRequestsViewModel.SelectedPendingProfileUpdate;
+                    await _userStore.UpdateUser(updateUser);
+                    await _userStore.DeleteUser(updateUser);
                     _messageStore.Message = "Žádost o změnu profilu schválena";
-                } 
+                }
                 else if (value == "Reject")
                 {
                     _userStore.DeleteUser(_usersRequestsViewModel.SelectedPendingProfileUpdate);

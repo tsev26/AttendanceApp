@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Attendance.WPF.Commands
 {
-    public class KeyUpsertCommand : CommandBase
+    public class KeyUpsertCommand : AsyncCommandBase
     {
         private readonly SelectedDataStore _selectedUserStore;
         private readonly INavigationService _closeAndReloadModalService;
@@ -21,9 +21,9 @@ namespace Attendance.WPF.Commands
             _closeAndReloadModalService = closeAndReloadModalService;
         }
 
-        public override void Execute(object? parameter)
+        public override async Task ExecuteAsync(object? parameter)
         {
-            bool change = _selectedUserStore.UpsertKey(_selectedUserStore.SelectedUser, _selectedUserStore.SelectedKeyValue);
+            bool change = await _selectedUserStore.UpsertKey(_selectedUserStore.SelectedUser, _selectedUserStore.SelectedKeyValue);
 
             if (!change)
             {

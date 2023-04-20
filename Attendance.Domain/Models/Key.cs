@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Attendance.Domain.Models
 {
-    public class Key : DomainObject
+    public class Key : DomainObject, IEqualityComparer<Key>
     {
         public Key(string keyValue) : base()
         {
@@ -25,7 +26,7 @@ namespace Attendance.Domain.Models
 
         
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public User? User { get; set; }
         public int UserId { get; set; }
         
 
@@ -46,6 +47,19 @@ namespace Attendance.Domain.Models
 
             Key other = (Key)obj;
             return KeyValue == other.KeyValue;
+        }
+
+        public bool Equals(Key? x, Key? y)
+        {
+            if (x == null || y == null)
+                return false;
+
+            return x.KeyValue == y.KeyValue;
+        }
+
+        public int GetHashCode([DisallowNull] Key obj)
+        {
+            return obj.KeyValue.GetHashCode();
         }
 
         public static bool operator ==(Key a, Key b)

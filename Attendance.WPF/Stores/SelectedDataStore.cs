@@ -1,4 +1,5 @@
 ﻿using Attendance.Domain.Models;
+using Attendance.EF.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,12 @@ namespace Attendance.WPF.Stores
     public class SelectedDataStore
     {
         private readonly UserStore _userStore;
-        public SelectedDataStore(UserStore userStore, AttendanceRecordStore attendanceRecordStore)
+        private readonly UserDataService _userDataService;
+
+        public SelectedDataStore(UserStore userStore,  UserDataService userDataService)
         {
             _userStore = userStore;
+            _userDataService = userDataService;
         }
 
         private User _selectedUser;
@@ -52,36 +56,37 @@ namespace Attendance.WPF.Stores
             SelectedUserChange?.Invoke();
         }
 
-        public void RemoveKey(User user, Key key)
+        public async Task RemoveKey(User user, Key key)
         {
+            await _userDataService.RemoveKey(key);
             user.Keys.Remove(key);
             SelectedUserChange?.Invoke();
         }
 
-        public bool UpsertKey(User user, Key newKeyValue)
+        public async Task<bool> UpsertKey(User user, Key newKeyValue)
         {
             bool change = false;
-            if (_userStore.Users.Exists(a => a.Keys.Contains(newKeyValue)))
+            change = await _userDataService.UpsertKey(user, newKeyValue);
+            if (change)
             {
-                return change;
+                Key? existingKey = user.Keys.FirstOrDefault(a => a.ID == newKeyValue.ID);
+                if (existingKey != null)
+                {
+                    int index = user.Keys.IndexOf(existingKey);
+                    user.Keys[index] = newKeyValue;
+                }
+                else
+                {
+                    user.Keys.Add(newKeyValue);
+                }
             }
-            Key? existingKey = user.Keys.FirstOrDefault(a => a.ID == newKeyValue.ID);
-            if (existingKey != null)
-            {
-                int index = user.Keys.IndexOf(existingKey);
-                user.Keys[index] = newKeyValue;
-            }
-            else
-            {
-                user.Keys.Add(newKeyValue);
-            }
-            change = true;
             SelectedUserChange?.Invoke();
             return change;
         }
 
-        public void SetFastWork(bool isFastWorkSet)
+        public async Task SetFastWork(bool isFastWorkSet)
         {
+            await _userDataService.SetFastWork(SelectedUser, isFastWorkSet);
             SelectedUser.IsFastWorkSet = isFastWorkSet;
         }
     }
