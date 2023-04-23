@@ -38,7 +38,8 @@ namespace Attendance.WPF.ViewModels
             ShowUsersKeys = false;
             ShowUsersAttendace = false;
 
-            UserStore_UsersChange();
+            LoadUsers(CurrentUser.User);
+            _groupStore.LoadGroups();
         }
         private void SelectedUserStore_SelectedUserChange()
         {
@@ -49,10 +50,16 @@ namespace Attendance.WPF.ViewModels
             SelectedKeyIndex = -1;
         }
       
+        private async Task LoadUsers(User user)
+        {
+            await _userStore.LoadUsers(user);
+            Users = _userStore.Users.ToList();
+            OnPropertyChanged(nameof(Users));
+        }
 
         private void UserStore_UsersChange()
         {
-            Users = _userStore.Users.Where(a => !a.ToApprove && a.IsSubordinate(CurrentUser.User)).ToList(); //.Select(u => u.Clone())
+            Users = _userStore.Users.ToList();
             OnPropertyChanged(nameof(Users));
 
             SelectedUserIndex = -1;
@@ -78,6 +85,8 @@ namespace Attendance.WPF.ViewModels
                 OnPropertyChanged(nameof(SelectedUserIndex));
                 OnPropertyChanged(nameof(IsUserSelected));
                 OnPropertyChanged(nameof(SelectedUser));
+                _selectedUserStore.SelectedUser = SelectedUser;
+                SelectedUserObligation = IsUserSelected ? new Obligation(SelectedUser.UserObligation) : null;
                 SelectedUserStore_SelectedUserChange();
             }
         }
@@ -85,6 +94,19 @@ namespace Attendance.WPF.ViewModels
         public bool IsUserSelected => SelectedUserIndex != -1;
         public User SelectedUser => IsUserSelected ? Users[SelectedUserIndex] : null;
 
+        private Obligation _selectedUserObligation;
+        public Obligation SelectedUserObligation
+        {
+            get
+            {
+                return _selectedUserObligation;
+            }
+            set
+            {
+                _selectedUserObligation = value;
+                OnPropertyChanged(nameof(SelectedUserObligation));
+            }
+        }
 
         private bool _showUsersProfile = false;
         public bool ShowUsersProfile

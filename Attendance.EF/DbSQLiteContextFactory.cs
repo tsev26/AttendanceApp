@@ -176,13 +176,15 @@ namespace Attendance.EF
                         activitiesAll.Add(btActivity);
                         activitiesAll.Add(vacationActivity);
                         
-                        Obligation obligation = new Obligation(8, true, new TimeOnly(9, 0, 0), new TimeOnly(15, 0, 0), true, true, true, true, true, false, false, activitiesBasic);
-                        Obligation obligationVedeni = new Obligation(6, true, new TimeOnly(12, 0, 0), new TimeOnly(13, 0, 0), true, true, false, true, true, false, false, activitiesAll);
+                        Obligation obligation = new Obligation(8, true, new TimeOnly(9, 0, 0), new TimeOnly(15, 0, 0), true, true, true, true, true, false, false);
+                        Obligation obligationVedeni = new Obligation(6, true, new TimeOnly(12, 0, 0), new TimeOnly(13, 0, 0), true, true, false, true, true, false, false);
                         
                         Group leadershipGroup = new Group("Vedení", null);
                         Group basicGroup = new Group("Základní", null);
                         leadershipGroup.Obligation = obligationVedeni;
                         basicGroup.Obligation = obligation;
+                        leadershipGroup.AvailableActivities = activitiesAll;
+                        basicGroup.AvailableActivities = activitiesBasic;
 
 
                         User admin = new User("admin", "admin", "tsevcu@gmail.com", true);

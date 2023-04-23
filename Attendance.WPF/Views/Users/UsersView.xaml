@@ -238,12 +238,12 @@
                                 Height="35"
                                 Margin="2"
                                 VerticalContentAlignment="Center"
-                                IsChecked="{Binding SelectedUser.UserObligation.HasRegularWorkingTime, Mode=TwoWay}" />
+                                IsChecked="{Binding SelectedUserObligation.HasRegularWorkingTime, Mode=TwoWay}" />
 
                             <Grid
                                 Grid.Row="6"
                                 Grid.ColumnSpan="2"
-                                Visibility="{Binding SelectedUser.UserObligation.HasRegularWorkingTime, Converter={StaticResource BoolToVisibilityConverter}}">
+                                Visibility="{Binding SelectedUserObligation.HasRegularWorkingTime, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto" />
                                     <RowDefinition Height="auto" />
@@ -268,7 +268,7 @@
                                     Margin="2"
                                     VerticalContentAlignment="Center"
                                     FontSize="20"
-                                    Text="{Binding SelectedUser.UserObligation.MinHoursWorked, Mode=TwoWay}" />
+                                    Text="{Binding SelectedUserObligation.MinHoursWorked, Mode=TwoWay}" />
 
                                 <TextBlock
                                     Grid.Row="1"
@@ -283,7 +283,7 @@
                                     Margin="2"
                                     VerticalContentAlignment="Center"
                                     FontSize="20"
-                                    Text="{Binding SelectedUser.UserObligation.LatestArival, Mode=TwoWay, StringFormat=HH:mm, Converter={StaticResource TimeOnlyConverter}}" />
+                                    Text="{Binding SelectedUserObligation.LatestArival, Mode=TwoWay, StringFormat=HH:mm, Converter={StaticResource TimeOnlyConverter}}" />
 
                                 <TextBlock
                                     Grid.Row="2"
@@ -298,7 +298,7 @@
                                     Margin="2"
                                     VerticalContentAlignment="Center"
                                     FontSize="20"
-                                    Text="{Binding SelectedUser.UserObligation.EarliestDeparture, Mode=TwoWay, StringFormat=HH:mm, Converter={StaticResource TimeOnlyConverter}}" />
+                                    Text="{Binding SelectedUserObligation.EarliestDeparture, Mode=TwoWay, StringFormat=HH:mm, Converter={StaticResource TimeOnlyConverter}}" />
 
 
                                 <Grid
@@ -375,31 +375,31 @@
                                     <ToggleButton
                                         Grid.Row="2"
                                         Grid.Column="0"
-                                        IsChecked="{Binding SelectedUser.UserObligation.WorksMonday, Mode=TwoWay}" />
+                                        IsChecked="{Binding SelectedUserObligation.WorksMonday, Mode=TwoWay}" />
                                     <ToggleButton
                                         Grid.Row="2"
                                         Grid.Column="1"
-                                        IsChecked="{Binding SelectedUser.UserObligation.WorksTuesday, Mode=TwoWay}" />
+                                        IsChecked="{Binding SelectedUserObligation.WorksTuesday, Mode=TwoWay}" />
                                     <ToggleButton
                                         Grid.Row="2"
                                         Grid.Column="2"
-                                        IsChecked="{Binding SelectedUser.UserObligation.WorksWednesday, Mode=TwoWay}" />
+                                        IsChecked="{Binding SelectedUserObligation.WorksWednesday, Mode=TwoWay}" />
                                     <ToggleButton
                                         Grid.Row="2"
                                         Grid.Column="3"
-                                        IsChecked="{Binding SelectedUser.UserObligation.WorksThursday, Mode=TwoWay}" />
+                                        IsChecked="{Binding SelectedUserObligation.WorksThursday, Mode=TwoWay}" />
                                     <ToggleButton
                                         Grid.Row="2"
                                         Grid.Column="4"
-                                        IsChecked="{Binding SelectedUser.UserObligation.WorksFriday, Mode=TwoWay}" />
+                                        IsChecked="{Binding SelectedUserObligation.WorksFriday, Mode=TwoWay}" />
                                     <ToggleButton
                                         Grid.Row="2"
                                         Grid.Column="5"
-                                        IsChecked="{Binding SelectedUser.UserObligation.WorksSaturday, Mode=TwoWay}" />
+                                        IsChecked="{Binding SelectedUserObligation.WorksSaturday, Mode=TwoWay}" />
                                     <ToggleButton
                                         Grid.Row="2"
                                         Grid.Column="6"
-                                        IsChecked="{Binding SelectedUser.UserObligation.WorksSunday, Mode=TwoWay}" />
+                                        IsChecked="{Binding SelectedUserObligation.WorksSunday, Mode=TwoWay}" />
                                 </Grid>
                             </Grid>
 

@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Attendance.WPF.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:viewmodels="clr-namespace:Attendance.WPF.ViewModels"
+    xmlns:viewmodels="clr-namespace:Attendance.WPF.ViewModels" xmlns:controls="clr-namespace:Attendance.WPF.Controls"
     d:DataContext="{d:DesignInstance viewmodels:UserFixesAttendanceRecordViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -90,7 +90,7 @@
                     Grid.Row="1"
                     Margin="10"
                     Style="{StaticResource BorderBasic}">
-                    <ListView
+                    <controls:ListViewBetter
                         x:Name="ListOfAttendanceRecords"
                         Width="auto"
                         Focusable="False"
@@ -104,12 +104,12 @@
                                         <Setter Property="Visibility" Value="Collapsed" />
                                     </Style>
                                 </GridView.ColumnHeaderContainerStyle>
-                                <GridViewColumn Width="125" DisplayMemberBinding="{Binding Activity}" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Activity}" />
                                 <GridViewColumn DisplayMemberBinding="{Binding Entry, StringFormat={}{0:dd.MM.yyyy HH:mm}}" />
 
                             </GridView>
                         </ListView.View>
-                    </ListView>
+                    </controls:ListViewBetter>
                 </Border>
 
                 <StackPanel

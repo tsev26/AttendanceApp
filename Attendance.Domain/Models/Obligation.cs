@@ -20,8 +20,7 @@ namespace Attendance.Domain.Models
                           bool worksThursday, 
                           bool worksFriday, 
                           bool worksSaturday, 
-                          bool worksSunday, 
-                          List<Activity> availableActivities) : base()
+                          bool worksSunday) : base()
         {
             MinHoursWorked = minHoursWorked;
             HasRegularWorkingTime = hasRegularWorkingTime;
@@ -34,7 +33,6 @@ namespace Attendance.Domain.Models
             WorksFriday = worksFriday;
             WorksSaturday = worksSaturday;
             WorksSunday = worksSunday;
-            AvailableActivities = new List<Activity>(availableActivities);
         }
 
         public Obligation(Obligation obligation)
@@ -50,14 +48,12 @@ namespace Attendance.Domain.Models
             WorksFriday = obligation.WorksFriday;
             WorksSaturday = obligation.WorksSaturday;
             WorksSunday = obligation.WorksSunday;
-            AvailableActivities = new List<Activity>(obligation.AvailableActivities);
         }
 
         public Obligation() 
         {
             MinHoursWorked = 0;
             HasRegularWorkingTime = false;
-            AvailableActivities = new List<Activity>();
         }
 
         public double MinHoursWorked { get; set; }
@@ -72,9 +68,6 @@ namespace Attendance.Domain.Models
         public bool WorksSaturday { get; set; }
         public bool WorksSunday { get; set; }
 
-        [InverseProperty("Obligations")]
-        public virtual List<Activity> AvailableActivities { get; set; }
-
         public virtual User ObligationMember { get; set;  }
 
         public virtual Group ObligationGroup { get; set; }
@@ -85,6 +78,44 @@ namespace Attendance.Domain.Models
             {
                 ID = this.ID
             };
+        }
+
+        public bool Equals(Obligation other)
+        {
+            if (other == null)
+                return false;
+            bool result = MinHoursWorked == other.MinHoursWorked &&
+            HasRegularWorkingTime == other.HasRegularWorkingTime &&
+            LatestArival == other.LatestArival &&
+            EarliestDeparture == other.EarliestDeparture &&
+            WorksMonday == other.WorksMonday &&
+            WorksTuesday == other.WorksTuesday &&
+            WorksWednesday == other.WorksWednesday &&
+            WorksThursday == other.WorksThursday &&
+            WorksFriday == other.WorksFriday &&
+            WorksSaturday == other.WorksSaturday &&
+            WorksSunday == other.WorksSunday;
+            return result;
+        }
+
+        public static bool operator ==(Obligation a, Obligation b)
+        {
+            if (ReferenceEquals(a, b))
+            {
+                return true;
+            }
+
+            if (a is null || b is null)
+            {
+                return false;
+            }
+
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(Obligation a, Obligation b)
+        {
+            return !(a == b);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Attendance.WPF.Stores;
+﻿using Attendance.Domain.Models;
+using Attendance.WPF.Stores;
 using Attendance.WPF.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,11 @@ namespace Attendance.WPF.Commands
 
         public override void Execute(object? parameter)
         {
-            _userStore.AddUser(_userProfileViewModel.UserUpdate);
+            User user = _userProfileViewModel.UserUpdate;
+            user.UserUpdateId = _userProfileViewModel.CurrentUser.User.ID;
+            user.ID = 0;
+            user.ToApprove = true;
+            _userStore.AddUser(user);
             _messageStore.Message = "Vytvořena žádost o opravu profilu";
         }
     }

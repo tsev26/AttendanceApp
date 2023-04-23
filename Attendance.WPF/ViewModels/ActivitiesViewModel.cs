@@ -28,6 +28,8 @@ namespace Attendance.WPF.ViewModels
             _activityStore.GlobalSettingChange += ActivityStore_GlobalSettingChange;
             ActivityStore_ActivitiesChange();
             ActivityStore_GlobalSettingChange();
+
+            _activityStore.LoadActivities();
         }
 
         private void ActivityStore_GlobalSettingChange()

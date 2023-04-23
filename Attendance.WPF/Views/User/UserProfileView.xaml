@@ -322,7 +322,6 @@
 
                     <TextBlock
                         Grid.Row="0"
-                        Margin="0"
                         HorizontalAlignment="Center"
                         Style="{StaticResource DetailTextBlock}"
                         Text="Odeslané žádosti o úpravu profilu" />

@@ -38,7 +38,7 @@ namespace Attendance.WPF.ViewModels
         public ICommand CloseModalCommand { get; }
         public ICommand SaveChangeCommand { get; }
 
-        public List<Activity> Activities => _selectedUserStore.SelectedUser.UserObligation.AvailableActivities;
+        public List<Activity> Activities => _selectedUserStore.SelectedUser.Group.AvailableActivities;
 
         public Activity Activity { get; set; }
 

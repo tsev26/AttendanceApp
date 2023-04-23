@@ -18,7 +18,7 @@ namespace Attendance.WPF.ViewModels
         private readonly AttendanceRecordStore _attendanceRecordStore;
         private readonly INavigationService _navigateToHome;
 
-        public List<Activity> Activities => _currentUserStore.User?.Group.Obligation.AvailableActivities.Where(a => !a.Property.IsPlan).ToList() ?? null;
+        public List<Activity> Activities => _currentUserStore.User?.Group.AvailableActivities.Where(a => !a.Property.IsPlan).ToList() ?? null;
 
         public UserSelectActivityViewModel(ActivityStore activityStore, 
                                            CurrentUserStore currentUserStore, 

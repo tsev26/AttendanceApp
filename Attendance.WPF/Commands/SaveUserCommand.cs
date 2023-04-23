@@ -1,4 +1,5 @@
-﻿using Attendance.WPF.Services;
+﻿using Attendance.Domain.Models;
+using Attendance.WPF.Services;
 using Attendance.WPF.Stores;
 using Attendance.WPF.ViewModels;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Attendance.WPF.Commands
 {
-    public class SaveUserCommand : CommandBase
+    public class SaveUserCommand : AsyncCommandBase
     {
         private readonly UserStore _userStore;
         private readonly UsersViewModel _usersViewModel;
@@ -22,10 +23,17 @@ namespace Attendance.WPF.Commands
             _messageStore = messageStore;
         }
 
-        public override void Execute(object? parameter)
+
+        public override async Task ExecuteAsync(object? parameter)
         {
-            _userStore.UpdateUser(_usersViewModel.SelectedUser);
-            _messageStore.Message = "Profil uživatele " + _usersViewModel.SelectedUser + " upraven";
+            User user = _usersViewModel.SelectedUser.Clone();
+            user.Obligation = _usersViewModel.SelectedUserObligation;
+            if (user.Obligation == user.Group.Obligation)
+            {
+                user.Obligation = null;
+            }
+            await _userStore.UpdateUser(user);
+            _messageStore.Message = "Profil uživatele " + user + " upraven";
         }
     }
 }

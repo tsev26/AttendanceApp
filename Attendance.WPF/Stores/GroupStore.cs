@@ -1,4 +1,5 @@
 ﻿using Attendance.Domain.Models;
+using Attendance.EF.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +12,22 @@ namespace Attendance.WPF.Stores
     public class GroupStore
     {
         private List<Group> _groups;
+        private readonly UserDataService _userDataService;
 
-        public GroupStore()
+        public GroupStore(UserDataService userDataService)
         {
             _groups = new List<Group>();
+            _userDataService = userDataService;
         }
 
         public event Action GroupsChange;
         public event Action GroupsActivitiesChange;
+
+
+        public async Task LoadGroups()
+        {
+            Groups = await _userDataService.GetGroups();
+        }
 
         public List<Group> Groups
         {
@@ -26,21 +35,18 @@ namespace Attendance.WPF.Stores
             set
             {
                 _groups = value;
+                GroupsChange?.Invoke();
             }
         }
 
-        public void AddGroup(Group newGroup)
+        public async Task AddGroup(Group newGroup)
         {
-            if (!_groups.Contains(newGroup))
+            if (!_groups.Any(a => a.Name == newGroup.Name))
             {
+                newGroup.Members = new List<User>();
+                await _userDataService.AddGroups(newGroup);
                 _groups.Add(newGroup);
             }
-            GroupsChange?.Invoke();
-        }
-
-        public void DeleteUser(Group deleteGroup)
-        {
-            _groups.Remove(deleteGroup);
             GroupsChange?.Invoke();
         }
 
@@ -70,20 +76,23 @@ namespace Attendance.WPF.Stores
         }
         */
 
-        public void RemoveGroup(Group group)
+        public async Task RemoveGroup(Group group)
         {
-            _groups.Remove(group);
-            GroupsChange?.Invoke();
+            await _userDataService.RemoveGroups(group);
+            LoadGroups();
         }
 
-        public void SetSupervisor(User? user, Group group)
+        public async Task SetSupervisor(User? user, Group group)
         {
+            await _userDataService.SetSupervisorToGroup(user, group);
             group.Supervisor = user;
             GroupsChange?.Invoke();
         }
 
-        public void UpdateGroupObligation(Group group)
+        public async Task UpdateGroupObligation(Group group)
         {
+            await _userDataService.UpdateGroup(group);
+
             int index = _groups.FindIndex(a => a.ID == group.ID);
 
             if (index != -1)
@@ -93,15 +102,17 @@ namespace Attendance.WPF.Stores
             GroupsChange?.Invoke();
         }
 
-        public void RemoveActivityFromGroup(Group group, Activity activity)
+        public async Task RemoveActivityFromGroup(Group group, Activity activity)
         {
-            group.Obligation.AvailableActivities.Remove(activity);
+            await _userDataService.RemoveActivityFromGroup(group, activity);
+            group.AvailableActivities.Remove(activity);
             GroupsActivitiesChange?.Invoke();
         }
 
-        public void AddActivityToGroup(Group group, Activity activity)
+        public async Task AddActivityToGroup(Group group, Activity activity)
         {
-            group.Obligation.AvailableActivities.Add(activity);
+            await _userDataService.AddActivityToGroup(group, activity);
+            group.AvailableActivities.Add(activity);
             GroupsActivitiesChange?.Invoke();
         }
     }

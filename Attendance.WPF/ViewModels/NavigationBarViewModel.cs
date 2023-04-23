@@ -97,7 +97,7 @@ namespace Attendance.WPF.ViewModels
         public ICommand NavigateRequestsCommand { get; }
         public ICommand NavigateUserPlanCommand { get; }
 
-        public bool IsButtonPlanVisibile => UserLogOn && _currentUser.User.Group.Obligation.AvailableActivities.Exists(a => a.Property.IsPlan);
+        public bool IsButtonPlanVisibile => UserLogOn && _currentUser.User.Group.AvailableActivities.Exists(a => a.Property.IsPlan);
 
         public override void Dispose()
         {

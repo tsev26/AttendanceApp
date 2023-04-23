@@ -21,6 +21,11 @@ namespace Attendance.WPF.Stores
 
         public event Action UsersChange;
 
+        public async Task LoadUsers(User? user = null)
+        {
+            Users = await _userDataService.GetUsers(user);
+        }
+
         public List<User> Users
         {
             get { return _users; }
@@ -34,12 +39,17 @@ namespace Attendance.WPF.Stores
 
         public async Task AddUser(User newUser)
         {
+            Group group = newUser.Group;
             User user = await _userDataService.AddUser(newUser);
+            
+            
             if (user != null)
             {
+                user.Group = group;
                 _users.Add(user);
             }    
             
+
             UsersChange?.Invoke();
         }
 
@@ -55,23 +65,26 @@ namespace Attendance.WPF.Stores
             UsersChange?.Invoke();
         }
 
-        public void SetGroup(User user, Group group)
+        public async Task SetGroup(User user, Group group)
         {
+            await _userDataService.UserSetGroup(user, group);
             user.Group = group;
+            group.Members.Add(user);
             UsersChange?.Invoke();
         }
 
         public async Task UpdateUser(User user)
         {
             await _userDataService.UpdateUser(user);
-            /*
-            int index = _users.FindIndex(a => a.UserId == user.UserId);
+            
+            
+            int index = _users.FindIndex(a => a.ID == user.ID);
             if (index != -1)
             {
                 user.ToApprove = false;
                 _users[index] = user;
             }
-            */
+            
             UsersChange?.Invoke();
         }
 

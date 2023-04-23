@@ -40,7 +40,8 @@ namespace Attendance.Domain.Models
         public string ActName2 => Shortcut;
         public string ActName3 => (PositionOfShortCutInName != 0) ? Name.Substring(PositionOfShortCutInName, LenghtOfName - PositionOfShortCutInName) : "";
 
-        public virtual List<Obligation> Obligations { get; set; }
+        public virtual List<Group> Groups { get; set; }
+
         public Activity Clone()
         {
             return new Activity(this)

@@ -9,5 +9,10 @@ namespace Attendance.Domain.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
+
+        public DomainObject()
+        {
+            ID = 0;
+        }
     }
 }

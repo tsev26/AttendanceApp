@@ -98,7 +98,7 @@ namespace Attendance.WPF.ViewModels
 
         public bool IsSelectedPendingProfileUpdate => SelectedPendingProfileUpdateIndex != -1;
         public User SelectedPendingProfileUpdate => IsSelectedPendingProfileUpdate ? PendingProfileUpdates[SelectedPendingProfileUpdateIndex] : null;
-        public User SelectedPendingProfileNow => IsSelectedPendingProfileUpdate ? _userStore.GetUserByUserId(SelectedPendingProfileUpdate.UserId).GetAwaiter().GetResult() : null;
+        public User SelectedPendingProfileNow => IsSelectedPendingProfileUpdate ? _userStore.GetUserByUserId((int)SelectedPendingProfileUpdate.UserUpdateId).GetAwaiter().GetResult() : null;
 
 
         public override void Dispose()

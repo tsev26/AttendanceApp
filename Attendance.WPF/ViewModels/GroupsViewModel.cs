@@ -41,11 +41,14 @@ namespace Attendance.WPF.ViewModels
             Groups = new List<Group>(_groupStore.Groups);
             ActivitiesGroup = new List<Activity>();
             ActivitiesNotAssignedGroup = new List<Activity>();
+            LoadActivities();
+            
 
             _groupStore.GroupsChange += GroupStore_GroupsChange;
             _userStore.UsersChange += UserStore_UsersChange;
             _groupStore.GroupsActivitiesChange += GroupStore_GroupsActivitiesChange;
-            GroupStore_GroupsChange();
+            _groupStore.LoadGroups();
+            _userStore.LoadUsers();
         }
 
 
@@ -86,11 +89,16 @@ namespace Attendance.WPF.ViewModels
             OnPropertyChanged(nameof(UsersToSet));
         }
 
+        public async Task LoadActivities()
+        {
+            await _activityStore.LoadActivities();
+        }
+
         private void GroupStore_GroupsActivitiesChange()
         {
             if (IsGroupSelected && SetActivities)
             {
-                ActivitiesGroup = SelectedGroup.Obligation.AvailableActivities.ToList();
+                ActivitiesGroup = SelectedGroup.AvailableActivities.ToList();
                 OnPropertyChanged(nameof(ActivitiesGroup));
 
                 ActivitiesNotAssignedGroup = _activityStore.Activities.Where(a => !ActivitiesGroup.Contains(a)).ToList();

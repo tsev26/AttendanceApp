@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Attendance.WPF.Commands
 {
-    public class CreateUserCommand : CommandBase
+    public class CreateUserCommand : AsyncCommandBase
     {
         private UserStore _userStore;
         private UserUpsertViewModel _userUpsertViewModel;
@@ -23,12 +23,13 @@ namespace Attendance.WPF.Commands
             _closeModalNavigationService = closeModalNavigationService;
         }
 
-        public override void Execute(object? parameter)
+
+        public override async Task ExecuteAsync(object? parameter)
         {
             User newUser = new User(_userUpsertViewModel.FirstName, _userUpsertViewModel.LastName, _userUpsertViewModel.Email, false, false);
             newUser.Group = _userUpsertViewModel.SelectedGroup;
             newUser.Keys.Add(new Key(_userUpsertViewModel.KeyValue));
-            _userStore.AddUser(newUser);
+            await _userStore.AddUser(newUser);
             _closeModalNavigationService.Navigate("Uživatel " + newUser + " vytvořen");
         }
     }

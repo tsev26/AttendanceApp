@@ -17,6 +17,7 @@ namespace Attendance.Domain.Models
             Name = name;
             Supervisor = superVisor;
             Obligation = new Obligation();
+            AvailableActivities = new List<Activity>();
         }
 
         public Group(Group group)
@@ -24,6 +25,7 @@ namespace Attendance.Domain.Models
             Name = group.Name;
             Supervisor = group.Supervisor;
             Obligation = new Obligation();
+            AvailableActivities = new List<Activity>();
         }
 
         public string Name { get; set; }
@@ -39,7 +41,9 @@ namespace Attendance.Domain.Models
         [InverseProperty("Group")]
         public List<User> Members { get; set; }
 
-
+        
+        [InverseProperty("Groups")]
+        public virtual List<Activity> AvailableActivities { get; set; }
 
         public override string ToString()
         {
@@ -53,6 +57,7 @@ namespace Attendance.Domain.Models
                 ID = this.ID,
                 Obligation = this.Obligation.Clone(),
                 Supervisor = this.Supervisor,
+                AvailableActivities = new List<Activity>(this.AvailableActivities)
             };
         }
 

@@ -71,7 +71,7 @@ namespace Attendance.WPF.Stores
 
         public bool IsUserSuperVisor { get; private set; }
 
-        public List<User> SubordinateUsers => _userStore.Users.Where(a => a.IsSubordinate(User)).ToList();
+        public List<User> SubordinateUsers => _userStore.Users.Where(a => a.Group.Supervisor == User || User.IsAdmin).ToList();
 
         public async Task LoadUser(User user)
         {

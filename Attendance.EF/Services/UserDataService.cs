@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Threading.Tasks;
 using Key = Attendance.Domain.Models.Key;
@@ -21,26 +22,57 @@ namespace Attendance.EF.Services
             _nonQueryDataService = new NonQueryDataService<User>(dbContextFactory);
         }
 
+        public async Task AddActivityToGroup(Group group, Activity activity)
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    Activity activityToAdd = await context.Activities.FindAsync(activity.ID);
+                    Group groupToAddActivity = await context.Groups.Include(a => a.AvailableActivities).FirstOrDefaultAsync(a => a.Name == group.Name);
+                    groupToAddActivity.AvailableActivities.Add(activityToAdd);
+
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+            }
+        }
+
         public async Task AddAttendanceRecord(AttendanceRecord attendanceRecord)
         {
             using (DatabaseContext context = _dbContextFactory.CreateDbContext())
             {
-                User user = await context.Users.FindAsync(attendanceRecord.User.ID);
-                Activity activity = await context.Activities.FindAsync(attendanceRecord.Activity.ID);
-                AttendanceRecord attendanceRecordAdd = new AttendanceRecord
+                try
                 {
-                    User = user,
-                    UserId = user.ID,
-                    Activity = activity,
-                    ActivityId = activity.ID,
-                    Entry = attendanceRecord.Entry,
-                    AttendanceRecordDetail = attendanceRecord.AttendanceRecordDetail,
-                    AttendanceRecordDetailInt = attendanceRecord.AttendanceRecordDetailInt
-                };
+                    User user = await context.Users.FindAsync(attendanceRecord.User.ID);
+                    Activity activity = await context.Activities.FindAsync(attendanceRecord.Activity.ID);
+                    AttendanceRecord attendanceRecordAdd = new AttendanceRecord
+                    {
+                        User = user,
+                        UserId = user.ID,
+                        Activity = activity,
+                        ActivityId = activity.ID,
+                        Entry = attendanceRecord.Entry,
+                        AttendanceRecordDetail = attendanceRecord.AttendanceRecordDetail,
+                        AttendanceRecordDetailInt = attendanceRecord.AttendanceRecordDetailInt
+                    };
 
-                context.AttendanceRecords.Add(attendanceRecordAdd);
-                await context.SaveChangesAsync();
-                return;
+                    context.AttendanceRecords.Add(attendanceRecordAdd);
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
             }
         }
 
@@ -77,8 +109,6 @@ namespace Attendance.EF.Services
                     // log the error or display the error message to the user
                     Console.WriteLine(errorMsg);
                 }
-
-                return;
             }
         }
     
@@ -87,12 +117,44 @@ namespace Attendance.EF.Services
         {
             using (DatabaseContext context = _dbContextFactory.CreateDbContext())
             {
-                List<AttendanceTotal> attendaceTotalsToRemove = context.AttendanceTotals.Where(a => a.User == user && updatesDays.Contains(a.Date)).ToList();
-                context.AttendanceTotals.RemoveRange(attendaceTotalsToRemove);
-                context.AttendanceTotals.AddRange(newAttendanceTotalInDay);
-                await context.SaveChangesAsync();
+                try
+                {
+                    List<AttendanceTotal> attendaceTotalsToRemove = context.AttendanceTotals.Where(a => a.User == user && updatesDays.Contains(a.Date)).ToList();
+                    context.AttendanceTotals.RemoveRange(attendaceTotalsToRemove);
+                    context.AttendanceTotals.AddRange(newAttendanceTotalInDay);
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+            }
+        }
 
-                return;
+        public async Task AddGroups(Group newGroup)
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    Group group = new Group(newGroup);
+                    group.SupervisorId = group.Supervisor.ID;
+                    group.Supervisor = null;
+                    group.Members = new List<User>();
+                    context.Groups.Add(group);
+
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
             }
         }
 
@@ -102,11 +164,11 @@ namespace Attendance.EF.Services
             {
                 try
                 {
-                    if (context.Users.Contains(newUser))
+                    if (!context.Users.Contains(newUser))
                     {
                         User userToApprove = new User()
                         {
-                            UserId = newUser.UserId,
+                            UserUpdateId = newUser.UserUpdateId,
                             FirstName = newUser.FirstName,
                             LastName = newUser.LastName,
                             Email = newUser.Email,
@@ -115,8 +177,12 @@ namespace Attendance.EF.Services
                             IsFastWorkSet = newUser.IsFastWorkSet,
                             Keys = new List<Key>(),
                             AttendanceRecords = new List<AttendanceRecord>(),
-                            AttendanceTotals = new List<AttendanceTotal>(),
-                            Obligation = new Obligation()
+                            AttendanceTotals = new List<AttendanceTotal>()
+                        };
+
+                        if (newUser.Obligation != null)
+                        {
+                            userToApprove.Obligation = new Obligation()
                             {
                                 MinHoursWorked = newUser.Obligation.MinHoursWorked,
                                 HasRegularWorkingTime = newUser.Obligation.HasRegularWorkingTime,
@@ -128,10 +194,23 @@ namespace Attendance.EF.Services
                                 WorksThursday = newUser.Obligation.WorksThursday,
                                 WorksFriday = newUser.Obligation.WorksFriday,
                                 WorksSaturday = newUser.Obligation.WorksSaturday,
-                                WorksSunday = newUser.Obligation.WorksSunday,
-                                AvailableActivities = new List<Activity>()
+                                WorksSunday = newUser.Obligation.WorksSunday
+                            };
+                        }
+                        if (newUser.UserUpdateId == null)
+                        {
+                            if (newUser.Group != null)
+                            {
+                                userToApprove.GroupId = newUser.Group.ID;
                             }
-                        };
+
+                            if (newUser.Keys != null)
+                            {
+                                userToApprove.Keys = newUser.Keys;
+                            }
+                        }
+                        
+
                         context.Users.Add(userToApprove);
                         await context.SaveChangesAsync();
                         return userToApprove;
@@ -176,12 +255,23 @@ namespace Attendance.EF.Services
         {
             using (DatabaseContext context = _dbContextFactory.CreateDbContext())
             {
-                return await context.AttendanceRecordFixes
-                                    .Where(a => a.User == user)
-                                    .Include(a => a.Activity)
-                                    .ThenInclude(a => a.Property)
-                                    .AsNoTracking()
-                                    .ToListAsync();
+                try
+                {
+                    return await context.AttendanceRecordFixes
+                                        .Where(a => a.User == user)
+                                        .Include(a => a.Activity)
+                                        .ThenInclude(a => a.Property)
+                                        .AsNoTracking()
+                                        .ToListAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+                return null;
             }
         }
 
@@ -189,13 +279,24 @@ namespace Attendance.EF.Services
         {
             using (DatabaseContext context = _dbContextFactory.CreateDbContext())
             {
-                return await context.AttendanceRecords
+                try
+                {
+                    return await context.AttendanceRecords
                                     .Where(a => a.User == user)
                                     .Include(a => a.Activity)
                                     .ThenInclude(a => a.Property)
                                     .Include(a => a.AttendanceRecordDetail)
                                     .AsNoTracking()
                                     .ToListAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+                return null;
             }
         }
 
@@ -203,12 +304,48 @@ namespace Attendance.EF.Services
         {
             using (DatabaseContext context = _dbContextFactory.CreateDbContext())
             {
-                return await context.AttendanceTotals
+                try
+                {
+                    return await context.AttendanceTotals
                                     .Where(a => a.User == user)
                                     .Include(a => a.Activity)
                                     .ThenInclude(a => a.Property)
                                     .AsNoTracking()
                                     .ToListAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+                return null;
+            }
+        }
+
+        public async Task<List<Group>> GetGroups()
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    var list = await context.Groups
+                                            .Include(a => a.Obligation)
+                                            .Include(a => a.Supervisor)
+                                            .Include(a => a.AvailableActivities)
+                                            .Include(a => a.Members)
+                                            .ToListAsync();
+                    return list;
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+                return null;
             }
         }
 
@@ -278,7 +415,7 @@ namespace Attendance.EF.Services
             {
                 try
                 {
-                    User user = await context.Users.Where(a => a.UserId == userId && !a.ToApprove)
+                    User user = await context.Users.Where(a => a.ID == userId && !a.ToApprove)
                                                    .Include(a => a.Obligation)
                                                    .Include(a => a.Group)
                                                    .ThenInclude(a => a.Obligation)
@@ -296,13 +433,51 @@ namespace Attendance.EF.Services
             }
         }
 
+        public async Task<List<User>> GetUsers(User? user = null)
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    List<User> users = await context.Users.Where(a => !a.ToApprove)
+                                                    .Include(a => a.AttendanceRecords)
+                                                    .Include(a => a.Group)
+                                                        .ThenInclude(a => a.Obligation)
+                                                    .Include(a => a.Obligation)
+                                                    .Include(a => a.Keys)
+                                                    .Where(a => (user == null) || (a.Group.SupervisorId == user.ID || user.IsAdmin))
+                                                    .ToListAsync();
+                    return users;
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+                return null;
+            }
+        }
+
         public async Task<bool> IsSupervisor(User? user)
         {
             using (DatabaseContext context = _dbContextFactory.CreateDbContext())
             {
-                List<User> users = await context.Users.Include(a => a.Group).ThenInclude(s => s.Supervisor).AsNoTracking().ToListAsync();
-                bool value = users.Any(a => a.IsSubordinate(user));
-                return value;
+                try
+                {
+                    List<User> users = await context.Users.Include(a => a.Group).ThenInclude(s => s.Supervisor).AsNoTracking().ToListAsync();
+                    bool value = users.Any(a => a.Group.Supervisor == user || user.IsAdmin);
+                    return value;
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+                return false;
             }
         }
 
@@ -310,36 +485,82 @@ namespace Attendance.EF.Services
         {
             using (DatabaseContext context = _dbContextFactory.CreateDbContext())
             {
-                User userData = await context.Users
-                                         .Include(a => a.Group)
-                                            .ThenInclude(g => g.Obligation)
-                                                .ThenInclude(o => o.AvailableActivities)
-                                                    .ThenInclude(p => p.Property)
-                                         .Include(a => a.Obligation)
-                                            .ThenInclude(o => o.AvailableActivities)
-                                                .ThenInclude(p => p.Property)
-                                         .Include(a => a.Keys)
-                                         .Include(a => a.AttendanceRecords)
-                                            .ThenInclude(r => r.Activity)
-                                         .Include(a => a.AttendanceRecords)
-                                            .ThenInclude(r => r.AttendanceRecordDetail)
-                                         .Include(a => a.AttendanceTotals)
-                                            .ThenInclude(t => t.Activity)
-                                        .AsNoTracking()
-                                        .FirstAsync(a => a.ID == user.ID);
-                return userData;
+                try
+                {
+                    User userData = await context.Users
+                         .Include(a => a.Group)
+                            .ThenInclude(g => g.Obligation)
+                         .Include(a => a.Group)
+                                .ThenInclude(o => o.AvailableActivities)
+                                    .ThenInclude(p => p.Property)
+                         .Include(a => a.Obligation)
+                         .Include(a => a.Keys)
+                         .Include(a => a.AttendanceRecords)
+                            .ThenInclude(r => r.Activity)
+                         .Include(a => a.AttendanceRecords)
+                            .ThenInclude(r => r.AttendanceRecordDetail)
+                         .Include(a => a.AttendanceTotals)
+                            .ThenInclude(t => t.Activity)
+                        .AsNoTracking()
+                        .FirstAsync(a => a.ID == user.ID);
+                    return userData;
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+                return null;
             }
         }
 
-        public Task<List<User>> LoadUserProfileFixes(User user)
+        public async Task<List<User>> LoadUserProfileFixes(User user)
         {
             using (DatabaseContext context = _dbContextFactory.CreateDbContext())
             {
-                return context.Users.Include(a => a.Obligation).Where(a => a.UserId == user.UserId && a.ToApprove).ToListAsync();
+                try
+                {
+                    List<User> users = await context.Users
+                                                .Include(a => a.Obligation)
+                                                .Where(a => a.UserUpdateId == user.ID && a.ToApprove)
+                                                .ToListAsync();
+                    return users;
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+                return null;
+                
             }
         }
 
-   
+        public async Task RemoveActivityFromGroup(Group group, Activity activity)
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    Activity activityToRemove = await context.Activities.FindAsync(activity.ID);
+                    Group groupToRemoveActivity = await context.Groups.Include(a => a.AvailableActivities).FirstOrDefaultAsync(a => a.ID == group.ID);
+                    groupToRemoveActivity.AvailableActivities.Remove(activityToRemove);
+
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+            }
+        }
 
         public async Task RemoveAttendanceRecord(AttendanceRecord attendanceRecord)
         {
@@ -347,7 +568,6 @@ namespace Attendance.EF.Services
             {
                 try
                 {
-                    
                     User userWithRecordToDelete = await context.Users.Include(a => a.AttendanceRecords).Where(a => a.AttendanceRecords.Contains(attendanceRecord)).FirstOrDefaultAsync();
                     userWithRecordToDelete.AttendanceRecords.Remove(attendanceRecord);
 
@@ -356,6 +576,51 @@ namespace Attendance.EF.Services
                     context.AttendanceRecords.Remove(attendanceRecordToDelete);
                     await context.SaveChangesAsync();
                     return;
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+            }
+        }
+
+        public async Task RemoveGroups(Group group)
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    List<User> users = await context.Users.Include(a => a.Group).Where(a => a.Group.Name == group.Name).ToListAsync();
+                    if (users.Count > 0)
+                    {
+                        Group unassignedGroup = await context.Groups.Where(a => a.Name == "Nezařazení").FirstOrDefaultAsync();
+
+                        if (unassignedGroup == null)
+                        {
+                            unassignedGroup = new Group("Nezařazení", group.Supervisor);
+                            unassignedGroup.SupervisorId = group.SupervisorId;
+                            unassignedGroup.Supervisor = null;
+                            unassignedGroup.AvailableActivities = new List<Activity>();
+                            unassignedGroup.Members = users;
+                        }
+
+                        foreach (User user in users)
+                        {
+                            user.Group = unassignedGroup;
+                        }
+
+                        await context.SaveChangesAsync();
+                    }
+
+                    Group groupToRemove = await context.Groups.Where(a => a.Name == group.Name).FirstOrDefaultAsync();
+                    groupToRemove.Supervisor = null; 
+
+                    context.Groups.Remove(groupToRemove);
+
+                    await context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -429,6 +694,27 @@ namespace Attendance.EF.Services
             }
         }
 
+        public async Task SetSupervisorToGroup(User? user, Group group)
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    Group groupToSetSupervisor = await context.Groups.FirstOrDefaultAsync(a => a.Name == group.Name);
+                    groupToSetSupervisor.SupervisorId = user.ID;
+
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+            }
+        }
+
         public async Task UpdateAttendanceRecord(AttendanceRecord newAttendanceRecord, AttendanceRecord oldAttendanceRecord)
         {
             using (DatabaseContext context = _dbContextFactory.CreateDbContext())
@@ -452,13 +738,45 @@ namespace Attendance.EF.Services
             }
         }
 
+        public async Task UpdateGroup(Group group)
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    Group groupToUpdate = await context.Groups.Include(a => a.Obligation).FirstOrDefaultAsync(a => a.ID == group.ID);
+                    groupToUpdate.Obligation.MinHoursWorked = group.Obligation.MinHoursWorked;
+                    groupToUpdate.Obligation.HasRegularWorkingTime = group.Obligation.HasRegularWorkingTime;
+                    groupToUpdate.Obligation.LatestArival = group.Obligation.LatestArival;
+                    groupToUpdate.Obligation.EarliestDeparture = group.Obligation.EarliestDeparture;
+                    groupToUpdate.Obligation.WorksMonday = group.Obligation.WorksMonday;
+                    groupToUpdate.Obligation.WorksTuesday = group.Obligation.WorksTuesday;
+                    groupToUpdate.Obligation.WorksWednesday = group.Obligation.WorksWednesday;
+                    groupToUpdate.Obligation.WorksThursday = group.Obligation.WorksThursday;
+                    groupToUpdate.Obligation.WorksFriday = group.Obligation.WorksFriday;
+                    groupToUpdate.Obligation.WorksSaturday = group.Obligation.WorksSaturday;
+                    groupToUpdate.Obligation.WorksSunday = group.Obligation.WorksSunday;
+
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+            }
+        }
+
         public async Task UpdateUser(User user)
         {
             using (DatabaseContext context = _dbContextFactory.CreateDbContext())
             {
                 try
                 {
-                    User userToUpdate = await context.Users.Where(a => a.UserId == user.UserId).Include(a => a.Obligation).Include(a => a.Group).ThenInclude(a => a.Obligation).ThenInclude(a => a.AvailableActivities).FirstOrDefaultAsync();
+                    int id = user.UserUpdateId ?? user.ID;
+                    User userToUpdate = await context.Users.Where(a => a.ID == id).Include(a => a.Obligation).Include(a => a.Group).ThenInclude(a => a.Obligation).FirstOrDefaultAsync();
                     userToUpdate.FirstName = user.FirstName;
                     userToUpdate.LastName = user.LastName;
                     userToUpdate.Email = user.Email;
@@ -466,18 +784,27 @@ namespace Attendance.EF.Services
                     {
                         userToUpdate.Obligation = new Obligation();
                     }
-                    userToUpdate.Obligation.HasRegularWorkingTime = user.Obligation.HasRegularWorkingTime;
-                    userToUpdate.Obligation.MinHoursWorked = user.Obligation.MinHoursWorked;
-                    userToUpdate.Obligation.LatestArival = user.Obligation.LatestArival;
-                    userToUpdate.Obligation.EarliestDeparture = user.Obligation.EarliestDeparture;
-                    userToUpdate.Obligation.WorksMonday = user.Obligation.WorksMonday;
-                    userToUpdate.Obligation.WorksTuesday = user.Obligation.WorksTuesday;
-                    userToUpdate.Obligation.WorksWednesday = user.Obligation.WorksWednesday;
-                    userToUpdate.Obligation.WorksThursday = user.Obligation.WorksThursday;
-                    userToUpdate.Obligation.WorksFriday = user.Obligation.WorksFriday;
-                    userToUpdate.Obligation.WorksSaturday = user.Obligation.WorksSaturday;
-                    userToUpdate.Obligation.WorksSunday = user.Obligation.WorksSunday;
-                    userToUpdate.Obligation.AvailableActivities = new List<Activity>();
+
+                    Obligation obligation = user.Obligation;
+                    if (obligation != null)
+                    {
+                        userToUpdate.Obligation.HasRegularWorkingTime = obligation.HasRegularWorkingTime;
+                        userToUpdate.Obligation.MinHoursWorked = obligation.MinHoursWorked;
+                        userToUpdate.Obligation.LatestArival = obligation.LatestArival;
+                        userToUpdate.Obligation.EarliestDeparture = obligation.EarliestDeparture;
+                        userToUpdate.Obligation.WorksMonday = obligation.WorksMonday;
+                        userToUpdate.Obligation.WorksTuesday = obligation.WorksTuesday;
+                        userToUpdate.Obligation.WorksWednesday = obligation.WorksWednesday;
+                        userToUpdate.Obligation.WorksThursday = obligation.WorksThursday;
+                        userToUpdate.Obligation.WorksFriday = obligation.WorksFriday;
+                        userToUpdate.Obligation.WorksSaturday = obligation.WorksSaturday;
+                        userToUpdate.Obligation.WorksSunday = obligation.WorksSunday;
+                    }
+                    else
+                    {
+                        userToUpdate.Obligation = null;
+                    }
+
 
                     await context.SaveChangesAsync();
                     return;
@@ -523,6 +850,27 @@ namespace Attendance.EF.Services
                     Console.WriteLine(errorMsg);
                 }
                 return false;
+            }
+        }
+
+        public async Task UserSetGroup(User user, Group group)
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    User userToAddToGroup = await context.Users.FindAsync(user.ID);
+                    userToAddToGroup.GroupId = group.ID;
+
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
             }
         }
     }

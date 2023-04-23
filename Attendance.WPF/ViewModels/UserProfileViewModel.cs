@@ -38,7 +38,8 @@ namespace Attendance.WPF.ViewModels
         public async Task LoadFixProfile()
         {
             UserUpdates.Clear();
-            foreach (var user in await _userStore.LoadFixProfile(CurrentUser.User))
+            List<User> users = await _userStore.LoadFixProfile(CurrentUser.User);
+            foreach (var user in users)
             {
                 UserUpdates.Add(user);
             }

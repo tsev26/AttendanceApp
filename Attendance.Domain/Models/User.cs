@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Attendance.Domain.Models
 {
-    public class User : DomainObject
+    public class User : DomainObject, IEquatable<User>
     {
         private static int _nextId = 1;
 
@@ -20,7 +21,6 @@ namespace Attendance.Domain.Models
                     bool isAdmin = false,
                     bool toApprove = false) : base()
         {
-            UserId = _nextId++;
             FirstName = firstName;
             LastName = lastName;
             Email = email;
@@ -33,14 +33,14 @@ namespace Attendance.Domain.Models
         }
 
         public User(
-                    int userId,
+                    int userUpdateId,
                     string firstName,
                     string lastName,
                     string email,
                     bool isAdmin = false,
                     bool toApprove = false) : base()
         {
-            UserId = userId;
+            UserUpdateId = userUpdateId;
             FirstName = firstName;
             LastName = lastName;
             Email = email;
@@ -54,7 +54,7 @@ namespace Attendance.Domain.Models
 
         public User(User user) : base()
         {
-            UserId = user.UserId;
+            UserUpdateId = user.UserUpdateId;
             FirstName = user.FirstName;
             LastName = user.LastName;
             Email = user.Email;
@@ -67,7 +67,7 @@ namespace Attendance.Domain.Models
             AttendanceTotals = new List<AttendanceTotal>();
         }
 
-        public int UserId { get; set; }
+        public int? UserUpdateId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -117,7 +117,7 @@ namespace Attendance.Domain.Models
             }
 
             User other = (User)obj;
-            return UserId == other.UserId && 
+            return UserUpdateId == other.UserUpdateId && 
                    FirstName == other.FirstName && 
                    LastName == other.LastName &&
                    Email == other.Email &&
@@ -133,6 +133,14 @@ namespace Attendance.Domain.Models
                    Obligation?.WorksFriday == other.Obligation?.WorksFriday &&
                    Obligation?.WorksSaturday == other.Obligation?.WorksSaturday &&
                    Obligation?.WorksSunday == other.Obligation?.WorksSunday;
+        }
+
+        public bool Equals(User other)
+        {
+            if (other == null)
+                return false;
+
+            return ID == other.ID;
         }
 
         public static bool operator ==(User a, User b)
@@ -165,14 +173,18 @@ namespace Attendance.Domain.Models
             };
         }
 
+        /*
         public bool IsSubordinate(User user)
         {
             return Group.Supervisor == user || user.IsAdmin;
         }
+        */
 
         public override string ToString()
         {
             return LastName + " " + FirstName;
         }
+
+
     }
 }
