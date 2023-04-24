@@ -12,26 +12,34 @@ namespace Attendance.WPF.ViewModels
 {
     public class UserHistoryViewModel : ViewModelBase
     {
-        private readonly CurrentUserStore _currentUser;
-		private readonly UserDailyOverviewViewModel _userDailyOverviewViewModel;
-		private readonly AttendanceRecordStore _attendanceRecordStore;
-        public UserHistoryViewModel(CurrentUserStore currentUser, AttendanceRecordStore attendanceRecordStore, UserDailyOverviewViewModel userDailyOverviewViewModel)
-        {
-            _currentUser = currentUser;
-            _attendanceRecordStore = attendanceRecordStore;
+		
+		private readonly SelectedDataStore _selectedDataStore;
 
-            _userDailyOverviewViewModel = userDailyOverviewViewModel;
+		public UserHistoryViewModel(CurrentUserStore currentUser, AttendanceRecordStore attendanceRecordStore, SelectedDataStore selectedDataStore, UserDailyOverviewViewModel userDailyOverviewViewModel)
+        {
+            AttendanceRecordStore = attendanceRecordStore;
+			_selectedDataStore = selectedDataStore;
+			_selectedDataStore.SelectedUser = currentUser.User;
             UserDailyOverviewViewModel = userDailyOverviewViewModel;
 
-
             ChangeMonthCommand = new ChangeMonthCommand(this);
+
+			AttendanceRecordStore.AttendanceLoad += AttendanceRecordStore_AttendanceLoad;
 
 			Month = DateTime.Now.Month;
 			Year = DateTime.Now.Year;
         }
 
+		private void AttendanceRecordStore_AttendanceLoad()
+		{
+            OnPropertyChanged(nameof(UserDailyOverviewViewModel.ActivitiesTotalInDay));
+            OnPropertyChanged(nameof(UserDailyOverviewViewModel.AttendanceRecordsInDay));
+            OnPropertyChanged(nameof(UserHistory));
+        }
 
-		public UserDailyOverviewViewModel UserDailyOverviewViewModel { get; }
+		public AttendanceRecordStore AttendanceRecordStore { get; }
+        public UserDailyOverviewViewModel UserDailyOverviewViewModel { get; }
+
         public ICommand ChangeMonthCommand { get; }
 
 		private int _year;
@@ -64,7 +72,7 @@ namespace Attendance.WPF.ViewModels
             }
 		}
 
-		public List<MonthlyAttendanceTotalsWork> UserHistory => _attendanceRecordStore.MonthlyAttendanceTotalsWorks(_currentUser.User, Month, Year);
+		public List<MonthlyAttendanceTotalsWork> UserHistory => AttendanceRecordStore.MonthlyAttendanceTotalsWorks(_selectedDataStore.SelectedUser, Month, Year);
 
 		public bool IsButtonNextMonthVisible => !(Year == DateTime.Now.Year && Month == DateTime.Now.Month);
 
@@ -82,7 +90,7 @@ namespace Attendance.WPF.ViewModels
                 OnPropertyChanged(nameof(IsHistorySelected));
                 OnPropertyChanged(nameof(SelectedHistory));
 
-				_userDailyOverviewViewModel.Date = (IsHistorySelected) ? SelectedHistory.Date : DateOnly.FromDateTime(DateTime.Now);
+                UserDailyOverviewViewModel.Date = (IsHistorySelected) ? SelectedHistory.Date : DateOnly.FromDateTime(DateTime.Now);
             }
 		}
 
@@ -91,5 +99,11 @@ namespace Attendance.WPF.ViewModels
 		public MonthlyAttendanceTotalsWork SelectedHistory => IsHistorySelected ? UserHistory[SelectedIndex] : null;
 
 		public DateOnly SelectedDate => SelectedHistory.Date;
-    }
+
+		public override void Dispose()
+		{
+            AttendanceRecordStore.AttendanceLoad -= AttendanceRecordStore_AttendanceLoad;
+            base.Dispose();
+		}
+	}
 }

@@ -1,5 +1,6 @@
 ﻿using Attendance.Domain.Models;
 using Attendance.WPF.Commands;
+using Attendance.WPF.Models;
 using Attendance.WPF.Services;
 using Attendance.WPF.Stores;
 using System;
@@ -19,13 +20,22 @@ namespace Attendance.WPF.ViewModels
         private readonly UserStore _userStore;
         private readonly GroupStore _groupStore;
         private readonly SelectedDataStore _selectedUserStore;
-        public UsersViewModel(UserStore userStore, CurrentUserStore currentUser, GroupStore groupStore, SelectedDataStore selectedUserStore, MessageStore messageStore, INavigationService navigateUserUpsert, INavigationService navigateUpsertKey)
+        
+
+        public UsersViewModel(UserStore userStore, 
+                              CurrentUserStore currentUser, 
+                              GroupStore groupStore, 
+                              SelectedDataStore selectedUserStore, 
+                              MessageStore messageStore, 
+                              UserHistoryViewModel userHistoryViewModel,
+                              INavigationService navigateUserUpsert, 
+                              INavigationService navigateUpsertKey)
         {
             _userStore = userStore;
             CurrentUser = currentUser;
             _groupStore = groupStore;
             _selectedUserStore = selectedUserStore;
-
+            UserHistoryViewModel = userHistoryViewModel;
             SaveUserCommand = new SaveUserCommand(userStore, this, messageStore);
             CreateUserNavigateCommand = new NavigateCommand(navigateUserUpsert);
             UsersViewShowsCommand = new UsersViewShowsCommand(this);
@@ -41,6 +51,10 @@ namespace Attendance.WPF.ViewModels
             LoadUsers(CurrentUser.User);
             _groupStore.LoadGroups();
         }
+
+
+        public UserHistoryViewModel UserHistoryViewModel { get; private set; }
+
         private void SelectedUserStore_SelectedUserChange()
         {
             if (!IsUserSelected) return;
@@ -88,6 +102,7 @@ namespace Attendance.WPF.ViewModels
                 _selectedUserStore.SelectedUser = SelectedUser;
                 SelectedUserObligation = IsUserSelected ? new Obligation(SelectedUser.UserObligation) : null;
                 SelectedUserStore_SelectedUserChange();
+                if (ShowUsersAttendace && IsUserSelected) LoadAttendanceSelectedUser();
             }
         }
 
@@ -148,6 +163,7 @@ namespace Attendance.WPF.ViewModels
             {
                 _showUsersAttendace = value;
                 OnPropertyChanged(nameof(ShowUsersAttendace));
+                if (ShowUsersAttendace && IsUserSelected) LoadAttendanceSelectedUser();
             }
         }
 
@@ -173,6 +189,12 @@ namespace Attendance.WPF.ViewModels
         public bool IsKeySelected => SelectedKeyIndex != -1;
         public Key SelectedKey => IsKeySelected ? UsersKeys[SelectedKeyIndex] : null;
 
+        public async Task LoadAttendanceSelectedUser()
+        {
+            UserHistoryViewModel.AttendanceRecordStore.LoadAttendanceTotals(SelectedUser);
+            UserHistoryViewModel.AttendanceRecordStore.LoadAttendanceRecords(SelectedUser);
+        }
+
         public override void Dispose()
         {
             _userStore.UsersChange -= UserStore_UsersChange;
@@ -180,5 +202,6 @@ namespace Attendance.WPF.ViewModels
             _selectedUserStore.SelectedKeyValue = null;
             base.Dispose();
         }
+
     }
 }

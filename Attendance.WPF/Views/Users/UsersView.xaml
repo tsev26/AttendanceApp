@@ -96,7 +96,42 @@
             </Grid>
         </Border>
 
+        <Grid
+            Grid.Column="1"
+            Margin="0"
+            Panel.ZIndex="1">
+            <Grid.Visibility>
+                <MultiBinding Converter="{StaticResource TwoBoolsToVisibilityConverter}">
+                    <Binding Path="ShowUsersAttendace" />
+                    <Binding Path="IsUserSelected" />
+                </MultiBinding>
+            </Grid.Visibility>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="3*" />
+            </Grid.RowDefinitions>
+
+
+            <local:UserHistoryView
+                x:Name="UserSelectActivity"
+                Grid.Row="0"
+                Margin="10,10,10,0"
+                DataContext="{Binding UserHistoryViewModel}" />
+
+
+
+            <local:UserDailyOverviewView
+                Grid.Row="1"
+                Margin="10,0,10,0"
+                DataContext="{Binding UserHistoryViewModel.UserDailyOverviewViewModel}"
+                Focusable="False" />
+
+
+        </Grid>
+
         <Border Grid.Column="1" Style="{StaticResource BorderBackground}">
+
             <Grid>
                 <Grid Margin="10" d:Visibility="Hidden">
                     <Grid.Visibility>

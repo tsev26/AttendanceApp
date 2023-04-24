@@ -33,6 +33,7 @@ namespace Attendance.WPF.ViewModels
             CurrentUser = currentUser;
             _selectedDataStore = selectedDataStore;
             _attendanceRecordStore = attendanceRecordStore;
+            _selectedDataStore.SelectedUser = currentUser.User;
             _selectedDataStore.AttendanceRecord = null;
             Date = DateOnly.FromDateTime(DateTime.Now);
             NavigateFixAttendaceCommand = new NavigateFixAttendaceCommand(selectedDataStore, this, attendanceRecordStore, messageStore, navigateFixAttendance, navigateFixesAttendance);
@@ -102,11 +103,11 @@ namespace Attendance.WPF.ViewModels
             OnPropertyChanged(nameof(ActivitiesTotalInDay));
         }
 
-        public string WorkedInDayTotal => _attendanceRecordStore.WorkedInDayTotal(CurrentUser.User, Date);
+        public string WorkedInDayTotal => _attendanceRecordStore.WorkedInDayTotal(_selectedDataStore.SelectedUser, Date);
 
-        public string WorkedInDay => _attendanceRecordStore.WorkedInDay(CurrentUser.User, Date);
+        public string WorkedInDay => _attendanceRecordStore.WorkedInDay(_selectedDataStore.SelectedUser, Date);
 
-        public string PauseInDay => _attendanceRecordStore.PauseInDay(CurrentUser.User, Date);
+        public string PauseInDay => _attendanceRecordStore.PauseInDay(_selectedDataStore.SelectedUser, Date);
 
         public List<AttendanceRecordItem> AttendanceRecordsInDay => _attendanceRecordStore.RecordsInDay(Date);
 

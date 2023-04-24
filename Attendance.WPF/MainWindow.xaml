@@ -101,6 +101,9 @@
                 <views:UserPlanView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewmodels:UserHistoryOverviewViewModel}">
+                <views:UserHistoryOverviewView />
+            </DataTemplate>
 
 
         </Grid.Resources>

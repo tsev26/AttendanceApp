@@ -12,11 +12,13 @@ namespace Attendance.WPF.Stores
     {
         private readonly UserStore _userStore;
         private readonly UserDataService _userDataService;
+        private readonly AttendanceRecordStore _attendanceRecordStore;
 
-        public SelectedDataStore(UserStore userStore,  UserDataService userDataService)
+        public SelectedDataStore(UserStore userStore,  UserDataService userDataService, AttendanceRecordStore attendanceRecordStore)
         {
             _userStore = userStore;
             _userDataService = userDataService;
+            _attendanceRecordStore = attendanceRecordStore;
         }
 
         private User _selectedUser;
@@ -39,6 +41,27 @@ namespace Attendance.WPF.Stores
         public AttendanceRecord AttendanceRecord { get; set; }
 
         public event Action SelectedUserChange;
+        public event Action SelectedUserAttendanceChange;
+
+        private async Task LoadUserAttendances()
+        {
+            if (SelectedUser != null)
+            {
+                await _attendanceRecordStore.LoadAttendanceRecords(SelectedUser);
+
+                await _attendanceRecordStore.LoadAttendanceTotals(SelectedUser);
+
+                await _attendanceRecordStore.LoadAttendanceRecordFixes(SelectedUser);
+            }
+            else
+            {
+                _attendanceRecordStore.AttendanceRecords = new List<AttendanceRecord>();
+                _attendanceRecordStore.AttendanceRecordFixes = new List<AttendanceRecordFix>();
+                _attendanceRecordStore.AttendanceTotal = new List<AttendanceTotal>();
+            }
+            SelectedUserAttendanceChange?.Invoke();
+
+        }
 
         public void SetGroup(User user, Group group)
         {

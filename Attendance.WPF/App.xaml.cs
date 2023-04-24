@@ -77,6 +77,7 @@ namespace Attendance.WPF
             services.AddTransient<UserFixesAttendanceRecordViewModel>(CreateUserFixesAttendanceRecordViewModel);
             services.AddTransient<UsersRequestsViewModel>(CreateUsersRequestsViewModel);
             services.AddTransient<UserPlanViewModel>(CreateUserPlanViewModel);
+            services.AddTransient<UserHistoryOverviewViewModel>(CreateUserHistoryOverviewViewModel);
 
             services.AddSingleton<MainViewModel>();
 
@@ -106,7 +107,8 @@ namespace Attendance.WPF
         {
             return new SelectedDataStore(
                 serviceProvider.GetRequiredService<UserStore>(),
-                serviceProvider.GetRequiredService<UserDataService>()
+                serviceProvider.GetRequiredService<UserDataService>(),
+                serviceProvider.GetRequiredService<AttendanceRecordStore>()
                 );
         }
         private HomeViewModel CreateHomeViewModel(IServiceProvider serviceProvider)
@@ -316,6 +318,7 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<GroupStore>(),
                 serviceProvider.GetRequiredService<SelectedDataStore>(),
                 serviceProvider.GetRequiredService<MessageStore>(),
+                serviceProvider.GetRequiredService<UserHistoryViewModel>(),
                 CreateUserUpsertNavigationService(serviceProvider),
                 CreateUserKeyUpsertNavigationService(serviceProvider)
                 );
@@ -323,10 +326,10 @@ namespace Attendance.WPF
 
         private INavigationService CreateUserHistoryService(IServiceProvider serviceProvider)
         {
-            return new NavigationService<UserHistoryViewModel>(
+            return new NavigationService<UserHistoryOverviewViewModel>(
                  serviceProvider.GetRequiredService<NavigationStore>(),
                  serviceProvider.GetRequiredService<MessageStore>(),
-                 () => serviceProvider.GetRequiredService<UserHistoryViewModel>());
+                 () => serviceProvider.GetRequiredService<UserHistoryOverviewViewModel>());
         }
 
         private UserHistoryViewModel CreateUserHistoryViewModel(IServiceProvider serviceProvider)
@@ -334,6 +337,7 @@ namespace Attendance.WPF
             return new UserHistoryViewModel(
                 serviceProvider.GetRequiredService<CurrentUserStore>(),
                 serviceProvider.GetRequiredService<AttendanceRecordStore>(),
+                serviceProvider.GetRequiredService<SelectedDataStore>(),
                 serviceProvider.GetRequiredService<UserDailyOverviewViewModel>()
                 );
         }
@@ -483,6 +487,14 @@ namespace Attendance.WPF
                  serviceProvider.GetRequiredService<NavigationStore>(),
                  serviceProvider.GetRequiredService<MessageStore>(),
                  () => serviceProvider.GetRequiredService<UserPlanViewModel>());
+        }
+
+        private UserHistoryOverviewViewModel CreateUserHistoryOverviewViewModel(IServiceProvider serviceProvider)
+        {
+            return new UserHistoryOverviewViewModel(
+                serviceProvider.GetRequiredService<UserHistoryViewModel>(),
+                serviceProvider.GetRequiredService<UserDailyOverviewViewModel>()
+                );
         }
     }
 }

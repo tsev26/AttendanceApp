@@ -31,15 +31,18 @@ namespace Attendance.WPF.Stores
 
         public event Action CurrentAttendanceChange;
         public event Action CurrentAttendanceRecordFixChange;
+        public event Action AttendanceLoad;
 
 		public async Task LoadAttendanceRecords(User user) 
         {
             AttendanceRecords = await _userDataService.GetAttendanceRecords(user);
+            AttendanceLoad?.Invoke();
         }
 
         public async Task LoadAttendanceTotals(User user)
         {
             AttendanceTotal = await _userDataService.GetAttendanceTotals(user);
+            AttendanceLoad?.Invoke();
         }
 
         public async Task LoadAttendanceRecordFixes(User user)
