@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Threading.Tasks;
@@ -448,6 +449,37 @@ namespace Attendance.EF.Services
                                                     .Where(a => (user == null) || (a.Group.SupervisorId == user.ID || user.IsAdmin))
                                                     .ToListAsync();
                     return users;
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+                return null;
+            }
+        }
+
+        public async Task<List<UsersCurrentActivity>> GetUsersCurrentActivities()
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    List<UsersCurrentActivity> result = await context.Users
+                        .Where(u => !u.ToApprove)
+                        .Include(u => u.AttendanceRecords)
+                            .ThenInclude(a => a.Activity)
+                        .Select(u => new UsersCurrentActivity
+                        {
+                            User = u,
+                            LastAttendanceRecord = u.AttendanceRecords.Where(ar => ar.Entry < DateTime.Now)
+                                                                      .OrderByDescending(ar => ar.Entry)
+                                                                      .FirstOrDefault()
+                        })
+                        .ToListAsync();
+                    return result;
                 }
                 catch (Exception ex)
                 {

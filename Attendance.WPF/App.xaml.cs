@@ -78,6 +78,7 @@ namespace Attendance.WPF
             services.AddTransient<UsersRequestsViewModel>(CreateUsersRequestsViewModel);
             services.AddTransient<UserPlanViewModel>(CreateUserPlanViewModel);
             services.AddTransient<UserHistoryOverviewViewModel>(CreateUserHistoryOverviewViewModel);
+            services.AddTransient<UsersCurrentActivityViewModel>(CreateUsersCurrentActivityViewModel);
 
             services.AddSingleton<MainViewModel>();
 
@@ -116,6 +117,7 @@ namespace Attendance.WPF
             return new HomeViewModel(
                 serviceProvider.GetRequiredService<UserStore>(),
                 CreateUserMenuNavigationService(serviceProvider),
+                CreateUsersCurrentActivityService(serviceProvider),
                 serviceProvider.GetRequiredService<CurrentUserStore>()
                 );
         }
@@ -496,5 +498,22 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<UserDailyOverviewViewModel>()
                 );
         }
+
+        private UsersCurrentActivityViewModel CreateUsersCurrentActivityViewModel(IServiceProvider serviceProvider)
+        {
+            return new UsersCurrentActivityViewModel(
+                serviceProvider.GetRequiredService<AttendanceRecordStore>(),
+                serviceProvider.GetRequiredService<CloseModalNavigationService>()
+                );
+        }
+
+        private INavigationService CreateUsersCurrentActivityService(IServiceProvider serviceProvider)
+        {
+            return new ModalNavigationService<UsersCurrentActivityViewModel>(
+                 serviceProvider.GetRequiredService<ModalNavigationStore>(),
+                 serviceProvider.GetRequiredService<MessageStore>(),
+                 () => serviceProvider.GetRequiredService<UsersCurrentActivityViewModel>());
+        }
     }
+
 }

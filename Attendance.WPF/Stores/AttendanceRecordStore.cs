@@ -28,12 +28,22 @@ namespace Attendance.WPF.Stores
         public List<AttendanceRecord> AttendanceRecords = new List<AttendanceRecord>();
         public List<AttendanceTotal> AttendanceTotal = new List<AttendanceTotal>();
         public List<AttendanceRecordFix> AttendanceRecordFixes = new List<AttendanceRecordFix>();
+        public List<UsersCurrentActivity> UsersCurrentActivities = new List<UsersCurrentActivity>();
+
 
         public event Action CurrentAttendanceChange;
         public event Action CurrentAttendanceRecordFixChange;
         public event Action AttendanceLoad;
+        public event Action UsersCurrentActivitiesLoad;
 
-		public async Task LoadAttendanceRecords(User user) 
+        public async Task LoadUsersCurrentActivities()
+        {
+            UsersCurrentActivities = await _userDataService.GetUsersCurrentActivities();
+            UsersCurrentActivitiesLoad?.Invoke();
+        }
+
+
+        public async Task LoadAttendanceRecords(User user) 
         {
             AttendanceRecords = await _userDataService.GetAttendanceRecords(user);
             AttendanceLoad?.Invoke();

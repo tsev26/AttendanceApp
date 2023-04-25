@@ -25,12 +25,23 @@
             Style="{StaticResource BorderBackground}">
 
             <Border Margin="-1,4,-1,-1" Style="{StaticResource BorderBackground}">
-                <StackPanel
-                    Margin="0,-100,0,0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
 
-                    <Border Style="{StaticResource BorderBasic}">
+                <StackPanel Margin="10">
+                    <Button
+                        Width="300"
+                        Height="40"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Command="{Binding UsersCurrentActivity}"
+                        Content="Současná aktivita uživatelů"
+                        FontSize="20"
+                        Style="{StaticResource ViewButton}" />
+
+                    <Border
+                        Margin="100"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource BorderBasic}">
                         <StackPanel Margin="70">
                             <TextBlock
                                 Grid.Row="0"

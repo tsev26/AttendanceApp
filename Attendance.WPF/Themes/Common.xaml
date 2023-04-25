@@ -413,7 +413,6 @@
         <Setter Property="FontSize" Value="14" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Foreground" Value="AntiqueWhite" />
-        <Setter Property="MaxWidth" Value="200" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">

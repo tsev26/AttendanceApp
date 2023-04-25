@@ -18,19 +18,23 @@ namespace Attendance.WPF.ViewModels
 		private CurrentUserStore _currentUser;
         public HomeViewModel(UserStore userStore,
                              INavigationService navigateToUserMenu,
-							 CurrentUserStore currentUser)
+                             INavigationService navigateCurrentUsersActivity,
+                             CurrentUserStore currentUser)
         {
             _userStore = userStore;
 			_currentUser = currentUser;
             _navigateToUserMenu = navigateToUserMenu;
             ClearUserKeyCommand = new ClearUserKeyCommand(this);
 			NavigateTo = new NavigateCommand(navigateToUserMenu);
+			UsersCurrentActivity = new NavigateCommand(navigateCurrentUsersActivity);
 
-			_currentUser.User = null;
+
+            _currentUser.User = null;
         }
 
-        public ICommand ClearUserKeyCommand { get; set; }
-		public ICommand NavigateTo { get; set; }
+        public ICommand ClearUserKeyCommand { get; }
+		public ICommand NavigateTo { get; }
+		public ICommand UsersCurrentActivity { get; }
 
         private string _userKey;
 		public string UserKey
