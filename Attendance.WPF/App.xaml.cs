@@ -79,6 +79,7 @@ namespace Attendance.WPF
             services.AddTransient<UserPlanViewModel>(CreateUserPlanViewModel);
             services.AddTransient<UserHistoryOverviewViewModel>(CreateUserHistoryOverviewViewModel);
             services.AddTransient<UsersCurrentActivityViewModel>(CreateUsersCurrentActivityViewModel);
+            services.AddTransient<ExportViewModel>(CreateExportViewModel);
 
             services.AddSingleton<MainViewModel>();
 
@@ -129,7 +130,8 @@ namespace Attendance.WPF
                 serviceProvider.GetRequiredService<SelectedDataStore>(),
                 serviceProvider.GetRequiredService<ActivityStore>(),
                 serviceProvider.GetRequiredService<MessageStore>(),
-                CreateUserKeyUpsertNavigationService(serviceProvider)
+                CreateUserKeyUpsertNavigationService(serviceProvider),
+                CreateExportService(serviceProvider)
                 );
         }
 
@@ -513,6 +515,23 @@ namespace Attendance.WPF
                  serviceProvider.GetRequiredService<ModalNavigationStore>(),
                  serviceProvider.GetRequiredService<MessageStore>(),
                  () => serviceProvider.GetRequiredService<UsersCurrentActivityViewModel>());
+        }
+
+        private ExportViewModel CreateExportViewModel(IServiceProvider serviceProvider)
+        {
+            return new ExportViewModel(
+                serviceProvider.GetRequiredService<AttendanceRecordStore>(),
+                serviceProvider.GetRequiredService<CurrentUserStore>(),
+                serviceProvider.GetRequiredService<CloseModalNavigationService>()
+                );
+        }
+
+        private INavigationService CreateExportService(IServiceProvider serviceProvider)
+        {
+            return new ModalNavigationService<ExportViewModel>(
+                 serviceProvider.GetRequiredService<ModalNavigationStore>(),
+                 serviceProvider.GetRequiredService<MessageStore>(),
+                 () => serviceProvider.GetRequiredService<ExportViewModel>());
         }
     }
 

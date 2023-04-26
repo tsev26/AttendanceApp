@@ -10,10 +10,16 @@ namespace Attendance.WPF.Commands
     public class ChangeMonthCommand : CommandBase
     {
         private readonly UserHistoryViewModel _userHistoryViewModel;
+        private readonly ExportViewModel _exportViewModel;
 
         public ChangeMonthCommand(UserHistoryViewModel userHistoryViewModel)
         {
             _userHistoryViewModel = userHistoryViewModel;
+        }
+
+        public ChangeMonthCommand(ExportViewModel exportViewModel)
+        {
+            _exportViewModel = exportViewModel;
         }
 
         public override void Execute(object? parameter)
@@ -22,30 +28,62 @@ namespace Attendance.WPF.Commands
             {
                 if (shift == "addMonth")
                 {
-                    if (_userHistoryViewModel.Month == 12)
+                    if (_userHistoryViewModel != null)
                     {
-                        _userHistoryViewModel.Year++;
-                        _userHistoryViewModel.Month = 1;
+                        if (_userHistoryViewModel.Month == 12)
+                        {
+                            _userHistoryViewModel.Year++;
+                            _userHistoryViewModel.Month = 1;
+                        }
+                        else
+                        {
+                            _userHistoryViewModel.Month++;
+                        }
+                        _userHistoryViewModel.SelectedIndex = -1;
                     }
-                    else
+                    else if (_exportViewModel != null)
                     {
-                        _userHistoryViewModel.Month++;
+                        if (_exportViewModel.Month == 12)
+                        {
+                            _exportViewModel.Year++;
+                            _exportViewModel.Month = 1;
+                        }
+                        else
+                        {
+                            _exportViewModel.Month++;
+                        }
                     }
                     
                 }
                 else if (shift == "substractMonth")
                 {
-                    if (_userHistoryViewModel.Month == 1)
+                    if (_userHistoryViewModel != null)
                     {
-                        _userHistoryViewModel.Year--;
-                        _userHistoryViewModel.Month = 12;
+                        if (_userHistoryViewModel.Month == 1)
+                        {
+                            _userHistoryViewModel.Year--;
+                            _userHistoryViewModel.Month = 12;
+                        }
+                        else
+                        {
+                            _userHistoryViewModel.Month--;
+                        }
+                        _userHistoryViewModel.SelectedIndex = -1;
                     }
-                    else
+                    else if (_exportViewModel != null)
                     {
-                        _userHistoryViewModel.Month--;
+                        if (_exportViewModel.Month == 1)
+                        {
+                            _exportViewModel.Year--;
+                            _exportViewModel.Month = 12;
+                        }
+                        else
+                        {
+                            _exportViewModel.Month--;
+                        }
                     }
                 }
-                _userHistoryViewModel.SelectedIndex = -1;
+                
             }
         }
     }

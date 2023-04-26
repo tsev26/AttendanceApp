@@ -1,4 +1,5 @@
 ﻿using Attendance.Domain.Models;
+using Attendance.Domain.Models.Virtual;
 using Attendance.EF.Services;
 using Attendance.WPF.Model;
 using Attendance.WPF.Models;
@@ -508,6 +509,16 @@ namespace Attendance.WPF.Stores
             attendanceRecordFix.Approved = ApproveType.Rejected;
             await _userDataService.FixDecision(attendanceRecordFix, ApproveType.Rejected);
             CurrentAttendanceRecordFixChange?.Invoke();
+        }
+
+        internal List<UsersExportData> LoadUsersExportData()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal List<UsersExportData> LoadUsersExportData(User user)
+        {
+            throw new NotImplementedException();
         }
     }
 }

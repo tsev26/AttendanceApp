@@ -18,7 +18,7 @@ namespace Attendance.WPF.ViewModels
         private readonly CurrentUserStore _currentUser;
         private readonly SelectedDataStore _selectedUserStore;
 
-        public UserKeysViewModel(CurrentUserStore currentUser, SelectedDataStore selectedUserStore, ActivityStore activityStore, MessageStore messageStore, INavigationService navigateUpsertKey)
+        public UserKeysViewModel(CurrentUserStore currentUser, SelectedDataStore selectedUserStore, ActivityStore activityStore, MessageStore messageStore, INavigationService navigateUpsertKey, INavigationService navigateExport)
         {
             _currentUser = currentUser;
             _selectedUserStore = selectedUserStore;
@@ -30,11 +30,14 @@ namespace Attendance.WPF.ViewModels
             SaveFastWorkChangeCommand = new SaveFastWorkChangeCommand(selectedUserStore, messageStore, this);
             _isFastWorkSet = _selectedUserStore.SelectedUser.IsFastWorkSet;
 
+            NavigateExport = new NavigateCommand(navigateExport);
+
             SelectedUserChange_CurrentUserKeysChange();
         }
 
         public ICommand NavigateUpsertKey { get; }
         public ICommand SaveFastWorkChangeCommand { get; }
+        public ICommand NavigateExport { get; }
 
         private void SelectedUserChange_CurrentUserKeysChange()
         {

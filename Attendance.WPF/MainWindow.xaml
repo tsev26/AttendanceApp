@@ -105,9 +105,12 @@
                 <views:UserHistoryOverviewView />
             </DataTemplate>
 
-
             <DataTemplate DataType="{x:Type viewmodels:UsersCurrentActivityViewModel}">
                 <views:UsersCurrentActivityView />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewmodels:ExportViewModel}">
+                <views:ExportView />
             </DataTemplate>
 
 

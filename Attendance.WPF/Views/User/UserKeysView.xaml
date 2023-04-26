@@ -85,6 +85,8 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
 
                     <TextBlock
@@ -127,6 +129,23 @@
                                 Width="50"
                                 HorizontalAlignment="Center"
                                 IsChecked="{Binding IsFastWorkSet, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Border>
+
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Margin="0"
+                        HorizontalAlignment="Center"
+                        Style="{StaticResource DetailTextBlock}"
+                        Text="Export docházky" />
+
+                    <Border Grid.Row="3" Style="{StaticResource BorderBasic}">
+                        <Grid Margin="10">
+                            <Button
+                                Command="{Binding NavigateExport}"
+                                Content="Export"
+                                Style="{StaticResource MenuButton}" />
                         </Grid>
                     </Border>
                 </Grid>
