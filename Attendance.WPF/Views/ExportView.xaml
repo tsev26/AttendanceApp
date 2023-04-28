@@ -23,6 +23,18 @@
         <TextBlock
             Grid.Row="0"
             Grid.ColumnSpan="2"
+            HorizontalAlignment="Center"
+            Panel.ZIndex="1"
+            Background="White"
+            FontSize="24"
+            Foreground="Red"
+            Style="{StaticResource DetailTextBlock}"
+            Text="{Binding MessageStore.ModalMessage}"
+            Visibility="{Binding MessageStore.HasModalMessage, Converter={StaticResource bool2VisibilityConverter}}" />
+
+        <TextBlock
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
             Margin="5"
             Style="{StaticResource Header}"
             Text="Export" />

@@ -522,6 +522,7 @@ namespace Attendance.WPF
             return new ExportViewModel(
                 serviceProvider.GetRequiredService<AttendanceRecordStore>(),
                 serviceProvider.GetRequiredService<CurrentUserStore>(),
+                serviceProvider.GetRequiredService<MessageStore>(),
                 serviceProvider.GetRequiredService<CloseModalNavigationService>()
                 );
         }

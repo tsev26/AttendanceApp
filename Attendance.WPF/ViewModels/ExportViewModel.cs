@@ -12,15 +12,26 @@ namespace Attendance.WPF.ViewModels
 {
     public class ExportViewModel : ViewModelBase
     {
-        public ExportViewModel(AttendanceRecordStore attendanceRecordStore, CurrentUserStore currentUserStore, INavigationService closeModalNavigationService)
+        
+        public ExportViewModel(AttendanceRecordStore attendanceRecordStore, CurrentUserStore currentUserStore, MessageStore messageStore, INavigationService closeModalNavigationService)
         {
             Month = DateTime.Now.Month;
             Year = DateTime.Now.Year;
             IsUserSuperVisor = currentUserStore.IsUserSuperVisor;
             ChangeMonthCommand = new ChangeMonthCommand(this);
             CloseModalCommand = new CloseModalCommand(closeModalNavigationService);
-            GenerateExportCSVCommand = new GenerateExportCSVCommand(attendanceRecordStore, currentUserStore, this);
+            GenerateExportCSVCommand = new GenerateExportCSVCommand(attendanceRecordStore, currentUserStore, this, messageStore);
+
+            MessageStore = messageStore;
+            MessageStore.ModalMessageChanged += MessageStore_ModalMessageChanged;
         }
+
+        private void MessageStore_ModalMessageChanged()
+        {
+            OnPropertyChanged(nameof(MessageStore));
+        }
+
+        public MessageStore MessageStore { get; }
 
         public ICommand ChangeMonthCommand { get; }
         public ICommand CloseModalCommand { get; }
@@ -60,5 +71,12 @@ namespace Attendance.WPF.ViewModels
         }
 
         public bool IsButtonNextMonthVisible => !(Year == DateTime.Now.Year && Month == DateTime.Now.Month);
+
+
+        public override void Dispose()
+        {
+            MessageStore.ModalMessageChanged -= MessageStore_ModalMessageChanged;
+            base.Dispose();
+        }
     }
 }

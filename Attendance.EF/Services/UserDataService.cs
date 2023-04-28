@@ -1,4 +1,5 @@
 ﻿using Attendance.Domain.Models;
+using Attendance.Domain.Models.Virtual;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -513,6 +514,26 @@ namespace Attendance.EF.Services
             }
         }
 
+        public List<string> LoadHeaderExportData()
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    List<string> activityName = context.Activities.Include(a => a.Property).Select(a => a.Property.GroupByName).Distinct().AsNoTracking().ToList();
+                    return activityName;
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+                return null;
+            }
+        }
+
         public async Task<User> LoadUserData(User user)
         {
             using (DatabaseContext context = _dbContextFactory.CreateDbContext())
@@ -569,6 +590,132 @@ namespace Attendance.EF.Services
                 }
                 return null;
                 
+            }
+        }
+
+        public List<UsersExportData> LoadUsersExportData(int month, int year, User? userToExport = null)
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    List<UsersExportData> usersExportDatas = new List<UsersExportData>();
+
+
+                    // Step 1: Get the list of all users and their obligations.
+                    List<User> users = context.Users
+                                               .Include(a => a.Group)
+                                               .ThenInclude(a => a.Obligation)
+                                               .Include(a => a.Obligation)
+                                               .Where(a => userToExport == null || userToExport.ID == a.ID)
+                                               .ToList();
+
+                    List<DateOnly> days = new List<DateOnly>();
+                    for (DateTime date = new DateTime(year, month, 1); date <= new DateTime(year, month, 1).AddMonths(1).AddDays(-1); date = date.AddDays(1))
+                    {
+                        days.Add(DateOnly.FromDateTime(date));
+                    }
+
+                    List<string> activityNames = context.Activities.Include(a => a.Property).Select(a => a.Property.GroupByName).Distinct().ToList();
+
+
+                    // Step 2: Get the attendance records for the selected month and year.
+                    List<AttendanceRecord> attendanceRecords = context.AttendanceRecords.Include(a => a.Activity).ThenInclude(a => a.Property).Where(a => a.Entry.Month == month && a.Entry.Year == year).ToList(); // implement this method to get the attendance records for a month
+                    foreach(User user in users)
+                    {
+                        AttendanceRecord attendanceRecordPrevious = context.AttendanceRecords.Where(a => a.User.ID == user.ID && (a.Entry.Month == (month-1) && a.Entry.Year == year) || (month == 1 && a.Entry.Month == 12 && a.Entry.Year == (year-1))).OrderByDescending(a => a.Entry).FirstOrDefault();
+                        if (attendanceRecordPrevious != null)
+                        {
+                            attendanceRecords.Add(attendanceRecordPrevious);
+                        }
+                        
+                        AttendanceRecord attendanceRecordNext = context.AttendanceRecords.Where(a => a.User.ID == user.ID && (a.Entry.Month == (month + 1) && a.Entry.Year == year) || (month == 12 && a.Entry.Month == 1 && a.Entry.Year == (year + 1))).OrderBy(a => a.Entry).FirstOrDefault();
+                        if (attendanceRecordNext != null)
+                        {
+                            attendanceRecords.Add(attendanceRecordNext);
+                        }
+                        
+                    }
+
+                    // Step 3: Calculate the duration of each record
+                    //attendanceRecords = attendanceRecords.Where(a => users.Any(u => u.ID == a.UserId)).ToList();
+                    attendanceRecords = attendanceRecords.Where(a => users.Any(u => u.ID == a.UserId)).OrderBy(a => a.UserId).OrderBy(a => a.Entry).ToList();
+                    TimeSpan duration = TimeSpan.Zero;
+                    List<AttendanceTotal> attendanceTotals = new List<AttendanceTotal>();
+                    foreach (AttendanceRecord record in attendanceRecords)
+                    {
+                        if (record.Activity.Property.IsWork && record.Activity.Property.Count)
+                        {
+                            AttendanceRecord nextRecord = attendanceRecords.FirstOrDefault(a => a.User.ID == record.User.ID && a.Entry > record.Entry);
+
+                            DateTime startDate = (record.Entry.Month != month || record.Entry.Year != year) ? new DateTime(year, month, 1) : record.Entry.Date;
+                            DateTime endDate = (record.Entry.Month != month || record.Entry.Year != year) ? new DateTime(year, month, 1).AddMonths(1).AddDays(-1) : nextRecord?.Entry.Date ?? DateTime.Now;
+
+                            while (startDate <= endDate)
+                            {
+                                DateTime entry = (startDate == record.Entry.Date) ? record.Entry : startDate;
+                                DateTime exit = (startDate == endDate) ? nextRecord.Entry : startDate.AddDays(1).AddSeconds(-1);
+                                duration = exit - entry;
+                                attendanceTotals.Add(new AttendanceTotal(record.User, DateOnly.FromDateTime(startDate), record.Activity, duration));
+
+                                startDate = startDate.AddDays(1);
+                            }
+                        }
+                    }
+
+                    // Step 5: Calculate the duration of each activity.
+                    List<AttendanceTotal> activityDurations = new List<AttendanceTotal>();
+                    foreach (AttendanceTotal total in attendanceTotals)
+                    {
+                        AttendanceTotal attendanceTotal = activityDurations.FirstOrDefault(a => a.Activity?.Property.GroupByName == total.Activity.Property.GroupByName && a.Date == total.Date && a.User == total.User);
+                        total.Duration = TimeSpan.FromTicks((total.Duration.Ticks + TimeSpan.TicksPerSecond / 2) / TimeSpan.TicksPerSecond * TimeSpan.TicksPerSecond);
+                        if (attendanceTotal == null)
+                        {
+                            if (total.Duration > total.Activity.Property.MaxInDay)
+                            {
+                                total.Duration = total.Activity.Property.MaxInDay;
+                            }
+                            activityDurations.Add(new AttendanceTotal(total.User, total.Date, total.Activity, total.Duration));
+                        }
+                        else
+                        {
+                            if (attendanceTotal.Duration + total.Duration > total.Activity.Property.MaxInDay)
+                            {
+                                attendanceTotal.Duration = total.Activity.Property.MaxInDay;
+                            }
+                            else
+                            {
+                                attendanceTotal.Duration += total.Duration;
+                            }
+                        }
+                    }
+
+                    // Step 4: Create a new UsersExportData object for each user and date.
+
+                    // Step 6: Create a new UsersExportData object for each user and date.
+                    foreach (User user in users)
+                    {
+                        foreach(DateOnly date in days)
+                        {
+                            List<ActivityExportData> activityExportDatas = new List<ActivityExportData>();
+                            foreach (AttendanceTotal a in activityDurations.Where(a => a.User == user && a.Date == date).ToList())
+                            {
+                                activityExportDatas.Add(new ActivityExportData() { Duration = a.Duration, ActivityName = a.Activity.Property.GroupByName });
+                            }
+                            usersExportDatas.Add(new UsersExportData() { UserName = user.ToString(), Date = date, ActivityExportDatas = activityExportDatas });
+                        }
+                    }
+
+                    return usersExportDatas;
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+                return null;
             }
         }
 

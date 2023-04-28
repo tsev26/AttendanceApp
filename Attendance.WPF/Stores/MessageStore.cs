@@ -14,6 +14,8 @@ namespace Attendance.WPF.Stores
 
         public MessageStore()
         {
+            Message = "";
+            ModalMessage = "";
         }
 
         public event Action MessageChanged;
@@ -52,11 +54,12 @@ namespace Attendance.WPF.Stores
             {
                 _modalMessage = value;
                 OnModalMessageChanged();
+                StartTimer();
             }
         }
 
         public bool HasMessage => Message.Length > 0;
-
+        public bool HasModalMessage => ModalMessage.Length > 0;
 
 
         private void StartTimer()

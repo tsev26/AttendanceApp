@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using static Attendance.WPF.Functions.TimeFunction;
 using Activity = Attendance.Domain.Models.Activity;
 
@@ -511,14 +512,14 @@ namespace Attendance.WPF.Stores
             CurrentAttendanceRecordFixChange?.Invoke();
         }
 
-        internal List<UsersExportData> LoadUsersExportData()
+        public List<UsersExportData> LoadUsersExportData(int month, int year, User? user = null)
         {
-            throw new NotImplementedException();
+            return _userDataService.LoadUsersExportData(month, year, user);
         }
 
-        internal List<UsersExportData> LoadUsersExportData(User user)
+        public List<string> LoadHeaderExportData()
         {
-            throw new NotImplementedException();
+            return _userDataService.LoadHeaderExportData();
         }
     }
 }
