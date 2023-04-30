@@ -41,7 +41,7 @@ namespace Attendance.WPF.ViewModels
 
 		public List<AttendanceRecordFix> AttendanceRecordFixes => _attendanceRecordStore.AttendanceRecordFixes.OrderBy(a => a.Approved).ToList();
 
-        public List<AttendanceRecord> AttendanceRecords => _attendanceRecordStore.AttendanceRecords.OrderByDescending(a => a.Entry).ToList();
+        public List<AttendanceRecord> AttendanceRecords => _attendanceRecordStore.AttendanceRecords.Where(a => a.Entry <= DateTime.Now).OrderByDescending(a => a.Entry).ToList();
 
 		private int _selectedAttendanceRecordFixIndex = -1;
 		public int SelectedAttendanceRecordFixIndex

@@ -1,6 +1,7 @@
 ﻿using Attendance.Domain.Models;
 using Attendance.Domain.Models.Virtual;
 using Attendance.EF.Services;
+using Attendance.WPF.Controls;
 using Attendance.WPF.Model;
 using Attendance.WPF.Models;
 using System;
@@ -74,7 +75,8 @@ namespace Attendance.WPF.Stores
             AttendanceRecord attendanceRecord = new AttendanceRecord(user, activity, dateTime);
             await _userDataService.AddAttendanceRecord(attendanceRecord);
             AttendanceRecords.Add(attendanceRecord);
-            await CountTotalDayAsync(user, attendanceRecord);
+            //await CountTotalDayAsync(user, attendanceRecord);
+            await CountTotalDay(user, attendanceRecord.Entry);
             CurrentAttendanceChange?.Invoke();
         }
 
@@ -86,7 +88,8 @@ namespace Attendance.WPF.Stores
             AttendanceRecords.Add(attendanceRecord);
             await _userDataService.AddAttendanceRecord(attendanceRecordEnding);
             AttendanceRecords.Add(attendanceRecordEnding);
-            await CountTotalDayAsync(user, attendanceRecord);
+            //await CountTotalDayAsync(user, attendanceRecord);
+            await CountTotalDay(user, attendanceRecord.Entry);
             CurrentAttendanceChange?.Invoke();
         }
 
@@ -102,7 +105,14 @@ namespace Attendance.WPF.Stores
 
             await _userDataService.UpdateAttendanceRecord(newAttendanceRecord, oldAttendanceRecord);
 
-            CountTotalDayAsync(user, newAttendanceRecord, oldAttendanceRecord);
+            //CountTotalDayAsync(user, newAttendanceRecord, oldAttendanceRecord);
+
+            await CountTotalDay(user, newAttendanceRecord.Entry);
+            if (newAttendanceRecord.Entry.Date != oldAttendanceRecord.Entry.Date)
+            {
+                await CountTotalDay(user, oldAttendanceRecord.Entry);
+            }
+
             CurrentAttendanceChange?.Invoke();
         }
 
@@ -138,6 +148,8 @@ namespace Attendance.WPF.Stores
 
         public async Task RemoveAttendanceRecord(AttendanceRecord attendanceRecord)
         {
+            DateTime day = attendanceRecord.Entry;
+            User user = attendanceRecord.User;
             AttendanceRecords.Remove(attendanceRecord);
             await _userDataService.RemoveAttendanceRecord(attendanceRecord);
             if (attendanceRecord.AttendanceRecordDetail != null)
@@ -147,6 +159,7 @@ namespace Attendance.WPF.Stores
                 await _userDataService.RemoveAttendanceRecord(endOfPlan);
             }
             //CountTotalDayAsync(attendanceRecord.User, attendanceRecord);
+            await CountTotalDay(user, day);
             CurrentAttendanceChange?.Invoke();
         }
 
@@ -171,17 +184,164 @@ namespace Attendance.WPF.Stores
             return ConvertSecondsToHHMMSS(WorkedInDay);
         }
 
+        public async Task CountTotalDay(User user, DateTime Entry)
+        {
+            DateTime startDate = AttendanceRecords.OrderByDescending(a => a.Entry).Where(a => a.UserId == user.ID && a.Entry < Entry).Select(a => a.Entry.Date).FirstOrDefault();
+            DateTime endDate = AttendanceRecords.OrderBy(a => a.Entry).Where(a => a.UserId == user.ID && a.Entry > Entry).Select(a => a.Entry.Date).FirstOrDefault();
+            if (startDate == DateTime.MinValue) startDate = Entry.Date;
+            if (endDate == DateTime.MinValue) endDate = DateTime.Now.Date;
+
+            List<DateOnly> updatesDays = new List<DateOnly>();
+            for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
+            {
+                updatesDays.Add(DateOnly.FromDateTime(date));
+            }
+
+            List<AttendanceRecord> attendanceRecords = AttendanceRecords.Where(a => a.UserId == user.ID && a.Entry.Date >= startDate.Date && a.Entry.Date <= endDate && a.Entry <= DateTime.Now).ToList();
+            AttendanceRecord attendanceRecordPrevious = AttendanceRecords.OrderByDescending(a => a.Entry).Where(a => a.UserId == user.ID && a.Entry.Date < startDate.Date && a.Entry <= DateTime.Now).FirstOrDefault();
+            if (attendanceRecordPrevious != null)
+            {
+                attendanceRecords.Add(attendanceRecordPrevious);
+            }
+
+            AttendanceRecord attendanceRecordNext = AttendanceRecords.OrderBy(a => a.Entry).Where(a => a.UserId == user.ID && a.Entry.Date > endDate.Date && a.Entry <= DateTime.Now).FirstOrDefault();
+            if (attendanceRecordNext != null)
+            {
+                attendanceRecords.Add(attendanceRecordNext);
+            }
+
+
+            attendanceRecords = attendanceRecords.OrderBy(a => a.Entry).ToList();
+            TimeSpan duration = TimeSpan.Zero;
+            List<AttendanceTotal> attendanceActivityTotals = new List<AttendanceTotal>();
+            foreach (AttendanceRecord record in attendanceRecords)
+            {
+                if (record.Activity.Property.Count)
+                {
+                    AttendanceRecord nextRecord = attendanceRecords.FirstOrDefault(a => a.Entry > record.Entry);
+                    if (nextRecord == null) break;
+                    DateTime startDateX = record.Entry.Date;
+                    DateTime endDateX = nextRecord.Entry.Date;
+
+                    while (startDateX <= endDateX)
+                    {
+                        DateTime entry = (startDateX == record.Entry.Date) ? record.Entry : startDateX;
+                        DateTime exit = (startDateX == endDateX) ? nextRecord.Entry : startDateX.AddDays(1).AddSeconds(-1);
+                        if (record.Activity.Property.IsPlan && !record.Activity.Property.HasTime)
+                        {
+                            if (record.AttendanceRecordDetail?.IsHalfDay ?? false)
+                            {
+                                duration = _activityStore.GlobalSetting.LenghtOfHalfDayActivity;
+                            }
+                            else
+                            {
+                                duration = _activityStore.GlobalSetting.LenghtOfAllDayActivity;
+                            }
+                        }
+                        else
+                        {
+                            duration = exit - entry;
+                        }
+                        
+                        attendanceActivityTotals.Add(new AttendanceTotal(record.User, DateOnly.FromDateTime(startDateX), record.Activity, duration));
+
+                        startDateX = startDateX.AddDays(1);
+                    }
+                }
+            }
+
+            List<AttendanceTotal> attendanceTotals = new List<AttendanceTotal>();
+            foreach (AttendanceTotal total in attendanceActivityTotals)
+            {
+                AttendanceTotal attendanceTotal = attendanceTotals.FirstOrDefault(a => a.Activity.ID == total.Activity.ID && a.Date == total.Date);
+                total.Duration = TimeSpan.FromTicks((total.Duration.Ticks + TimeSpan.TicksPerSecond / 2) / TimeSpan.TicksPerSecond * TimeSpan.TicksPerSecond);
+                if (attendanceTotal == null)
+                {
+                    attendanceTotals.Add(new AttendanceTotal(total.User, total.Date, total.Activity, total.Duration));
+                }
+                else
+                {
+                    attendanceTotal.Duration += total.Duration;
+                }
+            }
+
+            //check if there is enough pause for activities
+            Activity mainPauseActivity = _activityStore.GlobalSetting.MainPauseActivity;
+            foreach (DateOnly dateOnly in updatesDays)
+            {
+                TimeSpan totalPauseInDay = TimeSpan.FromSeconds(attendanceTotals.Where(a => a.Date == dateOnly && a.Activity.Property.IsPause).Sum(a => a.Duration.TotalSeconds));
+                TimeSpan totalWorkWithPauseInDay = TimeSpan.FromSeconds(attendanceTotals.Where(a => a.Date == dateOnly && !a.Activity.Property.IsPause && a.Activity.Property.HasPause).Sum(a => a.Duration.TotalSeconds));
+
+                if (totalWorkWithPauseInDay >= _activityStore.GlobalSetting.PauseEvery)
+                {
+                    TimeSpan totalRequiredPause = (int)(totalWorkWithPauseInDay / _activityStore.GlobalSetting.PauseEvery) * _activityStore.GlobalSetting.PauseDuration;
+
+                    if (totalRequiredPause > totalPauseInDay)
+                    {
+                        //adding required pause
+                        AttendanceTotal? pause = attendanceTotals.FirstOrDefault(a => a.Date == dateOnly && a.Activity == mainPauseActivity);
+                        if (pause != null)
+                        {
+                            pause.Duration += totalRequiredPause - totalPauseInDay;
+                        }
+                        else
+                        {
+                            AttendanceTotal pauseAttendanceTotal = new AttendanceTotal(user, dateOnly, mainPauseActivity, totalRequiredPause - totalPauseInDay);
+                            pauseAttendanceTotal.User = null;
+                            attendanceTotals.Add(pauseAttendanceTotal);
+                        }
+
+                        //substract required pause from worked time
+                        foreach (AttendanceTotal attendanceTotal in attendanceTotals.Where(a => a.Date == dateOnly && a.Activity.Property.Count && a.Activity.Property.IsWork && a.Activity.Property.HasPause))
+                        {
+                            TimeSpan activityDuration = attendanceTotal.Duration;
+                            if (activityDuration > totalRequiredPause)
+                            {
+                                activityDuration -= totalRequiredPause;
+                                break;
+                            }
+                            else
+                            {
+                                activityDuration = TimeSpan.Zero;
+                                totalRequiredPause -= activityDuration;
+                            }
+                        }
+                    }
+                }
+            }
+
+            //check if activity isnt reached maxed in day
+            foreach (AttendanceTotal attendanceTotal in attendanceTotals)
+            {
+                if (attendanceTotal.Duration > attendanceTotal.Activity.Property.MaxInDay && attendanceTotal.Activity.Property.Count && attendanceTotal.Activity.Property.MaxInDay != TimeSpan.Zero)
+                {
+                    attendanceTotal.Duration = attendanceTotal.Activity.Property.MaxInDay;
+                }
+            }
+
+            //AttendanceTotal.RemoveAll(a => a.User == user && updatesDays.Contains(a.Date));
+            //AttendanceTotal.AddRange(attendanceTotals);
+
+            foreach (var attendanceTotal in attendanceTotals)
+            {
+                attendanceTotal.User = null;
+                attendanceTotal.Activity = null;
+            }
+            await _userDataService.AddAttendanceTotal(user, updatesDays, attendanceTotals);
+
+        }
+
         public async Task CountTotalDayAsync(User user, AttendanceRecord attendanceRecord, AttendanceRecord? oldAttendanceRecord = null)
         {
             DateTime dateStart = attendanceRecord.Entry.Date;
             DateTime dateTimeStart = attendanceRecord.Entry;
 
             List<AttendanceRecordWithEnding> attendanceRecordWithEndings = new List<AttendanceRecordWithEnding>();
-            List<AttendanceRecord> all = AttendanceRecords;
-            AttendanceRecord nextAttendanceRecord = AttendanceRecords.OrderBy(a => a.Entry).FirstOrDefault(a => a.Entry > dateStart && (a.Activity?.Property.Count ?? false));
-            AttendanceRecord previeousAttendanceRecord = AttendanceRecords.OrderByDescending(a => a.Entry).FirstOrDefault(a => a.Entry < dateStart && a.Activity.Property.Count);
+            List<AttendanceRecord> all = AttendanceRecords.Where(a => a.UserId == user.ID).ToList();
+            AttendanceRecord nextAttendanceRecord = AttendanceRecords.OrderBy(a => a.Entry).Where(a => a.UserId == user.ID).FirstOrDefault(a => a.Entry > dateStart && (a.Activity?.Property.Count ?? false));
+            AttendanceRecord previeousAttendanceRecord = AttendanceRecords.OrderByDescending(a => a.Entry).Where(a => a.UserId == user.ID).FirstOrDefault(a => a.Entry < dateStart && a.Activity.Property.Count);
 
-            List <AttendanceRecord> orderedAttendanceRecord = AttendanceRecords.Where(a => a.Entry.Date >= (previeousAttendanceRecord?.Entry.Date ?? dateStart) && a.Entry.Date <= (nextAttendanceRecord?.Entry.Date ?? DateTime.Now.Date)).OrderBy(a => a.Entry).ToList();
+            List <AttendanceRecord> orderedAttendanceRecord = AttendanceRecords.Where(a => a.UserId == user.ID).Where(a => a.Entry.Date >= (previeousAttendanceRecord?.Entry.Date ?? dateStart) && a.Entry.Date <= (nextAttendanceRecord?.Entry.Date ?? DateTime.Now.Date)).OrderBy(a => a.Entry).ToList();
             List<DateOnly> updatesDays = new List<DateOnly>();
 
             for (DateTime date = (previeousAttendanceRecord?.Entry.Date ?? dateStart); date <= (nextAttendanceRecord?.Entry.Date ?? DateTime.Now.Date); date = date.AddDays(1))

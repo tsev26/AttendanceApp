@@ -105,9 +105,11 @@ namespace Attendance.EF
             }
         }
 
-        public void SetDefaultValuesIntoDb()
+        public bool SetDefaultValuesIntoDb()
         {
             bool dbExists = false;
+            bool returnValue = false;
+
             using (DatabaseContext dbContext = CreateDbContext())
             {
                 dbExists = dbContext.Database.CanConnect();
@@ -187,23 +189,23 @@ namespace Attendance.EF
                         basicGroup.AvailableActivities = activitiesBasic;
 
 
-                        User admin = new User("admin", "admin", "tsevcu@gmail.com", true);
+                        User admin = new User("admin", "admin", "t_sevcu@utb.cz", true);
                         admin.Group = leadershipGroup;
                         admin.AddKey("aaa");
                         admin.IsAdmin = true;
 
-                        User user1 = new User("Tomáš", "Ševců", "tsevcu@gmail.com", false);
+                        User user1 = new User("Tomáš", "Ševců", "t_sevcu@utb.cz", false);
                         user1.Group = leadershipGroup;
                         user1.AddKey("tse");
 
 
-                        User user2 = new User("TEST", "8", "tsevcu@gmail.com", false);
+                        User user2 = new User("Tereza", "Š", "t_sevcu@utb.cz", false);
                         user2.AddKey("test");
                         user2.Group = basicGroup;
-                        User user3 = new User("Petr", "Ševců", "tsevcu@gmail.com", false);
+                        User user3 = new User("Petr", "Ševců", "t_sevcu@utb.cz", false);
                         user3.AddKey("etr");
                         user3.Group = basicGroup;
-                        User user4 = new User("Eva", "Ševců", "tsevcu@gmail.com", false);
+                        User user4 = new User("Eva", "Ševců", "t_sevcu@utb.cz", false);
                         user4.AddKey("eva");
                         user4.Group = basicGroup;
 
@@ -218,6 +220,8 @@ namespace Attendance.EF
                         dbContextAdd.Users.Add(user4);
 
                         dbContextAdd.SaveChanges();
+                        returnValue = true;
+
                     }      
                 }
 
@@ -235,6 +239,8 @@ namespace Attendance.EF
                     }
                 }
             }
+
+            return returnValue;
         }
     }
 }

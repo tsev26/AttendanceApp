@@ -69,9 +69,10 @@ namespace Attendance.WPF.Stores
             GlobalSettingChange?.Invoke();
         }
 
-        public async Task LoadActivities()
+        public async Task<List<Activity>> LoadActivities()
         {
             Activities = await _activityDataService.GetActivities();
+            return Activities;
         }
     }
 }

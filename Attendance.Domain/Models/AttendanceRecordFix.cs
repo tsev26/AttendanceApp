@@ -71,7 +71,7 @@ namespace Attendance.Domain.Models
             AttendanceRecordId = attendanceRecord.ID;
 
             Activity = attendanceRecord.Activity;
-            ActivityId = attendanceRecord.ActivityId;
+            ActivityId = (int)attendanceRecord.ActivityId;
             Entry = attendanceRecord.Entry;
             User = user;
             UserId = user.ID;

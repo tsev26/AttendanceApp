@@ -123,8 +123,28 @@ namespace Attendance.EF.Services
                 {
                     List<AttendanceTotal> attendaceTotalsToRemove = context.AttendanceTotals.Where(a => a.User == user && updatesDays.Contains(a.Date)).ToList();
                     context.AttendanceTotals.RemoveRange(attendaceTotalsToRemove);
-                    context.AttendanceTotals.AddRange(newAttendanceTotalInDay);
                     await context.SaveChangesAsync();
+
+                    
+                    User userAdd = await context.Users.FirstOrDefaultAsync(a => a.ID == user.ID);
+                    foreach (var attendanceTotal in newAttendanceTotalInDay)
+                    {
+                        Activity activityAdd = await context.Activities.FindAsync(attendanceTotal.ActivityId);
+                        AttendanceTotal a = new AttendanceTotal()
+                        {
+                            Activity = activityAdd,
+                            ActivityId = activityAdd.ID,
+                            Date = attendanceTotal.Date,
+                            Duration = attendanceTotal.Duration,
+                            User = userAdd,
+                            UserId = attendanceTotal.UserId
+                        };
+                        context.AttendanceTotals.Add(a);
+                        //userAdd.AttendanceTotals.Add(a);
+                        await context.SaveChangesAsync();
+                    }
+                    //context.AttendanceTotals.AddRange(newAttendanceTotalInDay);
+                    
                 }
                 catch (Exception ex)
                 {
@@ -602,6 +622,84 @@ namespace Attendance.EF.Services
                     List<UsersExportData> usersExportDatas = new List<UsersExportData>();
 
 
+                    // Step 1: Get the list of all users
+                    List<User> users = context.Users
+                                               .Include(a => a.Group)
+                                               .ThenInclude(a => a.Obligation)
+                                               .Include(a => a.Obligation)
+                                               .Where(a => userToExport == null || userToExport.ID == a.ID)
+                                               .ToList();
+
+                    // Step 2: Get the list of dates in month and year
+                    List<DateOnly> days = new List<DateOnly>();
+                    for (DateTime date = new DateTime(year, month, 1); date <= new DateTime(year, month, 1).AddMonths(1).AddDays(-1); date = date.AddDays(1))
+                    {
+                        days.Add(DateOnly.FromDateTime(date));
+                    }
+
+                    //List<string> activityNames = context.Activities.Include(a => a.Property).Select(a => a.Property.GroupByName).Distinct().ToList();
+
+                    // Step 3: Get the list of attendanceTotal for selected users and dates
+                    List<AttendanceTotal> attendanceTotals = context.AttendanceTotals
+                                                                    .Include(a => a.Activity)
+                                                                    .ThenInclude(a => a.Property)
+                                                                    .Where(a => userToExport == null || userToExport.ID == a.UserId)
+                                                                    .Where(a => a.Date.Month == month && a.Date.Year == year)
+                                                                    .ToList();
+
+                    // Step 4: Calculate the duration of each activity export groupByName.
+                    List<AttendanceTotal> activityDurations = new List<AttendanceTotal>();
+                    foreach (AttendanceTotal total in attendanceTotals)
+                    {
+                        AttendanceTotal attendanceTotal = activityDurations.FirstOrDefault(a => a.Activity?.Property.GroupByName == total.Activity.Property.GroupByName && a.Date == total.Date && a.User == total.User);
+                        total.Duration = TimeSpan.FromTicks((total.Duration.Ticks + TimeSpan.TicksPerSecond / 2) / TimeSpan.TicksPerSecond * TimeSpan.TicksPerSecond);
+                        if (attendanceTotal == null)
+                        {
+                            activityDurations.Add(new AttendanceTotal(total.User, total.Date, total.Activity, total.Duration));
+                        }
+                        else
+                        {
+                            attendanceTotal.Duration += total.Duration;
+                        }
+                    }
+
+                    // Step 5: Create a new UsersExportData object for each user and date.
+                    foreach (User user in users)
+                    {
+                        foreach (DateOnly date in days)
+                        {
+                            List<ActivityExportData> activityExportDatas = new List<ActivityExportData>();
+                            foreach (AttendanceTotal a in activityDurations.Where(a => a.User == user && a.Date == date).ToList())
+                            {
+                                activityExportDatas.Add(new ActivityExportData() { Duration = a.Duration, ActivityName = a.Activity.Property.GroupByName });
+                            }
+                            usersExportDatas.Add(new UsersExportData() { UserName = user.ToString(), Date = date, ActivityExportDatas = activityExportDatas });
+                        }
+                    }
+
+                    // Step 6: Return result
+                    return usersExportDatas;
+                }
+                catch (Exception ex)
+                {
+                    var errorMsg = $"Error occurred while saving data to the database: {ex.Message}";
+                    errorMsg += $" Inner exception: {ex.InnerException}";
+                    // log the error or display the error message to the user
+                    Console.WriteLine(errorMsg);
+                }
+                return null;
+            }
+        }
+
+        public List<UsersExportData> LoadUsersExportDataOld(int month, int year, User? userToExport = null)
+        {
+            using (DatabaseContext context = _dbContextFactory.CreateDbContext())
+            {
+                try
+                {
+                    List<UsersExportData> usersExportDatas = new List<UsersExportData>();
+
+
                     // Step 1: Get the list of all users and their obligations.
                     List<User> users = context.Users
                                                .Include(a => a.Group)
@@ -620,7 +718,7 @@ namespace Attendance.EF.Services
 
 
                     // Step 2: Get the attendance records for the selected month and year.
-                    List<AttendanceRecord> attendanceRecords = context.AttendanceRecords.Include(a => a.Activity).ThenInclude(a => a.Property).Where(a => a.Entry.Month == month && a.Entry.Year == year).ToList(); // implement this method to get the attendance records for a month
+                    List<AttendanceRecord> attendanceRecords = context.AttendanceRecords.Include(a => a.Activity).ThenInclude(a => a.Property).Where(a => a.Entry.Month == month && a.Entry.Year == year).ToList();
                     foreach(User user in users)
                     {
                         AttendanceRecord attendanceRecordPrevious = context.AttendanceRecords.Where(a => a.User.ID == user.ID && (a.Entry.Month == (month-1) && a.Entry.Year == year) || (month == 1 && a.Entry.Month == 12 && a.Entry.Year == (year-1))).OrderByDescending(a => a.Entry).FirstOrDefault();
@@ -747,12 +845,13 @@ namespace Attendance.EF.Services
             {
                 try
                 {
-                    User userWithRecordToDelete = await context.Users.Include(a => a.AttendanceRecords).Where(a => a.AttendanceRecords.Contains(attendanceRecord)).FirstOrDefaultAsync();
-                    userWithRecordToDelete.AttendanceRecords.Remove(attendanceRecord);
-
                     AttendanceRecord attendanceRecordToDelete = await context.AttendanceRecords.Where(a => a.ID == attendanceRecord.ID).FirstOrDefaultAsync();
-                    attendanceRecordToDelete.User = null;
-                    context.AttendanceRecords.Remove(attendanceRecordToDelete);
+                    User userWithRecordToDelete = await context.Users.Include(a => a.AttendanceRecords).Where(a => a.AttendanceRecords.Contains(attendanceRecord)).FirstOrDefaultAsync();
+                    userWithRecordToDelete.AttendanceRecords.Remove(attendanceRecordToDelete);
+
+                    //AttendanceRecord attendanceRecordToDelete = await context.AttendanceRecords.Where(a => a.ID == attendanceRecord.ID).FirstOrDefaultAsync();
+
+                    //context.AttendanceRecords.Remove(attendanceRecordToDelete);
                     await context.SaveChangesAsync();
                     return;
                 }

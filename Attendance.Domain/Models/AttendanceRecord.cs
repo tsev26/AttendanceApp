@@ -34,11 +34,11 @@ namespace Attendance.Domain.Models
 
         [ForeignKey("UserId")]
         public User? User { get; set; }
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
 
         [ForeignKey("ActivityId")]
         public Activity? Activity { get; set; }
-        public int ActivityId { get; set; }
+        public int? ActivityId { get; set; }
 
         public DateTime Entry { get; set; }
 
