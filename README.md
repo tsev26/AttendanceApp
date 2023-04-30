@@ -1,7 +1,7 @@
 # AttendanceApp - Docházková aplikace
 
 # Úvod
-Tento projekt "AttendanceApp" byl vytvořen jako součást diplomnové práce na Univerzitě Tomáše Bati ve Zlíně. Cílem tohoto projektu je vytvoření aplikace pro správu docházky zaměstnanců ve firmě.
+Tento projekt "AttendanceApp" byl vytvořen jako součást diplomové práce na Univerzitě Tomáše Bati ve Zlíně. Cílem tohoto projektu je vytvoření aplikace pro správu docházky zaměstnanců ve firmě.
 
 # Instalace
 Pro spuštění aplikace je třeba stáhnout jeden z dostupných release balíčků. Pokud stáhnete balíček se selfcontained deployment, není potřeba instalovat žádný další software. Pokud stáhnete balíček deployment framework-dependant, je třeba mít nainstalován .NET6.0 na vašem zařízení.
