@@ -178,25 +178,26 @@ namespace Attendance.WPF.Commands
                         }
 
                     case "MoveStart":
-                        User user = _currentUser.User;
                         Activity activityToSet = attendanceRecord.Activity;
+                        AttendanceRecordDetail attendanceRecordDetailX = attendanceRecord.AttendanceRecordDetail;
+                        attendanceRecordDetailX.ID = 0;
                         await _attendanceRecordStore.RemoveAttendanceRecord(attendanceRecord);
-                        
-                        await _attendanceRecordStore.AddAttendanceRecord(user, activityToSet, DateTime.Now);
+                        await _attendanceRecordStore.AddAttendanceRecord(_currentUser.User, activityToSet, DateTime.Now, attendanceRecordDetailX);
                         _closeModalNavigation.Navigate();
                         _navigateHomeService.Navigate("Začátek plánu " + attendanceRecord.Activity + " posunut na teď");
                         break;
                     case "Remove":
+                        attendanceRecord.User = _currentUser.User;
+                        _attendanceRecordStore.RemoveAttendanceRecord(attendanceRecord);
+                        _messageStore.Message = "Plán " + attendanceRecord.Activity + " odstraněn";
                         if (_userPlanViewModel == null)
                         {
                             _closeModalNavigation.Navigate();
                         }
-                        _attendanceRecordStore.RemoveAttendanceRecord(attendanceRecord);
-                        _messageStore.Message = "Plán " + attendanceRecord.Activity + " odstraněn";
-
                         break;
                     case "MoveEnd":
                         AttendanceRecord endOfPlan = _attendanceRecordStore.AttendanceRecords.FirstOrDefault(a => a.Entry == attendanceRecord.AttendanceRecordDetail.ExpectedEnd);
+                        endOfPlan.User = _currentUser.User;
                         await _attendanceRecordStore.RemoveAttendanceRecord(endOfPlan);
                         //attendanceRecord.AttendanceRecordDetail.ExpectedEnd = DateTime.Now;
                         Activity mainActivity = _activityStore.GlobalSetting.MainWorkActivity;

@@ -154,7 +154,7 @@ namespace Attendance.WPF.Stores
             await _userDataService.RemoveAttendanceRecord(attendanceRecord);
             if (attendanceRecord.AttendanceRecordDetail != null)
             {
-                AttendanceRecord endOfPlan = AttendanceRecords.FirstOrDefault(a => a.User == attendanceRecord.User && a.Entry == attendanceRecord.AttendanceRecordDetail.ExpectedEnd);
+                AttendanceRecord endOfPlan = AttendanceRecords.FirstOrDefault(a => a.UserId == attendanceRecord.UserId && a.Entry == attendanceRecord.AttendanceRecordDetail.ExpectedEnd);
                 AttendanceRecords.Remove(endOfPlan);
                 await _userDataService.RemoveAttendanceRecord(endOfPlan);
             }
