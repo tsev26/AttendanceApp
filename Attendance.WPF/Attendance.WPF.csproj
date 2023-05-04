@@ -5,11 +5,16 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>immigration.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resources\TSevcu-2.png" />
     <None Remove="Resources\TSevcu-logo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="immigration.ico" />
   </ItemGroup>
 
   <ItemGroup>
