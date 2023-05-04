@@ -404,11 +404,21 @@ namespace Attendance.EF.Services
             {
                 try
                 {
-                    return await context.Users.Where(a => a.ToApprove && (a.Group.Supervisor.ID == user.ID || user.IsAdmin))
-                                              .Include(a => a.Obligation)
-                                              .Include(a => a.Group)
+                    var listOfUsers = await context.Users.Where(a => !a.ToApprove).Include(a => a.Group).Where(a => a.Group.SupervisorId == user.ID || user.IsAdmin).ToListAsync();
+                    var list = await context.Users
+                                            .Where(a => a.ToApprove)
+                                            .Include(a => a.Obligation)
+                                            .Include(a => a.Group)
                                                 .ThenInclude(a => a.Obligation)
-                                              .ToListAsync();
+                                            .Select(a => new
+                                            {
+                                                User = a,
+                                                UserUpdateId = a.UserUpdateId
+                                            })
+                                            .Where(a => listOfUsers.Select(u => u.ID).Contains((int)a.UserUpdateId))
+                                            .Select(a => a.User)
+                                            .ToListAsync();
+                    return list;
                 }
                 catch (Exception ex)
                 {
@@ -519,7 +529,7 @@ namespace Attendance.EF.Services
             {
                 try
                 {
-                    List<User> users = await context.Users.Include(a => a.Group).ThenInclude(s => s.Supervisor).AsNoTracking().ToListAsync();
+                    List<User> users = await context.Users.Where(a => !a.ToApprove).Include(a => a.Group).ThenInclude(s => s.Supervisor).AsNoTracking().ToListAsync();
                     bool value = users.Any(a => a.Group.Supervisor == user || user.IsAdmin);
                     return value;
                 }

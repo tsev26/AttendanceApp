@@ -182,7 +182,7 @@
                 Text="Zadává se čas"
                 Visibility="{Binding IsPlan, Converter={StaticResource BoolToVisibilityConverter}}" />
             <ToggleButton
-                Grid.Row="3"
+                Grid.Row="5"
                 Grid.Column="1"
                 Width="50"
                 Height="35"

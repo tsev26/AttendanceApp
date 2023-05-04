@@ -41,7 +41,8 @@
                     <ItemsControl
                         x:Name="ActivityItemsControl"
                         Focusable="False"
-                        ItemsSource="{Binding Activities}">
+                        ItemsSource="{Binding Activities}"
+                        Loaded="OnLoaded">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid
@@ -235,21 +236,21 @@
                 </Grid>
             </Grid>
 
-            <TextBox
-                x:Name="SelectActivityTextBox"
-                CharacterCasing="Upper"
-                Focusable="True"
-                Text="{Binding FindSymbol, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                Visibility="Visible">
-                <TextBox.Style>
-                    <Style TargetType="{x:Type TextBox}">
-                        <Setter Property="Width" Value="0" />
-                        <Setter Property="Width" Value="0" />
-                    </Style>
-                </TextBox.Style>
-            </TextBox>
-
         </Grid>
+
+        <TextBox
+            x:Name="SelectActivityTextBox"
+            CharacterCasing="Upper"
+            Focusable="True"
+            Text="{Binding FindSymbol, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Visibility="Visible">
+            <TextBox.Style>
+                <Style TargetType="{x:Type TextBox}">
+                    <Setter Property="Width" Value="0" />
+                    <Setter Property="Width" Value="0" />
+                </Style>
+            </TextBox.Style>
+        </TextBox>
 
     </Grid>
 </UserControl>
